@@ -14,7 +14,7 @@ class Student(BaseModel):
 @app.get("/")
 def index():
     return "This is the index page!"
-
+#test
 
 @app.get("/hello")
 def hello_world():
