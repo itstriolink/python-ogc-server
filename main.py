@@ -35,13 +35,3 @@ def get_student(student_id: int, q: str = None):
 def save_student(student_id: int, student: Student):
     return {"student_name": student.name, "student_id": student_id}
 
-
-@app.get("/tiles/castles/{x}/{y}/{z}")
-def raster_tile(x: int, y: int, z: int):
-    return {"x": x, "y": y, "z": z}
-
-
-@app.get("/collections/castles/items")
-def get_castles(bbox: str, limit: int = None):
-    bounding_box = bbox.split(",")
-    return {"bbox": bounding_box, "limit": limit}
