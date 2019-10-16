@@ -2,8 +2,6 @@ import geojson
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-# Another test commit
-
 app = FastAPI()
 
 
