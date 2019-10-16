@@ -2,6 +2,8 @@ import geojson
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+# Another test commit
+
 app = FastAPI()
 
 
@@ -34,6 +36,7 @@ def get_student(student_id: int, q: str = None):
 @app.put("/students/{student_id}")
 def save_student(student_id: int, student: Student):
     return {"student_name": student.name, "student_id": student_id}
+
 
 @app.get("/tiles/castles/{x}/{y}/{z}")
 def raster_tile(x: int, y: int, z: int):
