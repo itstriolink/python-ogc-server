@@ -1,11 +1,15 @@
 from fastapi import FastAPI
-from collections import make_index
+
+from index import make_index
 
 app = FastAPI()
 
 
 def main():
-    make_index()
+    coll = dict()
+    coll[
+        'castles'] = "C:\\Users\\labia\\Desktop\\HSR\\Semester 1\\Courses\\Z_ProjektArbeit\\python-wfs-server\\osm-castles-CH.geojson\\"
+    index = make_index(coll, 'http://www.google.com/')
 
 
 @app.get("/")

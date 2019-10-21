@@ -1,37 +1,44 @@
+import os
 import time
+from io import FileIO
+
 import geojson
 import s2sphere
+
 from tiles import TileCache
-import os
-import io
-from pydantic import BaseModel
 
 
-class CollectionMetadata(BaseModel):
+class CollectionMetadata:
     name: str
     path: str
     last_modified: time.time()
 
 
-class Collection(BaseModel):
+class Collection:
     metadata: CollectionMetadata
     tile_cache: TileCache
-    data_file: io.FileIO  # not sure yet
-    offset: list[int]
-    bbox: list[s2sphere.LatLngRect]  # Can't find it yet
-    web_mercator: list[s2sphere.Point]
-    id: list[str]
+    data_file: FileIO  # not sure yet
+    offset: list()
+    bbox: list()  # Can't find it yet
+    web_mercator: list()
+    id: list()
     by_id: dict()
 
 
-class Index(BaseModel):
-    collections: Collection
+class Index:
+    collections: dict()
     public_path: str
 
 
 def make_index(collections: dict, public_path):
-    index = Index(collections=dict[str, Collection], public_path=public_path)
-    pass
+    index = Index()
+    index.public_path = public_path
+
+    for name, path in collections.items():
+        coll = read_collection(name, path, None)
+        index.collections[name] = coll
+
+    return index
 
 
 def close():
@@ -74,17 +81,20 @@ def read_collection(name, path, if_modified_since):
     coll.metadata.name = name
     coll.metadata.path = abs_path
 
-    features = geojson.FeatureCollection
-
-    features = geojson.loads(data)
+    features = geojson.FeatureCollection(data['features'])
 
     data_file = os.tmpfile("", "miniwfs-*.geojson")
 
     coll.data_file = data_file
 
-    num_features = len(features.items())
+    num_features = len(features)
     coll.bbox = dict(list[s2sphere.LatLngRect], num_features)
     coll.id = dict(list[str], num_features)
     coll.web_mercator = dict(s2sphere.Point, num_features)
     coll.offset = dict()
     coll.by_id = dict()
+
+    for i, f in enumerate(features.Features):
+        feature = geojson.geometry.Geometry
+
+    return coll

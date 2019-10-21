@@ -1,21 +1,16 @@
-from pydantic import BaseModel
-
-
-class TileKey(BaseModel):
+class TileKey:
     x: int
     y: int
     zoom: int
 
 
-class TileCache(BaseModel):
-    # locks: mutex
-    # lists: list.List
+class TileCache:
     content: dict()
     size: int
     max_size: int
 
 
-class TileCacheEntry(BaseModel):
+class TileCacheEntry:
     key: TileKey
     value: bytearray
 

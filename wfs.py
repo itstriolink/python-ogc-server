@@ -1,22 +1,19 @@
-import geojson
-from pydantic import BaseModel
-
 DEFAULT_LIMIT = 10
 MAX_LIMIT = 10000
 
 
-class WFSLink(BaseModel):
+class WFSLink:
     href: str
     rel: str
     type: str
     title: str
 
 
-class WFSFeatureCollection(BaseModel):
+class WFSFeatureCollection:
     type: str
-    links: list[WFSLink]
-    bounding_Box: float
-    Features: list[geojson.Feature]
+    links: []
+    bounding_box: []
+    Features: []
 
 
 def format_items_url(prefix, collection, start_id, start, limit, box):
