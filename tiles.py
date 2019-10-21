@@ -10,7 +10,7 @@ class TileKey(BaseModel):
 class TileCache(BaseModel):
     # locks: mutex
     # lists: list.List
-    # content: dict()
+    content: dict()
     size: int
     max_size: int
 
