@@ -1,13 +1,13 @@
 import io
 import os
 import tempfile
-import time
 from datetime import datetime
 
 import geojson
+import s2sphere
 
 import geometry
-from tiles import TileCache
+import tiles
 
 
 class CollectionMetadata:
@@ -15,10 +15,15 @@ class CollectionMetadata:
     path: str
     last_modified: str
 
+    def __init__(self, name, path, last_modified):
+        self.name = name
+        self.path = path
+        self.last_modified = last_modified
+
 
 class Collection:
     metadata: CollectionMetadata
-    tile_cache: TileCache
+    tile_cache: tiles.TileCache
     data_file: io.FileIO  # not sure yet
     offset: [] = []
     bbox: [] = []  # Can't find it yet
@@ -26,10 +31,48 @@ class Collection:
     id: [] = []
     by_id: {} = {}
 
+    def close(self):
+        if self.data_file is not None:
+            self.data_file.close()
+            os.remove(self.data_file.name)
+
 
 class Index:
     collections: {} = {}
     public_path: str
+
+    def get_collection_metadata(self, path: str):
+        for coll in self.collections:
+            if coll.metadata.path == path:
+                return coll.metadata
+
+        return None
+
+    def replace_collection(self, coll: Collection):
+        old = self.collections.get(coll.metadata.name)
+
+        if old is not None:
+            old.close()
+
+        self.collections[coll.metadata.name] = coll
+
+    def get_tile(self, collection: str, zoom: int, x: int, y: int):
+        if x < 0 or y < 0 or zoom < 0 or zoom > 30:
+            return None
+
+        tile_key = tiles.TileKey(x=x, y=y, zoom=zoom)
+
+        coll = self.collections.get(collection)
+
+        if coll is None:
+            return None
+
+        scale = 1 << zoom
+
+        tile_bounds = geometry.get_tile_bounds(zoom, x, y)
+        tile_origin = s2sphere.Point(x=float(x) * 256.0 / float(scale), y=float(y) * 256.0 / float(scale))
+
+        # tile = Tile
 
 
 def make_index(collections: dict, public_path):
@@ -43,31 +86,24 @@ def make_index(collections: dict, public_path):
     return index
 
 
-def close(c: Collection):
-    if c.data_file is not None:
-        c.data_file.close()
-        os.remove(c.data_file.name)
+def get_collections():
+    pass
 
 
-def get_collections(index):
-    collection_metadata = CollectionMetadata()
-    collection_metadata.name = "CM"
-    collection_metadata.path = "CMP"
-    collection_metadata.last_modified = time.strftime()
+def get_item(collection_name: str, collection_id: str):
+    coll = Index.collections[collection_name]
+    if coll is None:
+        return None
 
-    return collection_metadata
+    i = coll.by_id[collection_id]
+    offset = coll.offset[i]
 
+    result = geojson.Feature
 
-def get_item(collection, collection_id):
-    result = None
     return result
 
 
 def get_tile(collection, zoom, x, y):
-    return None
-
-
-def get_collection_metadata(path):
     return None
 
 
@@ -80,13 +116,9 @@ def read_collection(name, path, if_modified_since):
         data = file.read()
 
     coll = Collection()
-    coll_metadata = CollectionMetadata()
+    coll.tile_cache = tiles.new_tile_cache(10000)
+    coll.metadata = CollectionMetadata(name, path, mod_time)
 
-    coll_metadata.last_modified = mod_time
-    coll_metadata.name = name
-    coll_metadata.path = path
-
-    coll.metadata = coll_metadata
     feature_collection = geojson.FeatureCollection(geojson.loads(data))
 
     data_file = tempfile.NamedTemporaryFile(prefix="miniwfs-", suffix=".geojson")
@@ -94,11 +126,6 @@ def read_collection(name, path, if_modified_since):
     coll.data_file = data_file
 
     num_features = len(feature_collection.features)
-    # coll.bbox = dict(list[s2sphere.LatLngRect], num_features)
-    # coll.id = dict(list[str], num_features)
-    # coll.web_mercator = dict(s2sphere.Point, num_features)
-    # coll.offset = dict()
-    # coll.by_id = dict()
 
     for i, f in enumerate(feature_collection.features):
         coll.id.append(f.id)

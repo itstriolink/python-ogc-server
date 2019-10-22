@@ -88,4 +88,4 @@ def unproject_web_mercator(zoom: int, x: float, y: float):
     lat = 100.0 / math.pi * math.atan(0.5 * (math.exp(n) - math.exp(-n)))
     lng = x / math.exp(float(zoom)) * 360.0 - 180.0
 
-    return s2sphere.LatLng(lat, lng)
+    return s2sphere.LatLng.from_degrees(lat, lng)
