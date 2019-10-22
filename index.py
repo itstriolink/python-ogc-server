@@ -1,32 +1,34 @@
+import io
 import os
+import tempfile
 import time
-from io import FileIO
+from datetime import datetime
 
 import geojson
-import s2sphere
 
+import geometry
 from tiles import TileCache
 
 
 class CollectionMetadata:
     name: str
     path: str
-    last_modified: time.time()
+    last_modified: str
 
 
 class Collection:
     metadata: CollectionMetadata
     tile_cache: TileCache
-    data_file: FileIO  # not sure yet
-    offset: list()
-    bbox: list()  # Can't find it yet
-    web_mercator: list()
-    id: list()
-    by_id: dict()
+    data_file: io.FileIO  # not sure yet
+    offset: [] = []
+    bbox: [] = []  # Can't find it yet
+    web_mercator: [] = []
+    id: [] = []
+    by_id: {} = {}
 
 
 class Index:
-    collections: dict()
+    collections: {} = {}
     public_path: str
 
 
@@ -41,8 +43,10 @@ def make_index(collections: dict, public_path):
     return index
 
 
-def close():
-    pass
+def close(c: Collection):
+    if c.data_file is not None:
+        c.data_file.close()
+        os.remove(c.data_file.name)
 
 
 def get_collections(index):
@@ -68,33 +72,43 @@ def get_collection_metadata(path):
 
 
 def read_collection(name, path, if_modified_since):
-    abs_path, err = os.path.abspath(path)
+    abs_path = os.path.abspath(path)
 
-    stat = os.stat(abs_path)
+    mod_time = datetime.fromtimestamp(os.path.getmtime(path))
 
-    with open(abs_path, "r") as file:
+    with open(abs_path, "r", encoding='utf8') as file:
         data = file.read()
 
     coll = Collection()
+    coll_metadata = CollectionMetadata()
 
-    coll.metadata.last_modified = stat.st_mtime
-    coll.metadata.name = name
-    coll.metadata.path = abs_path
+    coll_metadata.last_modified = mod_time
+    coll_metadata.name = name
+    coll_metadata.path = path
 
-    features = geojson.FeatureCollection(data['features'])
+    coll.metadata = coll_metadata
+    feature_collection = geojson.FeatureCollection(geojson.loads(data))
 
-    data_file = os.tmpfile("", "miniwfs-*.geojson")
+    data_file = tempfile.NamedTemporaryFile(prefix="miniwfs-", suffix=".geojson")
 
     coll.data_file = data_file
 
-    num_features = len(features)
-    coll.bbox = dict(list[s2sphere.LatLngRect], num_features)
-    coll.id = dict(list[str], num_features)
-    coll.web_mercator = dict(s2sphere.Point, num_features)
-    coll.offset = dict()
-    coll.by_id = dict()
+    num_features = len(feature_collection.features)
+    # coll.bbox = dict(list[s2sphere.LatLngRect], num_features)
+    # coll.id = dict(list[str], num_features)
+    # coll.web_mercator = dict(s2sphere.Point, num_features)
+    # coll.offset = dict()
+    # coll.by_id = dict()
 
-    for i, f in enumerate(features.Features):
-        feature = geojson.geometry.Geometry
+    for i, f in enumerate(feature_collection.features):
+        coll.id.append(f.id)
+        coll.by_id[f.id] = i
+        coll.bbox.append(geometry.compute_bounds(f.geometry))
 
+        center = coll.bbox[i].get_center()
+        coll.web_mercator.append(geometry.project_web_mercator(center))
+
+        # if i > 0:
+        #     data_file.write()
     return coll
+

@@ -1,6 +1,7 @@
-import s2sphere
-import geojson
 import math
+
+import geojson
+import s2sphere
 
 
 def compute_bounds(g: geojson.geometry.Geometry):
@@ -8,39 +9,39 @@ def compute_bounds(g: geojson.geometry.Geometry):
     if g is None:
         return r
 
-    if g.Type == geojson.geometry.Point:
+    if g.type == geojson.geometry.Point:
         if len(g.Point) >= 2:
             r = r.from_point(s2sphere.LatLng(g.Point[1], g.Point[0]))
         return r
 
-    elif g.Type == geojson.geometry.MultiPoint:
+    elif g.type == geojson.geometry.MultiPoint:
         for p in g.MultiPoint:
             if len(p) >= 2:
                 r = r.from_point(s2sphere.LatLng(p[1], p[0]))
         return r
 
-    elif g.Type == geojson.geometry.LineString:
+    elif g.type == geojson.geometry.LineString:
         return compute_line_bounds(g.LineString)
 
-    elif g.Type == geojson.geometry.MultiLineString:
+    elif g.type == geojson.geometry.MultiLineString:
         for line in g.MultiLineString:
             r = r.union((compute_line_bounds(line)))
         return r
 
-    elif g.Type == geojson.geometry.Polygon:
+    elif g.type == geojson.geometry.Polygon:
         for ring in g.Polygon:
             r = r.union(compute_line_bounds(ring))
         # s2sphere.expandforsubregions(r)
         return r
 
-    elif g.Type == geojson.geometry.MultiPolygon:
+    elif g.type == geojson.geometry.MultiPolygon:
         for poly in g.MultiPolygon:
             for ring in poly:
                 r = r.union(compute_line_bounds(ring))
             # s2sphere.expandforsubregions(r)
         return r
 
-    elif g.Type == geojson.geometry.GeometryCollection:
+    elif g.type == geojson.geometry.GeometryCollection:
         for geometry in g.Geometries:
             r = r.union(compute_bounds(geometry))
         return r
@@ -74,12 +75,12 @@ def get_tile_bounds(zoom: int, x: int, y: int):
 
 
 def project_web_mercator(p: s2sphere.LatLng):
-    siny = math.sin(p.lat().radians())
+    siny = math.sin(p.lat().radians)
     siny = min(max(siny, -0.9999), 0.9999)
-    x = 256 * (0.5 + p.lng().degrees() / 360)
+    x = 256 * (0.5 + p.lng().degrees / 360)
     y = 256 * (0.5 - math.log((1 + siny) / (1 - siny)) / (4 * math.pi))
 
-    return s2sphere.Point(x=x, y=y)
+    return s2sphere.Point(x=x, y=y, z=0)
 
 
 def unproject_web_mercator(zoom: int, x: float, y: float):

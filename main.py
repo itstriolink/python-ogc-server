@@ -6,10 +6,11 @@ app = FastAPI()
 
 
 def main():
-    coll = dict()
-    coll[
-        'castles'] = "C:\\Users\\labia\\Desktop\\HSR\\Semester 1\\Courses\\Z_ProjektArbeit\\python-wfs-server\\osm-castles-CH.geojson\\"
-    index = make_index(coll, 'http://www.google.com/')
+    coll = {
+        'castles': r'C:\Users\labia\Desktop\HSR\Semester 1\Courses\Z_ProjektArbeit\python-wfs-server\osm-castles-CH.geojson'}
+    PATH = r'http://127.0.0.1:8000'
+
+    index = make_index(coll, PATH)
 
 
 @app.get("/")
