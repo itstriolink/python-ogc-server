@@ -3,14 +3,14 @@ from fastapi import FastAPI
 from index import make_index
 
 app = FastAPI()
+CASTLES_PATH = r'C:\Users\labia\Desktop\HSR\Semester 1\Courses\Z_ProjektArbeit\python-wfs-server\osm-castles-CH.geojson'
+WEB_HOST_URL = r'http://127.0.0.1:8000'
 
 
 def main():
-    coll = {
-        'castles': r'C:\Users\labia\Desktop\HSR\Semester 1\Courses\Z_ProjektArbeit\python-wfs-server\osm-castles-CH.geojson'}
-    PATH = r'http://127.0.0.1:8000'
+    coll = {'castles': CASTLES_PATH}
 
-    index = make_index(coll, PATH)
+    index = make_index(coll, WEB_HOST_URL)
 
 
 @app.get("/")
@@ -34,4 +34,5 @@ def get_castles(bbox: str, limit: int = None):
     return {"bbox": bounding_box, "limit": limit}
 
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
