@@ -6,42 +6,43 @@ import s2sphere
 
 def compute_bounds(g: geojson.geometry.Geometry):
     r = s2sphere.LatLngRect()
+
     if g is None:
         return r
 
-    if g.type == geojson.geometry.Point:
-        if len(g.Point) >= 2:
-            r = r.from_point(s2sphere.LatLng(g.Point[1], g.Point[0]))
+    if type(g) == geojson.Point:
+        if len(g) >= 2:
+            r = r.from_point(s2sphere.LatLng.from_degrees(g['coordinates'][1], g['coordinates'][0]))
         return r
 
-    elif g.type == geojson.geometry.MultiPoint:
+    elif type(g) == geojson.geometry.MultiPoint:
         for p in g.MultiPoint:
             if len(p) >= 2:
-                r = r.from_point(s2sphere.LatLng(p[1], p[0]))
+                r = r.from_point(s2sphere.LatLng.from_degrees(p[1], p[0]))
         return r
 
-    elif g.type == geojson.geometry.LineString:
-        return compute_line_bounds(g.LineString)
+    elif type(g) == geojson.geometry.LineString:
+        return compute_line_bounds(g['coordinates'])
 
-    elif g.type == geojson.geometry.MultiLineString:
+    elif type(g) == geojson.geometry.MultiLineString:
         for line in g.MultiLineString:
             r = r.union((compute_line_bounds(line)))
         return r
 
-    elif g.type == geojson.geometry.Polygon:
-        for ring in g.Polygon:
+    elif type(g) == geojson.geometry.Polygon:
+        for ring in g['coordinates']:
             r = r.union(compute_line_bounds(ring))
         # s2sphere.expandforsubregions(r)
         return r
 
-    elif g.type == geojson.geometry.MultiPolygon:
+    elif type(g) == geojson.geometry.MultiPolygon:
         for poly in g.MultiPolygon:
             for ring in poly:
                 r = r.union(compute_line_bounds(ring))
             # s2sphere.expandforsubregions(r)
         return r
 
-    elif g.type == geojson.geometry.GeometryCollection:
+    elif type(g) == geojson.geometry.GeometryCollection:
         for geometry in g.Geometries:
             r = r.union(compute_bounds(geometry))
         return r
@@ -54,7 +55,7 @@ def compute_line_bounds(line):
     r = s2sphere.LatLngRect()
     for p in line:
         if len(p) >= 2:
-            r = r.from_point(s2sphere.LatLng(p[1], p[0]))
+            r = r.from_point(s2sphere.LatLng.from_degrees(p[1], p[0]))
     return r
 
 
@@ -70,8 +71,8 @@ def encode_bbox(r: s2sphere.LatLngRect):
 
 
 def get_tile_bounds(zoom: int, x: int, y: int):
-    r = s2sphere.LatLngRect(unproject_web_mercator(zoom, float(x), float(y)))
-    return r.from_point(unproject_web_mercator((zoom, float(x+1), float(y+1))))
+    r = s2sphere.LatLngRect.from_point(unproject_web_mercator(zoom, float(x), float(y)))
+    return r
 
 
 def project_web_mercator(p: s2sphere.LatLng):
@@ -85,7 +86,7 @@ def project_web_mercator(p: s2sphere.LatLng):
 
 def unproject_web_mercator(zoom: int, x: float, y: float):
     n = math.pi - 2.0 * math.pi * y / math.exp(float(zoom))
-    lat = 100.0 / math.pi * math.atan(0.5 * (math.exp(n) - math.exp(-n)))
+    lat = 180.0 / math.pi * math.atan(0.5 * (math.exp(n) - math.exp(-n)))
     lng = x / math.exp(float(zoom)) * 360.0 - 180.0
 
     return s2sphere.LatLng.from_degrees(lat, lng)

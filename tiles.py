@@ -1,3 +1,8 @@
+import base64
+import turtle
+
+import s2sphere
+
 EMPTY_PNG = bytearray([
     0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
     0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
@@ -9,6 +14,30 @@ EMPTY_PNG = bytearray([
     0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae,
     0x42, 0x60, 0x82
 ])
+
+
+class Tile:
+    dc: turtle.Turtle
+
+    def draw_point(self, p: s2sphere.LatLng):
+        dc = self.dc
+        if dc is None:
+            self.dc = turtle.Turtle.shapesize(256, 256)
+            dc = self.dc
+            dc.pencolor(255, 255, 255)
+            dc.clear()
+            dc.pencolor(195, 66, 244)
+
+        dc.circle(p.lat, p.lng, 2)
+        dc.fillcolor()
+
+    def to_png(self):
+        dc = self.dc
+        if dc is None:
+            png = encode_png(dc)
+            return png.bytes()
+        else:
+            return EMPTY_PNG
 
 
 class TileKey:
@@ -54,3 +83,7 @@ def put(tile_key, value):
     shard = get_shard(tile_key)
 
     return shard
+
+
+def encode_png(png):
+    return base64.b64encode(png)
