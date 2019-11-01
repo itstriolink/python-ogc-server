@@ -1,7 +1,12 @@
 import base64
-import turtle
+import io
 
-import s2sphere
+import Geometry
+from PIL import Image, ImageDraw
+
+PEN_COLOR = (195, 66, 244)
+SIZE = (256, 256)
+TRANSPARENT_COLOR = (255, 255, 255, 0)
 
 EMPTY_PNG = bytearray([
     0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
@@ -16,26 +21,26 @@ EMPTY_PNG = bytearray([
 ])
 
 
-class Tile:
-    dc: turtle.Turtle
+class Tile(object):
+    dc: Image.Image()
 
-    def draw_point(self, p: s2sphere.LatLng):
+    def __init__(self):
+        self.dc = None
+
+    def draw_point(self, p: Geometry.Point):
+        if self.dc is None:
+            self.dc = Image.new('RGBA', SIZE, color=TRANSPARENT_COLOR)
+
         dc = self.dc
-        if dc is None:
-            self.dc = turtle.Turtle.shapesize(256, 256)
-            dc = self.dc
-            dc.pencolor(255, 255, 255)
-            dc.clear()
-            dc.pencolor(195, 66, 244)
-
-        dc.circle(p.lat, p.lng, 2)
-        dc.fillcolor()
+        draw = ImageDraw.Draw(dc)
+        draw.ellipse((p.x - 2, p.y - 2, p.x + 2, p.y + 2), fill=PEN_COLOR, outline=PEN_COLOR, width=0)
 
     def to_png(self):
         dc = self.dc
-        if dc is None:
-            png = encode_png(dc)
-            return png.bytes()
+        if dc is not None:
+            byteIO = io.BytesIO()
+            dc.save(byteIO, format='PNG')
+            return byteIO.getvalue()
         else:
             return EMPTY_PNG
 

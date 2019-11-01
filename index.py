@@ -4,7 +4,7 @@ import tempfile
 from datetime import datetime
 
 import geojson
-import s2sphere
+from Geometry import Point
 
 import geometry
 import tiles
@@ -56,6 +56,48 @@ class Index:
 
         self.collections[coll.metadata.name] = coll
 
+    def get_collections(self):
+        pass
+
+    def get_item(self, collection_name: str, collection_id: str):
+        coll = self.collections[collection_name]
+        if coll is None:
+            return None
+
+        i = coll.by_id[collection_id]
+        offset = coll.offset[i]
+
+        result = geojson.Feature
+
+        return result
+
+    def get_tile(self, collection: str, zoom: int, x: int, y: int):
+        if x < 0 or y < 0 or zoom < 0 or zoom > 30:
+            return None, CollectionMetadata
+
+        tile_key = tiles.TileKey(x=x, y=y, zoom=zoom)
+        coll = self.collections.get(collection)
+        if coll is None:
+            return None, CollectionMetadata
+
+        scale = 1 << zoom
+
+        tile_bounds = geometry.get_tile_bounds(zoom, x, y)
+        tile_origin = Point(x=(float(x) * 256.0 / float(scale)), y=(float(y) * 256.0 / float(scale)))
+        tile = tiles.Tile()
+
+        for i, feature_bounds in enumerate(coll.bbox):
+            # TODO
+            # if not tile_bounds.intersects(feature_bounds):
+            #   continue
+
+            p = coll.web_mercator[i].__sub__(tile_origin).__mul__(float(scale))
+            tile.draw_point(p)
+
+        png = tile.to_png()
+
+        return png, coll.metadata
+
 
 def make_index(collections: dict, public_path: str):
     index = Index()
@@ -67,48 +109,6 @@ def make_index(collections: dict, public_path: str):
 
     # TODO
     return index
-
-
-def get_collections():
-    pass
-
-
-def get_item(collection_name: str, collection_id: str):
-    coll = Index.collections[collection_name]
-    if coll is None:
-        return None
-
-    i = coll.by_id[collection_id]
-    offset = coll.offset[i]
-
-    result = geojson.Feature
-
-    return result
-
-
-def get_tile(collection: str, zoom: int, x: int, y: int):
-    if x < 0 or y < 0 or zoom < 0 or zoom > 30:
-        return None, CollectionMetadata
-
-    tile_key = tiles.TileKey(x=x, y=y, zoom=zoom)
-    coll = Index.collections.get(collection)
-    if coll is None:
-        return None, CollectionMetadata
-
-    scale = 1 << zoom
-
-    tile_bounds = geometry.get_tile_bounds(zoom, x, y)
-    tile_origin = s2sphere.LatLng(lat=(float(x) * 256.0 / float(scale)), lng=(float(y) * 256.0 / float(scale)))
-    tile = tiles.Tile()
-    for i, feature_bounds in enumerate(coll.bbox):
-        if not tile_bounds.intersects(feature_bounds):
-            continue
-        p = coll.web_mercator[i].__sub__(tile_origin).__mul__(float(scale))
-        tile.draw_point(p)
-
-    png = tile.to_png()
-
-    return png, coll.metadata
 
 
 def read_collection(name, path, if_modified_since):
@@ -143,4 +143,3 @@ def read_collection(name, path, if_modified_since):
         # if i > 0:
         #     data_file.write()
     return coll
-

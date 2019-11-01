@@ -3,8 +3,17 @@ import s2sphere
 import index
 
 
-def handle_tile_request(collection: str, zoom: int, x: int, y: int):
-    return index.get_tile(collection, zoom, x, y)
+class WebServer:
+    index: index.Index
+
+    def handle_tile_request(self, collection: str, zoom: int, x: int, y: int):
+        return self.index.get_tile(collection, zoom, x, y)
+
+
+def make_web_server(idx: index.Index):
+    s = WebServer()
+    s.index = idx
+    return s
 
 
 def handle_collection_request(collection: str, bbox: str, limit: int):
