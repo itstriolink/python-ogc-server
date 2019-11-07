@@ -1,13 +1,16 @@
 import io
+import json
 import os
 import tempfile
 from datetime import datetime
 
 import geojson
+import s2sphere
 from Geometry import Point
 
 import geometry
 import tiles
+import wfs
 
 
 class CollectionMetadata:
@@ -37,6 +40,11 @@ class Collection:
             os.remove(self.data_file.name)
 
 
+class Footer:
+    links: [] = []
+    bbox: [] = []
+
+
 class Index:
     collections: {} = {}
     public_path: str
@@ -59,8 +67,71 @@ class Index:
     def get_collections(self):
         pass
 
-    def get_item(self, collection_name: str, collection_id: str):
-        coll = self.collections[collection_name]
+    def get_items(self,
+                  collection: str, start_id: str, start: int, limit: int,
+                  bbox: s2sphere.LatLngRect, writer: io.BytesIO):
+        coll = self.collections[collection]
+        if coll is None:
+            return CollectionMetadata()
+
+        bounds = s2sphere.LatLngRect()
+        skip = start
+        num_features = 0
+
+        writer.write(bytearray('{"type":"FeatureCollection","features":[', 'utf8'))
+
+        buffer = bytearray(50 * 1024)
+        for i, feature_bounds in enumerate(coll.bbox):
+            if not bbox.intersects(feature_bounds):
+                continue
+
+            if num_features >= limit:
+                next_id = coll.id[i]
+                next_index = i
+                break
+
+            if skip > 0:
+                skip = skip - 1
+                break
+
+            if num_features > 0:
+                writer.write(bytearray(',', 'utf8'))
+
+            b = buffer
+
+            json_len = int(coll.offset[i + 1] - coll.offset[i] - 2)
+
+            if json_len > len(b):
+                b = bytearray(json_len)
+
+            with open(coll.data_file.name, 'rb') as f:
+                f.seek(coll.offset[i])
+                writer.write(f.read(len(b[0:json_len])))
+
+            # writer.write(b[0:json_len])
+
+            num_features += 1
+
+            bounds = bounds.union(feature_bounds)
+
+        writer.write(bytearray('],', 'utf8'))
+
+        footer = Footer()
+
+        self_link = wfs.WFSLink()
+        self_link.rel = "self"
+        self_link.title = "self"
+        self_link.type = "application/geo+json"
+
+        footer.bbox = geometry.encode_bbox(bounds)
+
+        encoded_footer = json.dumps(footer.__dict__)
+
+        writer.write(bytearray(encoded_footer[1:], 'utf8'))
+        return coll.metadata, writer
+
+    def get_item(self, collection: str, collection_id: str):
+        coll = self.collections[collection]
         if coll is None:
             return None
 
@@ -87,9 +158,8 @@ class Index:
         tile = tiles.Tile()
 
         for i, feature_bounds in enumerate(coll.bbox):
-            # TODO
-            # if not tile_bounds.intersects(feature_bounds):
-            #   continue
+            if not tile_bounds.intersects(feature_bounds):
+                continue
 
             p = coll.web_mercator[i].__sub__(tile_origin).__mul__(float(scale))
             tile.draw_point(p)
@@ -116,30 +186,45 @@ def read_collection(name, path, if_modified_since):
 
     mod_time = datetime.fromtimestamp(os.path.getmtime(path))
 
-    with open(abs_path, "r", encoding='utf8') as file:
-        data = file.read()
+    with open(abs_path, "rb") as file:
+        feature_collection = geojson.load(file)
 
     coll = Collection()
     coll.tile_cache = tiles.new_tile_cache(10000)
     coll.metadata = CollectionMetadata(name, path, mod_time)
 
-    feature_collection = geojson.FeatureCollection(geojson.loads(data))
+    file = tempfile.NamedTemporaryFile(prefix="wfs-", suffix=".geojson", mode="wb", delete=False)
 
-    data_file = tempfile.NamedTemporaryFile(prefix="miniwfs-", suffix=".geojson")
+    coll.data_file = file
 
-    coll.data_file = data_file
+    header_size = file.write(bytearray('{"type":"FeatureCollection","features":[\n', 'utf8'))
 
+    pos = int(header_size)
     num_features = len(feature_collection.features)
 
     for i, f in enumerate(feature_collection.features):
         coll.id.append(f.id)
         coll.by_id[f.id] = i
+
         coll.bbox.append(geometry.compute_bounds(f.geometry))
 
         center = coll.bbox[i].get_center()
         coll.web_mercator.append(geometry.project_web_mercator(center))
 
-        # TODO
-        # if i > 0:
-        #     data_file.write()
+        if i > 0:
+            file.write(bytearray(',\n', 'utf8'))
+            pos += 2
+
+        coll.offset.append(pos)
+
+        encoded = geojson.dumps(f, ensure_ascii=False, separators=(',', ':'))
+        encoded_bytes = file.write(bytearray(encoded, 'utf8'))
+
+        pos = pos + int(encoded_bytes)
+
+    coll.offset[len(coll.offset) - 1] = pos + 2
+
+    file.write(bytearray("\n]}\n", 'utf8'))
+    file.close()
+
     return coll

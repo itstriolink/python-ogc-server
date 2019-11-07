@@ -2,7 +2,7 @@ import tempfile
 
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import FileResponse
+from starlette.responses import Response, FileResponse
 
 from index import make_index
 from server import make_web_server
@@ -35,14 +35,14 @@ def main():
     def get_raster_tile(collection: str, zoom: int, x: int, y: int):
         tile, metadata = server.handle_tile_request(collection, zoom, x, y)
 
-        with tempfile.NamedTemporaryFile(mode="w+b", suffix=".png", delete=False) as FOUT:
-            FOUT.write(tile)
-            return FileResponse(FOUT.name, media_type="image/png")
+        with tempfile.NamedTemporaryFile(mode="w+b", suffix=".png", delete=False) as png_file:
+            png_file.write(tile)
+            return FileResponse(png_file.name, media_type="image/png")
 
     @app.get("/collections/{collection}/items")
     def get_items(collection: str, bbox: str, limit: int = None):
-        bbox = server.handle_collection_request(collection, bbox, limit)
-        return bbox
+        content = server.handle_collection_request(collection, bbox, limit)
+        return Response(content=content, headers={"content-type": "application/geo+json"})
 
 
 main()

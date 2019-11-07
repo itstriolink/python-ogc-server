@@ -1,5 +1,5 @@
-import base64
-import io
+from base64 import b64encode
+from io import BytesIO
 
 import Geometry
 from PIL import Image, ImageDraw
@@ -21,7 +21,7 @@ EMPTY_PNG = bytearray([
 ])
 
 
-class Tile(object):
+class Tile:
     dc: Image.Image()
 
     def __init__(self):
@@ -38,9 +38,12 @@ class Tile(object):
     def to_png(self):
         dc = self.dc
         if dc is not None:
-            byteIO = io.BytesIO()
+            byteIO = BytesIO()
             dc.save(byteIO, format='PNG')
-            return byteIO.getvalue()
+            byte_value = byteIO.getvalue()
+            byteIO.close()
+
+            return byte_value
         else:
             return EMPTY_PNG
 
@@ -91,4 +94,4 @@ def put(tile_key, value):
 
 
 def encode_png(png):
-    return base64.b64encode(png)
+    return b64encode(png)
