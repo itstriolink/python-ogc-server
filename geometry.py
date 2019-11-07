@@ -7,17 +7,16 @@ import s2sphere
 
 def compute_bounds(g: geojson.geometry.Geometry):
     r = s2sphere.LatLngRect()
-
     if g is None:
         return r
 
-    if type(g) == geojson.Point:
-        if len(g) >= 2:
+    if type(g) == geojson.geometry.Point:
+        if len(g['coordinates']) >= 2:
             r = r.from_point(s2sphere.LatLng.from_degrees(g['coordinates'][1], g['coordinates'][0]))
         return r
 
     elif type(g) == geojson.geometry.MultiPoint:
-        for p in g.MultiPoint:
+        for p in g['coordinates']:
             if len(p) >= 2:
                 r = r.from_point(s2sphere.LatLng.from_degrees(p[1], p[0]))
         return r
@@ -26,18 +25,18 @@ def compute_bounds(g: geojson.geometry.Geometry):
         return compute_line_bounds(g['coordinates'])
 
     elif type(g) == geojson.geometry.MultiLineString:
-        for line in g.MultiLineString:
+        for line in g['coordinates']:
             r = r.union((compute_line_bounds(line)))
         return r
 
     elif type(g) == geojson.geometry.Polygon:
         for ring in g['coordinates']:
             r = r.union(compute_line_bounds(ring))
-        # s2sphere.expandforsubregions(r)
+        # s2sphere.LatLngRect.expanded(r, 100)
         return r
 
     elif type(g) == geojson.geometry.MultiPolygon:
-        for poly in g.MultiPolygon:
+        for poly in g['coordinates']:
             for ring in poly:
                 r = r.union(compute_line_bounds(ring))
             # s2sphere.expandforsubregions(r)
@@ -64,11 +63,11 @@ def encode_bbox(r: s2sphere.LatLngRect):
     if r.is_empty():
         return None
     else:
-        bbox = list[r.lo().lng().degrees(),
-                    r.lo().lat().degrees(),
-                    r.hi().lng().degrees(),
-                    r.hi().lat().degrees()]
-        return bbox
+        bbox = [r.lo().lng().degrees,
+                r.lo().lat().degrees,
+                r.hi().lng().degrees,
+                r.hi().lat().degrees]
+        return bbox[0:4]
 
 
 def get_tile_bounds(zoom: int, x: int, y: int):
