@@ -3,6 +3,7 @@ import math
 import Geometry
 import geojson
 import s2sphere
+from numpy import exp2
 
 
 def compute_bounds(g: geojson.geometry.Geometry):
@@ -71,8 +72,8 @@ def encode_bbox(r: s2sphere.LatLngRect):
 
 
 def get_tile_bounds(zoom: int, x: int, y: int):
-    r = s2sphere.LatLngRect.from_point(unproject_web_mercator(zoom, float(x), float(y)))
-    return r.from_point(unproject_web_mercator(zoom, float(x + 1), float(y + 1)))
+    return s2sphere.LatLngRect(unproject_web_mercator(zoom, float(x + 1), float(y + 1)),
+                               unproject_web_mercator(zoom, float(x), float(y)))
 
 
 def project_web_mercator(p: s2sphere.LatLng):
@@ -85,7 +86,7 @@ def project_web_mercator(p: s2sphere.LatLng):
 
 
 def unproject_web_mercator(zoom: int, x: float, y: float):
-    n = math.pi - 2.0 * math.pi * y / math.exp(float(zoom))
+    n = math.pi - 2.0 * math.pi * y / exp2(float(zoom))
     lat = 180.0 / math.pi * math.atan(0.5 * (math.exp(n) - math.exp(-n)))
     lng = x / math.exp(float(zoom)) * 360.0 - 180.0
 
