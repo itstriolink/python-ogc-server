@@ -1,4 +1,5 @@
 import io
+import os
 
 import s2sphere
 
@@ -21,6 +22,13 @@ class WebServer:
 
         metadata, features = self.index.get_items(collection, start_id, start, limit, bbox, features)
         return features.getvalue()
+
+    def exit_handler(self):
+        collections = self.index.collections.values()
+        for collection in collections:
+            file_name = collection.data_file.name
+            if os.path.exists(file_name):
+                os.remove(file_name)
 
 
 def make_web_server(idx: index.Index):

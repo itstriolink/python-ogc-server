@@ -1,3 +1,4 @@
+import atexit
 import tempfile
 
 from fastapi import FastAPI
@@ -12,37 +13,45 @@ app.add_middleware(
     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
 )
 
-CASTLES_PATH = r'C:\Users\labia\Desktop\HSR\Semester 1\Courses\Z_ProjektArbeit\python-wfs-server\osm-castles-CH.geojson'
+CASTLES_PATH = r'.\osm-castles-CH.geojson'
 WEB_HOST_URL = r'http://127.0.0.1:8000'
 
 
 def main():
-    coll = {'castles': CASTLES_PATH}
+    server = None
 
+    coll = {'castles': CASTLES_PATH}
     idx = make_index(coll, WEB_HOST_URL)
 
     server = make_web_server(idx)
+    try:
 
-    @app.get("/")
-    def index():
-        return "This is the index page!"
+        @app.get("/")
+        def index():
+            return "This is the index page!"
 
-    @app.get("/hello/world")
-    def hello_world():
-        return "Hello " + "World"
+        @app.get("/hello/world")
+        def hello_world():
+            return "Hello " + "World"
 
-    @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
-    def get_raster_tile(collection: str, zoom: int, x: int, y: int):
-        tile, metadata = server.handle_tile_request(collection, zoom, x, y)
+        @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
+        def get_raster_tile(collection: str, zoom: int, x: int, y: int):
+            tile, metadata = server.handle_tile_request(collection, zoom, x, y)
 
-        with tempfile.NamedTemporaryFile(mode="w+b", suffix=".png", delete=False) as png_file:
-            png_file.write(tile)
-            return FileResponse(png_file.name, media_type="image/png")
+            with tempfile.NamedTemporaryFile(mode="w+b", suffix=".png", delete=False) as png_file:
+                png_file.write(tile)
+                return FileResponse(png_file.name, media_type="image/png")
 
-    @app.get("/collections/{collection}/items")
-    def get_items(collection: str, bbox: str, limit: int = None):
-        content = server.handle_collection_request(collection, bbox, limit)
-        return Response(content=content, headers={"content-type": "application/geo+json"})
+        @app.get("/collections/{collection}/items")
+        def get_items(collection: str, bbox: str, limit: int = None):
+            content = server.handle_collection_request(collection, bbox, limit)
+            return Response(content=content, headers={"content-type": "application/geo+json"})
+
+        atexit.register(server.exit_handler)
+    except:
+        server.exit_handler()
+    finally:
+        pass
 
 
 main()
