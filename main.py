@@ -3,7 +3,7 @@ import tempfile
 
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import Response, FileResponse
+from starlette.responses import Response, FileResponse, JSONResponse
 
 from index import make_index
 from server import make_web_server
@@ -25,14 +25,14 @@ def main():
 
     server = make_web_server(idx)
     try:
-
         @app.get("/")
         def index():
-            return "This is the index page!"
+            return "This is a WFS server written in Python that serves geoJSON objects and PNG raster tiles!"
 
-        @app.get("/hello/world")
-        def hello_world():
-            return "Hello " + "World"
+        @app.get("/collections/{collection}/items")
+        def get_collection(collection: str, bbox: str, limit: int = None):
+            content = server.handle_collection_request(collection, bbox, limit)
+            return Response(content=content, headers={"content-type": "application/geo+json"})
 
         @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
         def get_raster_tile(collection: str, zoom: int, x: int, y: int):
@@ -42,10 +42,10 @@ def main():
                 png_file.write(tile)
                 return FileResponse(png_file.name, media_type="image/png")
 
-        @app.get("/collections/{collection}/items")
-        def get_items(collection: str, bbox: str, limit: int = None):
-            content = server.handle_collection_request(collection, bbox, limit)
-            return Response(content=content, headers={"content-type": "application/geo+json"})
+        @app.get("/collections/{collection}/items/{feature_id}")
+        def get_feature_info(collection: str, feature_id: str):
+            content = server.handle_feature_request(collection, feature_id)
+            return JSONResponse(content=content, headers={"content-type": "application/geo+json"})
 
         atexit.register(server.exit_handler)
     except:

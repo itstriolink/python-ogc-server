@@ -9,9 +9,6 @@ import index
 class WebServer:
     index: index.Index
 
-    def handle_tile_request(self, collection: str, zoom: int, x: int, y: int):
-        return self.index.get_tile(collection, zoom, x, y)
-
     def handle_collection_request(self, collection: str, bbox: str, limit: int = None):
         bbox = parse_bbox(bbox)
         start_id = ''
@@ -22,6 +19,14 @@ class WebServer:
 
         metadata, features = self.index.get_items(collection, start_id, start, limit, bbox, features)
         return features.getvalue()
+
+    def handle_tile_request(self, collection: str, zoom: int, x: int, y: int):
+        tile = self.index.get_tile(collection, zoom, x, y)
+        return tile
+
+    def handle_feature_request(self, collection: str, feature_id: str):
+        feature = self.index.get_item(collection, feature_id)
+        return feature
 
     def exit_handler(self):
         collections = self.index.collections.values()

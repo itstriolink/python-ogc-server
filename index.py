@@ -130,17 +130,29 @@ class Index:
         writer.write(bytearray(encoded_footer[1:], 'utf8'))
         return coll.metadata, writer
 
-    def get_item(self, collection: str, collection_id: str):
+    def get_item(self, collection: str, feature_id: str):
         coll = self.collections[collection]
+
         if coll is None:
             return None
 
-        i = coll.by_id[collection_id]
+        if feature_id not in coll.by_id:
+            return "This feature does not exist in the collection"
+
+        i = coll.by_id[feature_id]
         offset = coll.offset[i]
 
-        result = geojson.Feature
+        json_len = int(coll.offset[i + 1] - offset - 2)
+        writer = io.BytesIO()
+        b = bytearray(json_len)
 
-        return result
+        with open(coll.data_file.name, 'rb') as f:
+            f.seek(coll.offset[i])
+            writer.write(f.read(len(b[0:json_len])))
+
+        feature = geojson.loads(writer.getvalue().decode('utf8'))
+
+        return feature
 
     def get_tile(self, collection: str, zoom: int, x: int, y: int):
         if x < 0 or y < 0 or zoom < 0 or zoom > 30:
