@@ -70,6 +70,9 @@ class Index:
     def get_items(self,
                   collection: str, start_id: str, start: int, limit: int,
                   bbox: s2sphere.LatLngRect, writer: io.BytesIO):
+        if collection not in self.collections:
+            return None, None, "This collection type does not exist"
+
         coll = self.collections[collection]
         if coll is None:
             return CollectionMetadata()
@@ -124,11 +127,11 @@ class Index:
         self_link.type = "application/geo+json"
 
         footer.bbox = geometry.encode_bbox(bounds)
-
         encoded_footer = json.dumps(footer.__dict__)
 
         writer.write(bytearray(encoded_footer[1:], 'utf8'))
-        return coll.metadata, writer
+
+        return coll.metadata, writer, None
 
     def get_item(self, collection: str, feature_id: str):
         coll = self.collections[collection]
