@@ -1,0 +1,16 @@
+before_script: []
+stages: [
+  "build",
+]
+
+build_docu:
+  image: "thomasweise/texlive"
+  stage: "build"
+  script: [
+      "cd documentation",
+      "pdflatex.sh Main.tex",
+      ]
+  artifacts:
+    paths:
+      - documentation/Main.pdf
+    expire_in: "1 week"
