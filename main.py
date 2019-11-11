@@ -5,8 +5,8 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response, FileResponse, JSONResponse
 
-from index import make_index
-from server import make_web_server
+from classes.index import make_index
+from classes.server import make_web_server
 
 app = FastAPI()
 app.add_middleware(
@@ -15,6 +15,12 @@ app.add_middleware(
 
 CASTLES_PATH = r'.\osm-castles-CH.geojson'
 WEB_HOST_URL = r'http://127.0.0.1:8000'
+SHORT_INDEX_MESSAGE = 'This is a WFS server written in Python that serves GeoJSON objects and PNG raster tiles!'
+INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
+                'Available API methods: </br>' \
+                '1. /collections/{collection_type}/items?{bbox}{limit}</br>' \
+                '2. /tiles/castles/{zoom}/{x}/{y}.png/</br>' \
+                '3. /collections{collection_type}/items/{feature_id}'
 
 
 def main():
@@ -27,7 +33,7 @@ def main():
     try:
         @app.get("/")
         def index():
-            return "This is a WFS server written in Python that serves geoJSON objects and PNG raster tiles!"
+            return Response(content=SHORT_INDEX_MESSAGE)
 
         @app.get("/collections/{collection}/items")
         def get_collection(collection: str, bbox: str, limit: int = None):

@@ -8,9 +8,7 @@ import geojson
 import s2sphere
 from Geometry import Point
 
-import geometry
-import tiles
-import wfs
+from classes import wfs, tiles, geometry
 
 
 class CollectionMetadata:
@@ -140,7 +138,7 @@ class Index:
             return None
 
         if feature_id not in coll.by_id:
-            return "This feature does not exist in the collection"
+            return f"This feature does not exist in the {collection} collection"
 
         i = coll.by_id[feature_id]
         offset = coll.offset[i]

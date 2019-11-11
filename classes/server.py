@@ -4,7 +4,7 @@ import os
 
 import s2sphere
 
-import index
+from classes import index
 
 
 class WebServer:
