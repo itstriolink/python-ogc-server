@@ -1,6 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import Response, JSONResponse
+from starlette.responses import Response
 
 from classes.index import make_index
 from classes.server import make_web_server
@@ -39,19 +39,41 @@ def main():
         return Response(content=SHORT_INDEX_MESSAGE)
 
     @app.get("/collections/{collection}/items")
-    def get_collection_items(collection: str, bbox: str, limit: int = None):
-        content = server.handle_collection_request(collection, bbox, limit)
-        return JSONResponse(content=content, headers={"content-type": "application/geo+json"})
+    def get_collection_items(collection: str, bbox: str, limit=None):
+        content, http_response = server.handle_collection_request(collection, bbox, limit)
+
+        if http_response is not None:
+            raise HTTPException(status_code=http_response.status_code, detail=http_response.detail)
+        else:
+            return Response(content=content,
+                            headers={
+                                "content-type": "application/geo+json",
+                                "content-length": str(len(content))
+                            }
+                            )
 
     @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
     def get_raster_tile(collection: str, zoom: int, x: int, y: int):
-        content, metadata = server.handle_tile_request(collection, zoom, x, y)
-        return Response(content=content, media_type="image/png")
+        content, metadata, http_response = server.handle_tile_request(collection, zoom, x, y)
+
+        if http_response is not None:
+            raise HTTPException(status_code=http_response.status_code, detail=http_response.detail)
+        else:
+            return Response(content=content, media_type="image/png")
 
     @app.get("/collections/{collection}/items/{feature_id}")
     def get_feature_info(collection: str, feature_id: str):
-        content = server.handle_feature_request(collection, feature_id)
-        return JSONResponse(content=content, headers={"content-type": "application/geo+json"})
+        content, http_response = server.handle_feature_request(collection, feature_id)
+
+        if http_response is not None:
+            raise HTTPException(status_code=http_response.status_code, detail=http_response.detail)
+        else:
+            return Response(content=content,
+                            headers={
+                                "content-type": "application/geo+json",
+                                "content-length": str(len(content))
+                            }
+                            )
 
 
 main()

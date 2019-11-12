@@ -69,7 +69,8 @@ class Index:
                   collection: str, start_id: str, start: int, limit: int,
                   bbox: s2sphere.LatLngRect, writer: io.BytesIO):
         if collection not in self.collections:
-            return None, None, f"The collection type \"{collection}\" does not exist"
+            from classes.server import HTTPResponses
+            return None, None, HTTPResponses.ITEM_NOT_FOUND
 
         coll = self.collections[collection]
 
@@ -133,12 +134,13 @@ class Index:
 
     def get_item(self, collection: str, feature_id: str):
         if collection not in self.collections:
-            return f"The collection type \"{collection}\" does not exist"
+            from classes.server import HTTPResponses
+            return None, HTTPResponses.ITEM_NOT_FOUND
 
         coll = self.collections[collection]
 
         if feature_id not in coll.by_id:
-            return f"This feature does not exist in the {collection} collection"
+            return None, None
 
         i = coll.by_id[feature_id]
         offset = coll.offset[i]
@@ -153,15 +155,17 @@ class Index:
 
         feature = geojson.loads(writer.getvalue().decode('utf8'))
 
-        return feature
+        return feature, None
 
     def get_tile(self, collection: str, zoom: int, x: int, y: int):
         if x < 0 or y < 0 or zoom < 0 or zoom > 30:
-            return "Wrong parameters in the x, y, z", CollectionMetadata()
+            from classes.server import HTTPResponses
+            return None, CollectionMetadata, HTTPResponses.ITEM_NOT_FOUND
 
         tile_key = tiles.TileKey(x=x, y=y, zoom=zoom)
         if collection not in self.collections:
-            return f"The collection type \"{collection}\" does not exist", CollectionMetadata()
+            from classes.server import HTTPResponses
+            return None, CollectionMetadata, HTTPResponses.ITEM_NOT_FOUND
 
         coll = self.collections.get(collection)
 
@@ -180,7 +184,7 @@ class Index:
 
         png = tile.to_png()
 
-        return png, coll.metadata
+        return png, coll.metadata, None
 
 
 def make_index(collections: dict, public_path: str):
