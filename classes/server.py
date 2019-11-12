@@ -12,8 +12,8 @@ MAX_LIMIT = 1000
 
 
 class HTTPResponses:
-    ITEM_NOT_FOUND = HTTPException(status_code=404, detail="Collection not found")
-    WRONG_PARAMETER_FORMAT = HTTPException(status_code=400, detail="Malformed parameters")
+    NOT_FOUND = HTTPException(status_code=404, detail="Collection not found")
+    BAD_REQUEST = HTTPException(status_code=400, detail="Malformed parameters")
 
 
 class WebServer:
@@ -23,7 +23,7 @@ class WebServer:
         bbox, http_response = parse_bbox(bbox)
 
         if http_response is not None:
-            return http_response
+            return None, http_response
 
         start_id = ''
         start = 0
@@ -32,25 +32,18 @@ class WebServer:
         if limit is None:
             limit = DEFAULT_LIMIT
         elif not limit.isdigit():
-            return None, HTTPResponses.WRONG_PARAMETER_FORMAT
+            return None, HTTPResponses.BAD_REQUEST
 
         limit = int(limit)
 
         if limit <= 0:
             limit = 1
-        elif not limit > 0 and limit < MAX_LIMIT:
-            return None, HTTPResponses.WRONG_PARAMETER_FORMAT
-        else:
-            limit = int(limit)
+        elif not (0 < limit < MAX_LIMIT):
+            return None, HTTPResponses.BAD_REQUEST
 
         metadata, features, response = self.index.get_items(collection, start_id, start, limit, bbox, features)
 
-        return json.dumps(features,
-                          ensure_ascii=False,
-                          allow_nan=False,
-                          indent=None,
-                          separators=(",", ":"),
-                          ).encode("utf-8"), response
+        return json_dumps_for_response(features), response
 
     def handle_tile_request(self, collection: str, zoom: int, x: int, y: int):
         tile, metadata, response = self.index.get_tile(collection, zoom, x, y)
@@ -58,12 +51,7 @@ class WebServer:
 
     def handle_feature_request(self, collection: str, feature_id: str):
         feature, response = self.index.get_item(collection, feature_id)
-        return json.dumps(feature,
-                          ensure_ascii=False,
-                          allow_nan=False,
-                          indent=None,
-                          separators=(",", ":"),
-                          ).encode("utf-8"), response
+        return json_dumps_for_response(feature), response
 
     def exit_handler(self):
         collections = self.index.collections.values()
@@ -90,7 +78,10 @@ def parse_bbox(s: str):
     n = []
 
     for part in parts:
-        n.append(float(str.strip(part)))
+        try:
+            n.append(float(str.strip(part)))
+        except ValueError:
+            return None, HTTPResponses.BAD_REQUEST
 
     if len(n) == 4:
         bbox = bbox.from_point_pair(s2sphere.LatLng.from_degrees(n[1], n[0]), s2sphere.LatLng.from_degrees(n[3], n[2]))
@@ -104,4 +95,13 @@ def parse_bbox(s: str):
         if bbox.is_valid():
             return bbox, None
 
-    return s2sphere.LatLngRect(), HTTPResponses.WRONG_PARAMETER_FORMAT
+    return s2sphere.LatLngRect(), HTTPResponses.BAD_REQUEST
+
+
+def json_dumps_for_response(data):
+    return json.dumps(data,
+                      ensure_ascii=False,
+                      allow_nan=False,
+                      indent=None,
+                      separators=(",", ":"),
+                      ).encode("utf-8")

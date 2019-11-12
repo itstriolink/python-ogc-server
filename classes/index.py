@@ -70,7 +70,7 @@ class Index:
                   bbox: s2sphere.LatLngRect, writer: io.BytesIO):
         if collection not in self.collections:
             from classes.server import HTTPResponses
-            return None, None, HTTPResponses.ITEM_NOT_FOUND
+            return None, None, HTTPResponses.NOT_FOUND
 
         coll = self.collections[collection]
 
@@ -135,7 +135,7 @@ class Index:
     def get_item(self, collection: str, feature_id: str):
         if collection not in self.collections:
             from classes.server import HTTPResponses
-            return None, HTTPResponses.ITEM_NOT_FOUND
+            return None, HTTPResponses.NOT_FOUND
 
         coll = self.collections[collection]
 
@@ -160,12 +160,12 @@ class Index:
     def get_tile(self, collection: str, zoom: int, x: int, y: int):
         if x < 0 or y < 0 or zoom < 0 or zoom > 30:
             from classes.server import HTTPResponses
-            return None, CollectionMetadata, HTTPResponses.ITEM_NOT_FOUND
+            return None, CollectionMetadata, HTTPResponses.NOT_FOUND
 
         tile_key = tiles.TileKey(x=x, y=y, zoom=zoom)
         if collection not in self.collections:
             from classes.server import HTTPResponses
-            return None, CollectionMetadata, HTTPResponses.ITEM_NOT_FOUND
+            return None, CollectionMetadata, HTTPResponses.NOT_FOUND
 
         coll = self.collections.get(collection)
 

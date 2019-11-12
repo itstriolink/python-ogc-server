@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import Response
+from starlette.responses import Response, HTMLResponse
 
 from classes.index import make_index
 from classes.server import make_web_server
@@ -13,12 +13,18 @@ app.add_middleware(
 CASTLES_PATH = r'.\osm-castles-CH.geojson'
 WEB_HOST_URL = r'http://127.0.0.1:8000'
 
-SHORT_INDEX_MESSAGE = 'This is a WFS server written in Python that serves GeoJSON objects and PNG raster tiles'
+SHORT_INDEX_MESSAGE = 'This is a MiniWFS server written in Python ' \
+                      '<a href=\"https://gitlab.com/labiangashi/python-wfs-server\" ' \
+                      'target="_blank" title="Repository">here</a> ' \
+                      'that serves GeoJSON objects and PNG raster tiles <br />'
 INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
-                'Available API methods: </br>' \
-                '1. /collections/{collection_type}/items?{bbox}{limit} </br>' \
-                '2. /tiles/castles/{zoom}/{x}/{y}.png/ </br>' \
-                '3. /collections{collection_type}/items/{feature_id}'
+                '<br/>' \
+                '<strong>Available API methods: </strong></br>' \
+                '<ol>' \
+                '<li><i>/collections/{collection_name}/items?{bbox}{limit} </i></li>' \
+                '<li><i>/tiles/{collection_name}/{zoom}/{x}/{y}.png</i></li>' \
+                '<li><i>/collections{collection_name}/items/{feature_id}</i></li>' \
+                '</ol>'
 
 
 def main():
@@ -36,7 +42,7 @@ def main():
 
     @app.get("/")
     def index():
-        return Response(content=SHORT_INDEX_MESSAGE)
+        return HTMLResponse(content=INDEX_MESSAGE)
 
     @app.get("/collections/{collection}/items")
     def get_collection_items(collection: str, bbox: str, limit=None):
