@@ -140,7 +140,8 @@ class Index:
         coll = self.collections[collection]
 
         if feature_id not in coll.by_id:
-            return None, None
+            from classes.server import HTTPResponses
+            return None, HTTPResponses.NOT_FOUND
 
         i = coll.by_id[feature_id]
         offset = coll.offset[i]

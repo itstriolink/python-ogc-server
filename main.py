@@ -65,7 +65,11 @@ def main():
         if http_response is not None:
             return Response(content=None, status_code=http_response.status_code)
         else:
-            return Response(content=content, media_type="image/png")
+            return Response(content=content,
+                            headers={
+                                "content-type": "image/png",
+                                "content-length": str(len(content))
+                            })
 
     @app.get("/collections/{collection}/items/{feature_id}")
     def get_feature_info(collection: str, feature_id: str):
@@ -78,8 +82,7 @@ def main():
                             headers={
                                 "content-type": "application/geo+json",
                                 "content-length": str(len(content))
-                            }
-                            )
+                            })
 
 
 main()
