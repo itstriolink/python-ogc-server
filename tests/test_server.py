@@ -1,6 +1,6 @@
 import unittest
 
 
-class TestWFS(unittest.TestCase):
+class TestServer(unittest.TestCase):
     # TODO
     pass

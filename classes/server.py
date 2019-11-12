@@ -1,5 +1,4 @@
 import io
-import json
 import os
 
 import s2sphere
@@ -21,9 +20,9 @@ class WebServer:
         metadata, features, error = self.index.get_items(collection, start_id, start, limit, bbox, features)
 
         if error is not None:
-            return json.dumps(error)
+            return error
         else:
-            return features.getvalue()
+            return features
 
     def handle_tile_request(self, collection: str, zoom: int, x: int, y: int):
         tile = self.index.get_tile(collection, zoom, x, y)

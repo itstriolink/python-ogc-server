@@ -69,11 +69,9 @@ class Index:
                   collection: str, start_id: str, start: int, limit: int,
                   bbox: s2sphere.LatLngRect, writer: io.BytesIO):
         if collection not in self.collections:
-            return None, None, "This collection type does not exist"
+            return None, None, f"The collection type \"{collection}\" does not exist"
 
         coll = self.collections[collection]
-        if coll is None:
-            return CollectionMetadata()
 
         bounds = s2sphere.LatLngRect()
         skip = start
@@ -129,13 +127,15 @@ class Index:
 
         writer.write(bytearray(encoded_footer[1:], 'utf8'))
 
-        return coll.metadata, writer, None
+        features = geojson.loads(writer.getvalue().decode('utf8'))
+
+        return coll.metadata, features, None
 
     def get_item(self, collection: str, feature_id: str):
-        coll = self.collections[collection]
+        if collection not in self.collections:
+            return f"The collection type \"{collection}\" does not exist"
 
-        if coll is None:
-            return None
+        coll = self.collections[collection]
 
         if feature_id not in coll.by_id:
             return f"This feature does not exist in the {collection} collection"
@@ -157,12 +157,13 @@ class Index:
 
     def get_tile(self, collection: str, zoom: int, x: int, y: int):
         if x < 0 or y < 0 or zoom < 0 or zoom > 30:
-            return None, CollectionMetadata
+            return "Wrong parameters in the x, y, z", CollectionMetadata()
 
         tile_key = tiles.TileKey(x=x, y=y, zoom=zoom)
+        if collection not in self.collections:
+            return f"The collection type \"{collection}\" does not exist", CollectionMetadata()
+
         coll = self.collections.get(collection)
-        if coll is None:
-            return None, CollectionMetadata
 
         scale = 1 << zoom
 
@@ -198,6 +199,9 @@ def read_collection(name, path, if_modified_since):
     abs_path = os.path.abspath(path)
 
     mod_time = datetime.fromtimestamp(os.path.getmtime(path))
+
+    if not os.path.exists(abs_path):
+        return None
 
     with open(abs_path, "rb") as file:
         feature_collection = geojson.load(file)

@@ -3,7 +3,7 @@ stages: [
   "build",
 ]
 
-build_docu:
+build_documentation:
   image: "thomasweise/texlive"
   stage: "build"
   script: [

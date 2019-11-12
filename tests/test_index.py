@@ -22,14 +22,16 @@ def create_test_index(test: unittest.TestCase):
 class TestIndex(unittest.TestCase):
     def test_get_items_empty_bbox(self):
         index = create_test_index(self)
-        items = get_items(index, "castles", None, 0, 100, s2sphere.LatLngRect)
+        items, _, _ = get_items(index, "castles", '', 0, 100, s2sphere.LatLngRect)
         # TODO
+        print(items)
         pass
 
 
 def get_items(index: classes.index.Index, collection: str, start_id: str, start_index: int, limit: int,
               bounding_box: s2sphere.LatLngRect):
     writer = io.BytesIO()
+
     metadata, features, info = index.get_items(collection, start_id, start_index, limit, bounding_box, writer)
 
     if info is not None:
