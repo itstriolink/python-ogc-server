@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response, HTMLResponse
 
@@ -49,7 +49,7 @@ def main():
         content, http_response = server.handle_collection_request(collection, bbox, limit)
 
         if http_response is not None:
-            raise HTTPException(status_code=http_response.status_code, detail=http_response.detail)
+            return Response(content=None, status_code=http_response.status_code)
         else:
             return Response(content=content,
                             headers={
@@ -63,7 +63,7 @@ def main():
         content, metadata, http_response = server.handle_tile_request(collection, zoom, x, y)
 
         if http_response is not None:
-            raise HTTPException(status_code=http_response.status_code, detail=http_response.detail)
+            return Response(content=None, status_code=http_response.status_code)
         else:
             return Response(content=content, media_type="image/png")
 
@@ -72,7 +72,7 @@ def main():
         content, http_response = server.handle_feature_request(collection, feature_id)
 
         if http_response is not None:
-            raise HTTPException(status_code=http_response.status_code, detail=http_response.detail)
+            return Response(content=None, status_code=http_response.status_code)
         else:
             return Response(content=content,
                             headers={
