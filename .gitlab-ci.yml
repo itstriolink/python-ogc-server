@@ -9,6 +9,14 @@ compile_pdf:
     paths: 
       - documentation/Main.pdf  # instruct GitLab to keep the main.pdf file
 
+test_job:
+stage: test
+image: python:3.6-slim
+script: [
+  "echo 'Running tests'",
+  "python -m unittest discover -s './tests/'",
+]
+
 pages:
   stage: deploy
   script:
