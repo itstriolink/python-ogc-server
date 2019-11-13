@@ -13,7 +13,7 @@ pages:
   stage: deploy
   script:
     - mkdir public  # create a folder called public
-    - cp main.pdf public  # copy the pdf file into the public folder
+    - cp documentation/Main.pdf public  # copy the pdf file into the public folder
   artifacts:
     paths: 
       - public  # instruct GitLab to keep the public folder
