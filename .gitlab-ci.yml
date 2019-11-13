@@ -1,18 +1,21 @@
-#test_job:
-#  stage: test
-#  image: python:3.6-slim
-#  script: [
-#    "echo 'Running tests'",
-#    "python -m unittest discover -s './tests/'",
-#  ]
+test_job:
+  stage: test
+  image: python:3.7
+  before_script:
+    - python --version
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+  script:
+    - echo "Running tests"
+    - python -m unittest discover -s "./tests/"
+
 
 compile_pdf:
   stage: build
   image: timnn/texlive  # use a Docker image for LaTeX from https://hub.docker.com/
-  script: [
-    "cd documentation",
-    "pdflatex Main.tex",
-  ]
+  script:
+    - cd documentation
+    - pdflatex Main.tex
   artifacts:
     paths: 
       - documentation/Main.pdf  # instruct GitLab to keep the main.pdf file
