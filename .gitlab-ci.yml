@@ -1,16 +1,21 @@
-before_script: []
-stages: [
-  "build",
-]
-
-build_documentation:
-  image: "thomasweise/texlive"
-  stage: "build"
+compile_pdf:
+  stage: build
+  image: timnn/texlive  # use a Docker image for LaTeX from https://hub.docker.com/
   script: [
-      "cd documentation",
-      "pdflatex.sh Main.tex",
-      ]
+    "cd documentation",
+    "pdflatex Main.tex",
+  ]
   artifacts:
-    paths:
-      - documentation/Main.pdf
-    expire_in: "1 week"
+    paths: 
+      - documentation/Main.pdf  # instruct GitLab to keep the main.pdf file
+
+pages:
+  stage: deploy
+  script:
+    - mkdir public  # create a folder called public
+    - cp main.pdf public  # copy the pdf file into the public folder
+  artifacts:
+    paths: 
+      - public  # instruct GitLab to keep the public folder
+  only: 
+    - master  # deploy the pdf only for commits made to the master branch
