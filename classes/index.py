@@ -203,10 +203,10 @@ def make_index(collections: dict, public_path: str):
 def read_collection(name, path, if_modified_since):
     abs_path = os.path.abspath(path)
 
-    mod_time = datetime.fromtimestamp(os.path.getmtime(path))
-
     if not os.path.exists(abs_path):
         return None
+
+    mod_time = datetime.fromtimestamp(os.path.getmtime(abs_path))
 
     with open(abs_path, "rb") as file:
         feature_collection = geojson.load(file)

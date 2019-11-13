@@ -20,12 +20,11 @@ def create_test_index(test: unittest.TestCase):
 
 
 class TestIndex(unittest.TestCase):
-    def test_get_items_empty_bbox(self):
-        index = create_test_index(self)
-        items, _, _ = get_items(index, "castles", '', 0, 100, s2sphere.LatLngRect)
-        # TODO
-        print(items)
-        pass
+    # def test_get_items_empty_bbox(self):
+    #    index = create_test_index(self)
+    #    items, _, _ = get_items(index, "castles", '', 0, 100, s2sphere.LatLngRect)
+    #    # TODO
+    pass
 
 
 def get_items(index: classes.index.Index, collection: str, start_id: str, start_index: int, limit: int,

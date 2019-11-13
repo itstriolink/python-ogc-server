@@ -39,50 +39,52 @@ def main():
         raise RuntimeError("Something went wrong while trying to create the collection")
     finally:
         pass
+    try:
+        @app.get("/")
+        def index():
+            return HTMLResponse(content=INDEX_MESSAGE)
 
-    @app.get("/")
-    def index():
-        return HTMLResponse(content=INDEX_MESSAGE)
+        @app.get("/collections/{collection}/items")
+        def get_collection_items(collection: str, bbox: str, limit=None):
+            content, http_response = server.handle_collection_request(collection, bbox, limit)
 
-    @app.get("/collections/{collection}/items")
-    def get_collection_items(collection: str, bbox: str, limit=None):
-        content, http_response = server.handle_collection_request(collection, bbox, limit)
+            if http_response is not None:
+                return Response(content=None, status_code=http_response.status_code)
+            else:
+                return Response(content=content,
+                                headers={
+                                    "content-type": "application/geo+json",
+                                    "content-length": str(len(content))
+                                }
+                                )
 
-        if http_response is not None:
-            return Response(content=None, status_code=http_response.status_code)
-        else:
-            return Response(content=content,
-                            headers={
-                                "content-type": "application/geo+json",
-                                "content-length": str(len(content))
-                            }
-                            )
+        @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
+        def get_raster_tile(collection: str, zoom: int, x: int, y: int):
+            content, metadata, http_response = server.handle_tile_request(collection, zoom, x, y)
 
-    @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
-    def get_raster_tile(collection: str, zoom: int, x: int, y: int):
-        content, metadata, http_response = server.handle_tile_request(collection, zoom, x, y)
+            if http_response is not None:
+                return Response(content=None, status_code=http_response.status_code)
+            else:
+                return Response(content=content,
+                                headers={
+                                    "content-type": "image/png",
+                                    "content-length": str(len(content))
+                                })
 
-        if http_response is not None:
-            return Response(content=None, status_code=http_response.status_code)
-        else:
-            return Response(content=content,
-                            headers={
-                                "content-type": "image/png",
-                                "content-length": str(len(content))
-                            })
+        @app.get("/collections/{collection}/items/{feature_id}")
+        def get_feature_info(collection: str, feature_id: str):
+            content, http_response = server.handle_feature_request(collection, feature_id)
 
-    @app.get("/collections/{collection}/items/{feature_id}")
-    def get_feature_info(collection: str, feature_id: str):
-        content, http_response = server.handle_feature_request(collection, feature_id)
-
-        if http_response is not None:
-            return Response(content=None, status_code=http_response.status_code)
-        else:
-            return Response(content=content,
-                            headers={
-                                "content-type": "application/geo+json",
-                                "content-length": str(len(content))
-                            })
+            if http_response is not None:
+                return Response(content=None, status_code=http_response.status_code)
+            else:
+                return Response(content=content,
+                                headers={
+                                    "content-type": "application/geo+json",
+                                    "content-length": str(len(content))
+                                })
+    except:
+        return Response(content=None, status_code=500)
 
 
 main()
