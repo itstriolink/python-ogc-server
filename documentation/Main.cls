@@ -193,7 +193,7 @@
 			{\large \facname \par}
 			{\large \deptname \par}
 			\bigskip
-			{\large Advisor Professor Stefan Keller \par}
+			{\large Advisor Prof. Stefan Keller \par}
 			\bigskip
 			{\large \univname \par}
 			\bigskip

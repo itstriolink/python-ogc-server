@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7200 64-bit) (preloaded format=pdflatex 2019.11.2)  8 NOV 2019 18:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7200 64-bit) (preloaded format=pdflatex 2019.11.2)  13 NOV 2019 08:07
 entering extended mode
 **./Main.tex
 (Main.tex
@@ -1040,13 +1040,13 @@ Package epstopdf Info: Source file: <Logos/HSR_Logo_CMYK.eps>
 verted-to.pdf Logos/HSR_Logo_CMYK.eps>
 (epstopdf)             \includegraphics on input line 12.
 Package epstopdf Info: Output file is already uptodate.
-<Logos/HSR_Logo_CMYK-eps-converted-to.pdf, id=50, 184.69pt x 72.27pt>
+<Logos/HSR_Logo_CMYK-eps-converted-to.pdf, id=118, 184.69pt x 72.27pt>
 File: Logos/HSR_Logo_CMYK-eps-converted-to.pdf Graphic file (type pdf)
 <use Logos/HSR_Logo_CMYK-eps-converted-to.pdf>
 Package pdftex.def Info: Logos/HSR_Logo_CMYK-eps-converted-to.pdf  used on inpu
 t line 12.
 (pdftex.def)             Requested size: 127.7772pt x 50.0pt.
-<Logos/MSE.jpg, id=51, 258.9675pt x 30.1125pt>
+<Logos/MSE.jpg, id=119, 258.9675pt x 30.1125pt>
 File: Logos/MSE.jpg Graphic file (type jpg)
 <use Logos/MSE.jpg>
 Package pdftex.def Info: Logos/MSE.jpg  used on input line 12.
@@ -1094,44 +1094,73 @@ LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <24.88> not available
 (Main.toc
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10.95> not available
 (Font)              Font shape `OT1/phv/b/n' tried instead on input line 1.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 6.
+
+("C:\Users\labia\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd"
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
+LaTeX Font Info:    Trying to load font information for U+msb on input line 6.
+("C:\Users\labia\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd"
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [3
+
+
+])
 \tf@toc=\write5
 \openout5 = `Main.toc'.
 
- [3
-
-
-] (Chapters/Introduction.tex
+LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10.95> not available
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 57.
+ [4] (Chapters/Introduction.tex
 Chapter 1.
 ------------------------------------------------------------------------------
  1 Introduction
 ------------------------------------------------------------------------------
-) [1
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 4.
+) (Chapters/RequirementsEngineering.tex [1
 
 
 
 ]
 Chapter 2.
 ------------------------------------------------------------------------------
- 2 Chapter 2
+ 2 Requirements Engineering
 ------------------------------------------------------------------------------
-[2
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <12> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 5.
+) (Chapters/ArchitectureDesign.tex [2
 
 ]
 Chapter 3.
 ------------------------------------------------------------------------------
- 3 Chapter 3
+ 3 Architecture \& Design
 ------------------------------------------------------------------------------
+) (Chapters/Implementation.tex [3
+
+]
+Chapter 4.
+------------------------------------------------------------------------------
+ 4 Implementation
+------------------------------------------------------------------------------
+) (Chapters/Results.tex [4
+
+]
+Chapter 5.
+------------------------------------------------------------------------------
+ 5 Results
+------------------------------------------------------------------------------
+)
 ------------------------------------------------------------------------------
  List of Figures
 ------------------------------------------------------------------------------
-[3
+[5
 
 ] (Main.lof)
 \tf@lof=\write6
 \openout6 = `Main.lof'.
 
- [4
+ [6
 
 ]
 ------------------------------------------------------------------------------
@@ -1141,69 +1170,56 @@ Chapter 3.
 \tf@lot=\write7
 \openout7 = `Main.lot'.
 
- [5
+ [7
 
 
 ]
 Appendix A.
 ------------------------------------------------------------------------------
- A Appendix 1
+ A Installation
 ------------------------------------------------------------------------------
-[6
+[8
 
 
 ]
 Appendix B.
 ------------------------------------------------------------------------------
- B Appendix 2
+ B Documentation
 ------------------------------------------------------------------------------
-[7
+[9
 
 ]
 Appendix C.
 ------------------------------------------------------------------------------
- C Appendix 3
+ C Project Management
 ------------------------------------------------------------------------------
-[8
+[10
 
 ]
 ------------------------------------------------------------------------------
  Bibliography
 ------------------------------------------------------------------------------
-(Main.bbl
-LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10.95> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 11.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 12.
-
-
-("C:\Users\labia\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd"
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 12.
-
-("C:\Users\labia\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd"
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)) [9
+(Main.bbl) [11
 
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 96.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 96.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 102.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 102.
  (Main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 96.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 96.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 102.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 102.
 Package rerunfilecheck Info: File `Main.out' has not changed.
-(rerunfilecheck)             Checksum: 32719A85E2D54EF9211C2D965388ECE3;1202.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 96.
+(rerunfilecheck)             Checksum: 9F661EF23B26647413A638D539BEB83F;3597.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 102.
  ) 
 Here is how much of TeX's memory you used:
- 24710 strings out of 492453
- 431970 string characters out of 3120076
- 474853 words of memory out of 3000000
- 28580 multiletter control sequences out of 15000+200000
- 25379 words of font info for 53 fonts, out of 3000000 for 9000
+ 24776 strings out of 492453
+ 433293 string characters out of 3120076
+ 476857 words of memory out of 3000000
+ 28605 multiletter control sequences out of 15000+200000
+ 28645 words of font info for 57 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,11n,54p,936b,662s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 60i,11n,54p,933b,662s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc
 }<C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/
 cm/cmr10.pfb><C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
@@ -1211,9 +1227,9 @@ ic/amsfonts/cm/cmtt10.pfb><C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fon
 ts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/labia/AppData/Local/Programs/MiKTeX 
 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Users/labia/AppData/Local/Programs/
 MiKTeX 2.9/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on Main.pdf (13 pages, 96026 bytes).
+Output written on Main.pdf (16 pages, 111695 bytes).
 PDF statistics:
- 168 PDF objects out of 1000 (max. 8388607)
- 30 named destinations out of 1000 (max. 500000)
- 111 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 279 PDF objects out of 1000 (max. 8388607)
+ 57 named destinations out of 1000 (max. 500000)
+ 247 words of extra memory for PDF output out of 10000 (max. 10000000)
 
