@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7200 64-bit) (preloaded format=pdflatex 2019.11.2)  13 NOV 2019 08:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7200 64-bit) (preloaded format=pdflatex 2019.11.2)  13 NOV 2019 09:02
 entering extended mode
 **./Main.tex
 (Main.tex
@@ -1038,34 +1038,21 @@ Package epstopdf Info: Source file: <Logos/HSR_Logo_CMYK.eps>
 (epstopdf)                    size: 18766 bytes
 (epstopdf)             Command: <epstopdf --outfile=Logos/HSR_Logo_CMYK-eps-con
 verted-to.pdf Logos/HSR_Logo_CMYK.eps>
-(epstopdf)             \includegraphics on input line 12.
+(epstopdf)             \includegraphics on input line 11.
 Package epstopdf Info: Output file is already uptodate.
 <Logos/HSR_Logo_CMYK-eps-converted-to.pdf, id=118, 184.69pt x 72.27pt>
 File: Logos/HSR_Logo_CMYK-eps-converted-to.pdf Graphic file (type pdf)
 <use Logos/HSR_Logo_CMYK-eps-converted-to.pdf>
 Package pdftex.def Info: Logos/HSR_Logo_CMYK-eps-converted-to.pdf  used on inpu
-t line 12.
+t line 11.
 (pdftex.def)             Requested size: 127.7772pt x 50.0pt.
 <Logos/MSE.jpg, id=119, 258.9675pt x 30.1125pt>
 File: Logos/MSE.jpg Graphic file (type jpg)
 <use Logos/MSE.jpg>
-Package pdftex.def Info: Logos/MSE.jpg  used on input line 12.
+Package pdftex.def Info: Logos/MSE.jpg  used on input line 11.
 (pdftex.def)             Requested size: 172.00572pt x 20.0pt.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <20.74> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 12.
-
-! LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.12 \maketitle
-               
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 11.
 [1
 
 
@@ -1215,7 +1202,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 102.
 Here is how much of TeX's memory you used:
  24776 strings out of 492453
  433293 string characters out of 3120076
- 476857 words of memory out of 3000000
+ 476858 words of memory out of 3000000
  28605 multiletter control sequences out of 15000+200000
  28645 words of font info for 57 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
