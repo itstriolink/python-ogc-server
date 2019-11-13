@@ -159,7 +159,7 @@ class Index:
         return feature, None
 
     def get_tile(self, collection: str, zoom: int, x: int, y: int):
-        if x < 0 or y < 0 or zoom < 0 or zoom > 30:
+        if x < 0 or y < 0 or not 0 < zoom < 30:
             from classes.server import HTTPResponses
             return None, CollectionMetadata, HTTPResponses.NOT_FOUND
 

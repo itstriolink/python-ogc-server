@@ -7,7 +7,7 @@ from fastapi import HTTPException
 
 from classes import index
 
-DEFAULT_LIMIT = 50
+DEFAULT_LIMIT = 30
 MAX_LIMIT = 1000
 
 
@@ -38,7 +38,7 @@ class WebServer:
 
         if limit <= 0:
             limit = 1
-        elif not (0 < limit < MAX_LIMIT):
+        elif not (0 < limit <= MAX_LIMIT):
             return None, HTTPResponses.BAD_REQUEST
 
         metadata, features, response = self.index.get_items(collection, start_id, start, limit, bbox, features)
@@ -74,12 +74,12 @@ def parse_bbox(s: str):
     if len(s) == 0:
         return bbox
 
-    parts = str.split(s, ",")
+    edges = str.split(s, ",")
     n = []
 
-    for part in parts:
+    for edge in edges:
         try:
-            n.append(float(str.strip(part)))
+            n.append(float(str.strip(edge)))
         except ValueError:
             return None, HTTPResponses.BAD_REQUEST
 

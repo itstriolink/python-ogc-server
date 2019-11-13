@@ -37,15 +37,20 @@ class Tile:
 
     def to_png(self):
         dc = self.dc
+        byteIO = BytesIO()
+
         if dc is not None:
-            byteIO = BytesIO()
             dc.save(byteIO, format='PNG')
             byte_value = byteIO.getvalue()
             byteIO.close()
 
             return byte_value
         else:
-            return EMPTY_PNG
+            byteIO.write(EMPTY_PNG)
+            byte_value = byteIO.getvalue()
+            byteIO.close()
+
+            return byte_value
 
 
 class TileKey:
