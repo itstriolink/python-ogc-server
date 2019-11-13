@@ -1,3 +1,11 @@
+test_job:
+  stage: test
+  image: python:3.6-slim
+  script: [
+    "echo 'Running tests'",
+    "python -m unittest discover -s './tests/'",
+  ]
+
 compile_pdf:
   stage: build
   image: timnn/texlive  # use a Docker image for LaTeX from https://hub.docker.com/
@@ -8,14 +16,6 @@ compile_pdf:
   artifacts:
     paths: 
       - documentation/Main.pdf  # instruct GitLab to keep the main.pdf file
-
-test_job:
-stage: test
-image: python:3.6-slim
-script: [
-  "echo 'Running tests'",
-  "python -m unittest discover -s './tests/'",
-]
 
 pages:
   stage: deploy
