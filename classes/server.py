@@ -7,7 +7,7 @@ from fastapi import HTTPException
 
 from classes import index
 
-DEFAULT_LIMIT = 30
+DEFAULT_LIMIT = 10
 MAX_LIMIT = 1000
 
 
@@ -19,7 +19,7 @@ class HTTPResponses:
 class WebServer:
     index: index.Index
 
-    def handle_collection_request(self, collection: str, bbox: str, limit: str):
+    def handle_items_request(self, collection: str, bbox: str, limit: str):
         bbox, http_response = parse_bbox(bbox)
 
         if http_response is not None:
@@ -41,7 +41,9 @@ class WebServer:
         elif not (0 < limit <= MAX_LIMIT):
             return None, HTTPResponses.BAD_REQUEST
 
-        metadata, features, response = self.index.get_items(collection, start_id, start, limit, bbox, features)
+        # metadata, features, response = self.index.get_items(collection, start_id, start, limit, bbox, features)
+
+        metadata, features, response = self.index.get_items_2(collection, start_id, start, limit, bbox, features)
 
         return json_dumps_for_response(features), response
 
@@ -49,8 +51,10 @@ class WebServer:
         tile, metadata, response = self.index.get_tile(collection, zoom, x, y)
         return tile, metadata, response
 
-    def handle_feature_request(self, collection: str, feature_id: str):
-        feature, response = self.index.get_item(collection, feature_id)
+    def handle_item_request(self, collection: str, feature_id: str):
+        # feature, response = self.index.get_item(collection, feature_id)
+
+        feature, response = self.index.get_item_2(collection, feature_id)
         return json_dumps_for_response(feature), response
 
     def exit_handler(self):

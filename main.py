@@ -32,13 +32,9 @@ def main():
 
     coll = {'castles': CASTLES_PATH}
 
-    try:
-        idx = make_index(coll, WEB_HOST_URL)
-        server = make_web_server(idx)
-    except Exception:
-        raise RuntimeError("Something went wrong while trying to create the collection")
-    finally:
-        pass
+    idx = make_index(coll, WEB_HOST_URL)
+    server = make_web_server(idx)
+
     try:
         @app.get("/")
         def index():
@@ -46,7 +42,7 @@ def main():
 
         @app.get("/collections/{collection}/items")
         def get_collection_items(collection: str, bbox: str, limit=None):
-            content, http_response = server.handle_collection_request(collection, bbox, limit)
+            content, http_response = server.handle_items(collection, bbox, limit)
 
             if http_response is not None:
                 return Response(content=None, status_code=http_response.status_code)
