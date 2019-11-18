@@ -8,6 +8,9 @@ class WFSLink:
     type: str
     title: str
 
+    def to_json(self):
+        return dict(href=self.href, rel=self.rel, type=self.type, title=self.title)
+
 
 class WFSFeatureCollection:
     type: str

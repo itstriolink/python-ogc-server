@@ -40,9 +40,20 @@ def main():
         def index():
             return HTMLResponse(content=INDEX_MESSAGE)
 
+        @app.get("/collections")
+        def get_collections():
+            content = server.handle_collections_request()
+
+            return Response(content=content,
+                            headers={
+                                "content-type": "application/json",
+                                "content-length": str(len(content))
+                            }
+                            )
+
         @app.get("/collections/{collection}/items")
         def get_collection_items(collection: str, bbox: str, limit=None):
-            content, http_response = server.handle_items(collection, bbox, limit)
+            content, http_response = server.handle_items_request(collection, bbox, limit)
 
             if http_response is not None:
                 return Response(content=None, status_code=http_response.status_code)

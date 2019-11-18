@@ -64,7 +64,12 @@ class Index:
         self.collections[coll.metadata.name] = coll
 
     def get_collections(self):
-        pass
+        collections = []
+
+        for collection in self.collections.values():
+            collections.append(collection.metadata)
+
+        return collections
 
     def get_items(self,
                   collection: str, start_id: str, start: int, limit: int,

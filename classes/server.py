@@ -6,6 +6,7 @@ import s2sphere
 from fastapi import HTTPException
 
 from classes import index
+from classes.wfs import WFSLink
 
 DEFAULT_LIMIT = 10
 MAX_LIMIT = 1000
@@ -18,6 +19,51 @@ class HTTPResponses:
 
 class WebServer:
     index: index.Index
+
+    def handle_collections_request(self):
+        collections = self.index.get_collections()
+        wfs_collections = []
+
+        class WFSCollection:
+            name: str
+            links: [] = []
+
+            def to_json(self):
+                return dict(name=self.name, links=self.links)
+
+        class WFSCollectionResponse:
+            links: [] = []
+            collections: [] = []
+
+            def to_json(self):
+                return dict(links=self.links, collections=self.collections)
+
+        for collection in collections:
+            link = WFSLink()
+            link.href = self.index.public_path + "/collections/" + collection.name
+            link.rel = "item"
+            link.type = "application/geo+json"
+            link.title = collection.name
+
+            wfs_collection = WFSCollection()
+            wfs_collection.name = collection.name
+            wfs_collection.links.append(link.to_json())
+
+            wfs_collections.append(wfs_collection.to_json())
+
+        self_link = WFSLink()
+        self_link.href = self.index.public_path + "/collections"
+        self_link.rel = "self"
+        self_link.type = "application/json"
+        self_link.title = "Collections"
+
+        result = WFSCollectionResponse()
+        result.collections = wfs_collections
+        result.links.append(self_link.to_json())
+
+        content = json.dumps(result.to_json(), separators=(',', ':'))
+
+        return content
 
     def handle_items_request(self, collection: str, bbox: str, limit: str):
         bbox, http_response = parse_bbox(bbox)
