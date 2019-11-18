@@ -11,31 +11,31 @@ app.add_middleware(
 )
 
 CASTLES_PATH = r'.\osm-castles-CH.geojson'
-WEB_HOST_URL = r'http://127.0.0.1:8000'
+WEB_HOST_URL = r'http://127.0.0.1:8000/'
 
 SHORT_INDEX_MESSAGE = 'This is a MiniWFS server written in Python ' \
                       '<a href=\"https://gitlab.com/labiangashi/python-wfs-server\" ' \
                       'target="_blank" title="Repository">here</a> ' \
-                      'that serves GeoJSON objects and PNG raster tiles <br />'
+                      'that serves GeoJSON objects and PNG raster tiles. <br />'
+
 INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
                 '<br/>' \
-                '<strong>Available API methods: </strong></br>' \
+                '<strong>Available API methods: </strong>' \
                 '<ol>' \
+                '<li><i>/collections</i></li>' \
                 '<li><i>/collections/{collection_name}/items?{bbox}{limit} </i></li>' \
-                '<li><i>/tiles/{collection_name}/{zoom}/{x}/{y}.png</i></li>' \
                 '<li><i>/collections{collection_name}/items/{feature_id}</i></li>' \
+                '<li><i>/tiles/{collection_name}/{zoom}/{x}/{y}.png</i></li>' \
                 '</ol>'
 
 
 def main():
-    server = None
-
-    coll = {'castles': CASTLES_PATH}
-
-    idx = make_index(coll, WEB_HOST_URL)
-    server = make_web_server(idx)
-
     try:
+        coll = {'castles': CASTLES_PATH}
+
+        idx = make_index(coll, WEB_HOST_URL)
+        server = make_web_server(idx)
+
         @app.get("/")
         def index():
             return HTMLResponse(content=INDEX_MESSAGE)
@@ -48,8 +48,7 @@ def main():
                             headers={
                                 "content-type": "application/json",
                                 "content-length": str(len(content))
-                            }
-                            )
+                            })
 
         @app.get("/collections/{collection}/items")
         def get_collection_items(collection: str, bbox: str, limit=None):
@@ -62,8 +61,7 @@ def main():
                                 headers={
                                     "content-type": "application/geo+json",
                                     "content-length": str(len(content))
-                                }
-                                )
+                                })
 
         @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
         def get_raster_tile(collection: str, zoom: int, x: int, y: int):
@@ -90,6 +88,10 @@ def main():
                                     "content-type": "application/geo+json",
                                     "content-length": str(len(content))
                                 })
+
+        @app.get('/{path:path}', include_in_schema=False)
+        def raise_400(path):
+            return Response(content=None, status_code=404)
     except:
         return Response(content=None, status_code=500)
 

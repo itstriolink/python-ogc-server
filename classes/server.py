@@ -40,7 +40,7 @@ class WebServer:
 
         for collection in collections:
             link = WFSLink()
-            link.href = self.index.public_path + "/collections/" + collection.name
+            link.href = self.index.public_path + "collections/" + collection.name
             link.rel = "item"
             link.type = "application/geo+json"
             link.title = collection.name
@@ -52,7 +52,7 @@ class WebServer:
             wfs_collections.append(wfs_collection.to_json())
 
         self_link = WFSLink()
-        self_link.href = self.index.public_path + "/collections"
+        self_link.href = self.index.public_path + "collections"
         self_link.rel = "self"
         self_link.type = "application/json"
         self_link.title = "Collections"
