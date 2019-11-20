@@ -13,7 +13,7 @@ app.add_middleware(
 CASTLES_PATH = r'.\osm-castles-CH.geojson'
 WEB_HOST_URL = r'http://127.0.0.1:8000/'
 
-SHORT_INDEX_MESSAGE = 'This is a MiniWFS server written in Python ' \
+SHORT_INDEX_MESSAGE = 'This is a MiniWFS server compliant with WFS3, written in Python ' \
                       '<a href=\"https://gitlab.com/labiangashi/python-wfs-server\" ' \
                       'target="_blank" title="Repository">here</a> ' \
                       'that serves GeoJSON objects and PNG raster tiles. <br />'
@@ -78,7 +78,20 @@ def main():
 
         @app.get("/collections/{collection}/items/{feature_id}")
         def get_feature_info(collection: str, feature_id: str):
-            content, http_response = server.handle_feature_request(collection, feature_id)
+            content, http_response = server.handle_item_request(collection, feature_id)
+
+            if http_response is not None:
+                return Response(content=None, status_code=http_response.status_code)
+            else:
+                return Response(content=content,
+                                headers={
+                                    "content-type": "application/geo+json",
+                                    "content-length": str(len(content))
+                                })
+
+        @app.get("/tiles/{collection}/{zoom}/{x}/{y}/{a}/{b}.geojson")
+        def get_tile_feature_info(collection: str, zoom: int, x: int, y: int, a: int, b: int):
+            content, http_response = server.handle_tile_feature_info_request(collection, zoom, x, y, a, b)
 
             if http_response is not None:
                 return Response(content=None, status_code=http_response.status_code)
@@ -90,7 +103,7 @@ def main():
                                 })
 
         @app.get('/{path:path}', include_in_schema=False)
-        def raise_400(path):
+        def raise_400():
             return Response(content=None, status_code=404)
     except:
         return Response(content=None, status_code=500)

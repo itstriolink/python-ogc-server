@@ -2,7 +2,10 @@ from base64 import b64encode
 from io import BytesIO
 
 import Geometry
+import s2sphere
 from PIL import Image, ImageDraw
+
+from classes.geometry import unproject_web_mercator
 
 PEN_COLOR = (195, 66, 244)
 SIZE = (256, 256)
@@ -62,6 +65,10 @@ class TileKey:
         self.x = x
         self.y = y
         self.zoom = zoom
+
+    def bounds(self):
+        return s2sphere.LatLngRect(unproject_web_mercator(self.zoom, float(self.x + 1), float(self.y + 1)),
+                                   unproject_web_mercator(self.zoom, float(self.x), float(self.y)))
 
 
 class TileCache:

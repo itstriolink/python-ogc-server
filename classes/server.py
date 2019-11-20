@@ -6,6 +6,7 @@ import s2sphere
 from fastapi import HTTPException
 
 from classes import index
+from classes.tiles import TileKey
 from classes.wfs import WFSLink
 
 DEFAULT_LIMIT = 10
@@ -87,9 +88,7 @@ class WebServer:
         elif not (0 < limit <= MAX_LIMIT):
             return None, HTTPResponses.BAD_REQUEST
 
-        # metadata, features, response = self.index.get_items(collection, start_id, start, limit, bbox, features)
-
-        metadata, features, response = self.index.get_items_2(collection, start_id, start, limit, bbox, features)
+        metadata, features, response = self.index.get_items(collection, start_id, start, limit, bbox, features)
 
         return json_dumps_for_response(features), response
 
@@ -98,9 +97,13 @@ class WebServer:
         return tile, metadata, response
 
     def handle_item_request(self, collection: str, feature_id: str):
-        # feature, response = self.index.get_item(collection, feature_id)
+        feature, response = self.index.get_item(collection, feature_id)
+        return json_dumps_for_response(feature), response
 
-        feature, response = self.index.get_item_2(collection, feature_id)
+    def handle_tile_feature_info_request(self, collection: str, zoom: int, x: int, y: int, a: int, b: int):
+        tile = TileKey(x, y, zoom)
+        feature, response = self.index.get_tile_feature_info(collection, tile, a, b)
+
         return json_dumps_for_response(feature), response
 
     def exit_handler(self):

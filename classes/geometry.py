@@ -33,14 +33,13 @@ def compute_bounds(g: geojson.geometry.Geometry):
     elif type(g) == geojson.geometry.Polygon:
         for ring in g['coordinates']:
             r = r.union(compute_line_bounds(ring))
-        # s2sphere.LatLngRect.expanded(r, 100)
+        # s2sphere.exp
         return r
 
     elif type(g) == geojson.geometry.MultiPolygon:
         for poly in g['coordinates']:
             for ring in poly:
                 r = r.union(compute_line_bounds(ring))
-            # s2sphere.expandforsubregions(r)
         return r
 
     elif type(g) == geojson.geometry.GeometryCollection:
