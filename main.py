@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response, HTMLResponse
@@ -10,7 +12,7 @@ app.add_middleware(
     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
 )
 
-CASTLES_PATH = r'.\osm-castles-CH.geojson'
+CASTLES_PATH = os.path.join(".", "osm-castles-CH.geojson")
 WEB_HOST_URL = r'http://127.0.0.1:8000/'
 
 SHORT_INDEX_MESSAGE = 'This is a MiniWFS server compliant with WFS3, written in Python ' \
