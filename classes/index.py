@@ -172,33 +172,6 @@ class Index:
 
         return png, coll.metadata, None
 
-    def get_tile_feature_info(self, collection: str, tile: tiles.TileKey, a: int, b: int):
-        if a < 0 or a > 256 or b < 0 or b >= 256:
-            from classes.server import HTTPResponses
-            return None, HTTPResponses.BAD_REQUEST
-
-        tile_bounds = tile.bounds()
-        tile_size = tile_bounds.get_size()
-
-        pixel_size = s2sphere.LatLng(lat=float(tile_size.lat().radians) / 256, lng=float(tile_size.lng().radians) / 256)
-
-        center = s2sphere.LatLng(
-            lat=s2sphere.Angle(tile_bounds.hi().lat().radians - pixel_size.lat().radians * b).radians,
-            lng=s2sphere.Angle(tile_bounds.lo().lng().radians + pixel_size.lng().radians * a).radians)
-
-        MAX_SIGNATURE_WIDTH = 8.0
-
-        bbox_size = s2sphere.LatLng(lat=s2sphere.Angle(pixel_size.lat().radians * MAX_SIGNATURE_WIDTH).radians,
-                                    lng=s2sphere.Angle(pixel_size.lng().radians * MAX_SIGNATURE_WIDTH).radians)
-
-        bbox = s2sphere.LatLngRect.from_center_size(center, bbox_size)
-
-        features = io.BytesIO()
-
-        metadata, features, response = self.get_items(collection, "", 0, 10, bbox, features)
-
-        return features, response
-
 
 def make_index(collections: dict, public_path: str):
     index = Index()

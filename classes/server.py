@@ -1,6 +1,5 @@
 import io
 import json
-import os
 
 import s2sphere
 from fastapi import HTTPException
@@ -11,6 +10,7 @@ from classes.wfs import WFSLink
 
 DEFAULT_LIMIT = 10
 MAX_LIMIT = 1000
+MAX_SIGNATURE_WIDTH = 8.0
 
 
 class HTTPResponses:
@@ -102,16 +102,30 @@ class WebServer:
 
     def handle_tile_feature_info_request(self, collection: str, zoom: int, x: int, y: int, a: int, b: int):
         tile = TileKey(x, y, zoom)
-        feature, response = self.index.get_tile_feature_info(collection, tile, a, b)
 
-        return json_dumps_for_response(feature), response
+        if a < 0 or a > 256 or b < 0 or b >= 256:
+            from classes.server import HTTPResponses
+            return None, HTTPResponses.BAD_REQUEST
 
-    def exit_handler(self):
-        collections = self.index.collections.values()
-        for collection in collections:
-            file_name = collection.data_file.name
-            if os.path.exists(file_name):
-                os.remove(file_name)
+        tile_bounds = tile.bounds()
+        tile_size = tile_bounds.get_size()
+
+        pixel_size = s2sphere.LatLng(lat=tile_size.lat().radians / 256, lng=tile_size.lng().radians / 256)
+
+        center = s2sphere.LatLng(
+            lat=s2sphere.Angle(tile_bounds.hi().lat().radians - pixel_size.lat().radians * float(b)).radians,
+            lng=s2sphere.Angle(tile_bounds.lo().lng().radians + pixel_size.lng().radians * float(a)).radians)
+
+        bbox_size = s2sphere.LatLng(lat=s2sphere.Angle(pixel_size.lat().radians * MAX_SIGNATURE_WIDTH).radians,
+                                    lng=s2sphere.Angle(pixel_size.lng().radians * MAX_SIGNATURE_WIDTH).radians)
+
+        bbox = s2sphere.LatLngRect.from_center_size(center, bbox_size)
+
+        features = io.BytesIO()
+
+        metadata, features, response = self.index.get_items(collection, "", 0, 10, bbox, features)
+
+        return json_dumps_for_response(features), response
 
 
 def make_web_server(idx: index.Index):

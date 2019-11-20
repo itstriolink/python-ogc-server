@@ -67,8 +67,9 @@ class TileKey:
         self.zoom = zoom
 
     def bounds(self):
-        return s2sphere.LatLngRect(unproject_web_mercator(self.zoom, float(self.x + 1), float(self.y + 1)),
-                                   unproject_web_mercator(self.zoom, float(self.x), float(self.y)))
+        return s2sphere.LatLngRect.from_point_pair(unproject_web_mercator(self.zoom, float(self.x), float(self.y)),
+                                                   unproject_web_mercator(self.zoom, float(self.x + 1),
+                                                                          float(self.y + 1)))
 
 
 class TileCache:

@@ -33,7 +33,7 @@ def compute_bounds(g: geojson.geometry.Geometry):
     elif type(g) == geojson.geometry.Polygon:
         for ring in g['coordinates']:
             r = r.union(compute_line_bounds(ring))
-        # s2sphere.exp
+        # s2sphere.LatLngRect.expanded(r, 100)
         return r
 
     elif type(g) == geojson.geometry.MultiPolygon:
@@ -71,8 +71,8 @@ def encode_bbox(r: s2sphere.LatLngRect):
 
 
 def get_tile_bounds(zoom: int, x: int, y: int):
-    return s2sphere.LatLngRect(unproject_web_mercator(zoom, float(x + 1), float(y + 1)),
-                               unproject_web_mercator(zoom, float(x), float(y)))
+    return s2sphere.LatLngRect.from_point_pair(unproject_web_mercator(zoom, float(x), float(y)),
+                                               unproject_web_mercator(zoom, float(x + 1), float(y + 1)))
 
 
 def project_web_mercator(p: s2sphere.LatLng):
@@ -87,6 +87,6 @@ def project_web_mercator(p: s2sphere.LatLng):
 def unproject_web_mercator(zoom: int, x: float, y: float):
     n = math.pi - 2.0 * math.pi * y / exp2(float(zoom))
     lat = 180.0 / math.pi * math.atan(0.5 * (math.exp(n) - math.exp(-n)))
-    lng = x / math.exp(float(zoom)) * 360.0 - 180.0
+    lng = x / exp2(float(zoom)) * 360.0 - 180.0
 
     return s2sphere.LatLng.from_degrees(lat, lng)
