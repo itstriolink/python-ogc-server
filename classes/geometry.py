@@ -3,7 +3,7 @@ import math
 import Geometry
 import geojson
 import s2sphere
-from numpy import exp2
+from scipy.special import exp2
 
 
 def compute_bounds(g: geojson.geometry.Geometry):
@@ -33,7 +33,7 @@ def compute_bounds(g: geojson.geometry.Geometry):
     elif type(g) == geojson.geometry.Polygon:
         for ring in g['coordinates']:
             r = r.union(compute_line_bounds(ring))
-        # s2sphere.LatLngRect.expanded(r, 100)
+
         return r
 
     elif type(g) == geojson.geometry.MultiPolygon:
@@ -43,7 +43,7 @@ def compute_bounds(g: geojson.geometry.Geometry):
         return r
 
     elif type(g) == geojson.geometry.GeometryCollection:
-        for geometry in g.Geometries:
+        for geometry in g['Geometries']:
             r = r.union(compute_bounds(geometry))
         return r
 

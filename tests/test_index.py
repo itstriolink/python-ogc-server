@@ -23,7 +23,7 @@ class TestIndex(unittest.TestCase):
     # def test_get_items_empty_bbox(self):
     #    index = create_test_index(self)
     #    items, _, _ = get_items(index, "castles", '', 0, 100, s2sphere.LatLngRect)
-    #    # TODO
+    #    TODO
     pass
 
 

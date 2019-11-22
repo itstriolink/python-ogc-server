@@ -28,6 +28,7 @@ INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
                 '<li><i>/collections/{collection_name}/items?{bbox}{limit} </i></li>' \
                 '<li><i>/collections{collection_name}/items/{feature_id}</i></li>' \
                 '<li><i>/tiles/{collection_name}/{zoom}/{x}/{y}.png</i></li>' \
+                '<li><i>/tiles/{collection_name}/{zoom}/{x}/{y}/{a}/{b}.geojson</i></li>' \
                 '</ol>'
 
 
