@@ -24,19 +24,12 @@ class CollectionMetadata:
 
 class Collection:
     metadata: CollectionMetadata
-    tile_cache: tiles.TileCache
-    data_file: io.FileIO
     offset: [] = []
     bbox: [] = []
     web_mercator: [] = []
     id: [] = []
     by_id: {} = {}
     feature: [] = []
-
-    def close(self):
-        if self.data_file is not None:
-            self.data_file.close()
-            os.remove(self.data_file.name)
 
 
 class Footer:
@@ -217,7 +210,6 @@ def read_collection(name, path, if_modified_since):
         feature_collection = geojson.load(file)
 
     coll = Collection()
-    coll.tile_cache = tiles.new_tile_cache(10000)
     coll.metadata = CollectionMetadata(name, path, mod_time)
 
     for i, f in enumerate(feature_collection.features):
