@@ -5,7 +5,7 @@ import Geometry
 import s2sphere
 from PIL import Image, ImageDraw
 
-from classes.geometry import unproject_web_mercator
+from wfs_server.geometry import unproject_web_mercator
 
 PEN_COLOR = (195, 66, 244)
 SIZE = (256, 256)
@@ -25,35 +25,35 @@ EMPTY_PNG = bytearray([
 
 
 class Tile:
-    dc: Image.Image()
+    image: Image.Image()
 
     def __init__(self):
-        self.dc = None
+        self.image = None
 
-    def draw_point(self, p: Geometry.Point):
-        if self.dc is None:
-            self.dc = Image.new('RGBA', SIZE, color=TRANSPARENT_COLOR)
+    def draw_point(self, point: Geometry.Point):
+        if self.image is None:
+            self.image = Image.new('RGBA', SIZE, color=TRANSPARENT_COLOR)
 
-        dc = self.dc
-        draw = ImageDraw.Draw(dc)
-        draw.ellipse((p.x - 2, p.y - 2, p.x + 2, p.y + 2), fill=PEN_COLOR, outline=PEN_COLOR, width=0)
+        image = self.image
+        draw = ImageDraw.Draw(image)
+        draw.ellipse((point.x - 2, point.y - 2, point.x + 2, point.y + 2), fill=PEN_COLOR, outline=PEN_COLOR, width=0)
 
     def to_png(self):
-        dc = self.dc
-        byteIO = BytesIO()
+        image = self.image
+        byte_io = BytesIO()
 
-        if dc is not None:
-            dc.save(byteIO, format='PNG')
-            byte_value = byteIO.getvalue()
-            byteIO.close()
-
-            return byte_value
-        else:
-            byteIO.write(EMPTY_PNG)
-            byte_value = byteIO.getvalue()
-            byteIO.close()
+        if image is not None:
+            image.save(byte_io, format='PNG')
+            byte_value = byte_io.getvalue()
+            byte_io.close()
 
             return byte_value
+
+        byte_io.write(EMPTY_PNG)
+        byte_value = byte_io.getvalue()
+        byte_io.close()
+
+        return byte_value
 
 
 class TileKey:

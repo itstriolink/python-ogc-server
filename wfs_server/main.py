@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response, HTMLResponse
 
-from classes.index import make_index
-from classes.server import make_web_server
+from wfs_server.api_handler import make_web_server
+from wfs_server.index import make_index
 
 app = FastAPI()
 app.add_middleware(
@@ -33,7 +33,6 @@ INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
 
 
 def main():
-    try:
         coll = {'castles': CASTLES_PATH}
 
         idx = make_index(coll, WEB_HOST_URL)
@@ -54,30 +53,30 @@ def main():
                             })
 
         @app.get("/collections/{collection}/items")
-        def get_collection_items(collection: str, bbox: str, limit=None):
+        def get_collection_items(collection: str, bbox: str = '', limit=None):
             content, http_response = server.handle_items_request(collection, bbox, limit)
 
             if http_response is not None:
                 return Response(content=None, status_code=http_response.status_code)
-            else:
-                return Response(content=content,
-                                headers={
-                                    "content-type": "application/geo+json",
-                                    "content-length": str(len(content))
-                                })
+
+            return Response(content=content,
+                            headers={
+                                "content-type": "application/geo+json",
+                                "content-length": str(len(content))
+                            })
 
         @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
         def get_raster_tile(collection: str, zoom: int, x: int, y: int):
-            content, metadata, http_response = server.handle_tile_request(collection, zoom, x, y)
+            content, http_response = server.handle_tile_request(collection, zoom, x, y)
 
             if http_response is not None:
                 return Response(content=None, status_code=http_response.status_code)
-            else:
-                return Response(content=content,
-                                headers={
-                                    "content-type": "image/png",
-                                    "content-length": str(len(content))
-                                })
+
+            return Response(content=content,
+                            headers={
+                                "content-type": "image/png",
+                                "content-length": str(len(content))
+                            })
 
         @app.get("/collections/{collection}/items/{feature_id}")
         def get_feature_info(collection: str, feature_id: str):
@@ -85,12 +84,12 @@ def main():
 
             if http_response is not None:
                 return Response(content=None, status_code=http_response.status_code)
-            else:
-                return Response(content=content,
-                                headers={
-                                    "content-type": "application/geo+json",
-                                    "content-length": str(len(content))
-                                })
+
+            return Response(content=content,
+                            headers={
+                                "content-type": "application/geo+json",
+                                "content-length": str(len(content))
+                            })
 
         @app.get("/tiles/{collection}/{zoom}/{x}/{y}/{a}/{b}.geojson")
         def get_tile_feature_info(collection: str, zoom: int, x: int, y: int, a: int, b: int):
@@ -98,18 +97,16 @@ def main():
 
             if http_response is not None:
                 return Response(content=None, status_code=http_response.status_code)
-            else:
-                return Response(content=content,
-                                headers={
-                                    "content-type": "application/geo+json",
-                                    "content-length": str(len(content))
-                                })
+
+            return Response(content=content,
+                            headers={
+                                "content-type": "application/geo+json",
+                                "content-length": str(len(content))
+                            })
 
         @app.get('/{path:path}', include_in_schema=False)
         def raise_400():
             return Response(content=None, status_code=404)
-    except:
-        return Response(content=None, status_code=500)
 
 
 main()

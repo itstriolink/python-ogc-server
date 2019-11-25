@@ -8,28 +8,8 @@ import s2sphere
 from Geometry import Point
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from classes import wfs, tiles, geometry
-
-
-class CollectionMetadata:
-    name: str
-    path: str
-    last_modified: str
-
-    def __init__(self, name, path, last_modified):
-        self.name = name
-        self.path = path
-        self.last_modified = last_modified
-
-
-class Collection:
-    metadata: CollectionMetadata
-    offset: [] = []
-    bbox: [] = []
-    web_mercator: [] = []
-    id: [] = []
-    by_id: {} = {}
-    feature: [] = []
+from wfs_server import tiles, geometry
+from wfs_server.data_structures import Collection, CollectionMetadata, WFSLink
 
 
 class Footer:
@@ -63,30 +43,23 @@ class Index:
         return collections
 
     def get_items(self,
-                  collection: str, start_id: str, start: int, limit: int,
+                  collection: str, limit: int,
                   bbox: s2sphere.LatLngRect, writer: io.BytesIO):
         if collection not in self.collections:
-            from classes.server import HTTPResponses
+            from wfs_server.api_handler import HTTPResponses
             return None, None, HTTPResponses.NOT_FOUND
 
         coll = self.collections[collection]
 
         bounds = s2sphere.LatLngRect()
-        skip = start
         num_features = 0
 
         writer.write(bytearray('{"type":"FeatureCollection","features":[', 'utf8'))
         for i, feature_bounds in enumerate(coll.bbox):
-            if not bbox.intersects(feature_bounds):
+            if not bbox.is_empty and not bbox.intersects(feature_bounds):
                 continue
 
             if num_features >= limit:
-                next_id = coll.id[i]
-                next_index = i
-                break
-
-            if skip > 0:
-                skip = skip - 1
                 break
 
             if num_features > 0:
@@ -102,7 +75,7 @@ class Index:
 
         footer = Footer()
 
-        self_link = wfs.WFSLink()
+        self_link = WFSLink()
         self_link.rel = "self"
         self_link.title = "self"
         self_link.type = "application/geo+json"
@@ -118,13 +91,13 @@ class Index:
 
     def get_item(self, collection: str, feature_id: str):
         if collection not in self.collections:
-            from classes.server import HTTPResponses
+            from wfs_server.api_handler import HTTPResponses
             return None, HTTPResponses.NOT_FOUND
 
         coll = self.collections[collection]
 
         if feature_id not in coll.by_id:
-            from classes.server import HTTPResponses
+            from wfs_server.api_handler import HTTPResponses
             return None, HTTPResponses.NOT_FOUND
 
         writer = io.BytesIO()
@@ -137,12 +110,12 @@ class Index:
 
     def get_tile(self, collection: str, zoom: int, x: int, y: int):
         if x < 0 or y < 0 or not 0 < zoom < 30:
-            from classes.server import HTTPResponses
+            from wfs_server.api_handler import HTTPResponses
             return None, CollectionMetadata, HTTPResponses.NOT_FOUND
 
         tile_key = tiles.TileKey(x=x, y=y, zoom=zoom)
         if collection not in self.collections:
-            from classes.server import HTTPResponses
+            from wfs_server.api_handler import HTTPResponses
             return None, CollectionMetadata, HTTPResponses.NOT_FOUND
 
         coll = self.collections.get(collection)
@@ -167,7 +140,7 @@ class Index:
     def reload_if_changed(self, cm: CollectionMetadata):
         coll, response = read_collection(cm.name, cm.path, cm.last_modified)
 
-        from classes.server import HTTPResponses
+        from wfs_server.api_handler import HTTPResponses
         if response is not None and response is HTTPResponses.NOT_MODIFIED:
             return None
         else:
@@ -203,7 +176,7 @@ def read_collection(name, path, if_modified_since):
     mod_time = datetime.fromtimestamp(os.path.getmtime(abs_path))
 
     if not mod_time > if_modified_since:
-        from classes.server import HTTPResponses
+        from wfs_server.api_handler import HTTPResponses
         return None, HTTPResponses.NOT_MODIFIED
 
     with open(abs_path, "rb") as file:
