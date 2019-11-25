@@ -3,7 +3,7 @@ import math
 import Geometry
 import geojson
 import s2sphere
-from scipy.special import exp2
+from numpy import exp2
 
 
 def compute_bounds(g: geojson.geometry.Geometry):

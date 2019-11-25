@@ -6,6 +6,7 @@ from datetime import datetime
 import geojson
 import s2sphere
 from Geometry import Point
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from classes import wfs, tiles, geometry
 
@@ -58,9 +59,7 @@ class Index:
         old = self.collections.get(coll.metadata.name)
 
         if old is not None:
-            old.close()
-
-        self.collections[coll.metadata.name] = coll
+            self.collections[coll.metadata.name] = coll
 
     def get_collections(self):
         collections = []
@@ -172,16 +171,33 @@ class Index:
 
         return png, coll.metadata, None
 
+    def reload_if_changed(self, cm: CollectionMetadata):
+        coll, response = read_collection(cm.name, cm.path, cm.last_modified)
+
+        from classes.server import HTTPResponses
+        if response is not None and response is HTTPResponses.NOT_MODIFIED:
+            return None
+        else:
+            self.replace_collection(coll)
+
+    def watch_files(self):
+        for collection in self.get_collections():
+            self.reload_if_changed(collection)
+
 
 def make_index(collections: dict, public_path: str):
     index = Index()
     index.public_path = public_path
 
+    scheduler = BackgroundScheduler()
+
+    scheduler.add_job(index.watch_files, 'interval', minutes=5)
+    scheduler.start()
+
     for name, path in collections.items():
-        coll = read_collection(name, path, None)
+        coll, response = read_collection(name, path, datetime.min)
         index.collections[name] = coll
 
-    # TODO
     return index
 
 
@@ -192,6 +208,10 @@ def read_collection(name, path, if_modified_since):
         return None
 
     mod_time = datetime.fromtimestamp(os.path.getmtime(abs_path))
+
+    if not mod_time > if_modified_since:
+        from classes.server import HTTPResponses
+        return None, HTTPResponses.NOT_MODIFIED
 
     with open(abs_path, "rb") as file:
         feature_collection = geojson.load(file)
@@ -210,4 +230,4 @@ def read_collection(name, path, if_modified_since):
         center = coll.bbox[i].get_center()
         coll.web_mercator.append(geometry.project_web_mercator(center))
 
-    return coll
+    return coll, None

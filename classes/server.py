@@ -16,6 +16,7 @@ MAX_SIGNATURE_WIDTH = 8.0
 class HTTPResponses:
     NOT_FOUND = HTTPException(status_code=404, detail="Collection not found")
     BAD_REQUEST = HTTPException(status_code=400, detail="Malformed parameters")
+    NOT_MODIFIED = HTTPException(status_code=304, detail="Not Modified")
 
 
 class WebServer:
