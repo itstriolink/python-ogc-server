@@ -1,3 +1,4 @@
+import logging
 import os
 
 from fastapi import FastAPI
@@ -43,9 +44,10 @@ def main():
     else:
         for collection_object in str.split(COLLECTIONS_ENV, ","):
             value = str.split(collection_object, "=")
-
-            if value is None or len(value) > 2:
-                return None
+            if value is None or len(value) != 2:
+                return logging.ERROR('Malformed parameters for the --collections argument, '
+                                     'pass something like: pass something like --collections=castles=path/to/c.geojson,'
+                                     'lakes=path/to/l.geojson"')
 
             collections[value[0]] = value[1]
 
