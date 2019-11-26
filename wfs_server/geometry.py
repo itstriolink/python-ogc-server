@@ -3,7 +3,6 @@ import math
 import Geometry
 import geojson
 import s2sphere
-from numpy import exp2
 
 
 def compute_bounds(geometry: geojson.geometry.Geometry):
@@ -86,8 +85,8 @@ def project_web_mercator(p: s2sphere.LatLng):
 
 
 def unproject_web_mercator(zoom: int, x: float, y: float):
-    n = math.pi - 2.0 * math.pi * y / exp2(float(zoom))
+    n = math.pi - 2.0 * math.pi * y / 2 ** (float(zoom))
     lat = 180.0 / math.pi * math.atan(0.5 * (math.exp(n) - math.exp(-n)))
-    lng = x / exp2(float(zoom)) * 360.0 - 180.0
+    lng = x / 2 ** (float(zoom)) * 360.0 - 180.0
 
     return s2sphere.LatLng.from_degrees(lat, lng)
