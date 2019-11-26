@@ -12,21 +12,19 @@ test_job:
 
 compile_pdf:
   stage: build
-  image: timnn/texlive  # use a Docker image for LaTeX from https://hub.docker.com/
+  image: timnn/texlive
   script:
     - cd documentation
     - pdflatex Main.tex
   artifacts:
     paths:
-      - documentation/Main.pdf  # instruct GitLab to keep the main.pdf file
+      - documentation/Main.pdf
 
 pages:
   stage: deploy
   script:
-    - mkdir public  # create a folder called public
-    - cp documentation/Main.pdf public  # copy the pdf file into the public folder
+    - mkdir public
+    - cp documentation/Main.pdf public
   artifacts:
     paths:
-      - public  # instruct GitLab to keep the public folder
-  only:
-    - master  # deploy the pdf only for commits made to the master branch
+      - public
