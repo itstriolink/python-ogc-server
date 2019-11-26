@@ -71,14 +71,14 @@ class WebServer:
         if limit is None:
             limit = DEFAULT_LIMIT
         elif not limit.isdigit():
-            return APIResponse(None, HTTPResponse.BAD_REQUEST)
+            return APIResponse(None, HTTPResponse["BAD_REQUEST"])
 
         limit = int(limit)
 
         if limit <= 0:
             limit = 1
         elif not (0 < limit <= MAX_LIMIT):
-            return APIResponse(None, HTTPResponse.BAD_REQUEST)
+            return APIResponse(None, HTTPResponse["BAD_REQUEST"])
 
         api_response = self.index.get_items(collection, limit, response.content, features)
         api_response.content = json_dumps_for_response(api_response.content)
@@ -101,8 +101,7 @@ class WebServer:
         tile = TileKey(x, y, zoom)
 
         if a < 0 or a > 256 or b < 0 or b >= 256:
-            from wfs_server.server_handler import HTTPResponse
-            return APIResponse(None, HTTPResponse.BAD_REQUEST)
+            return APIResponse(None, HTTPResponse["BAD_REQUEST"])
 
         tile_bounds = tile.bounds()
         tile_size = tile_bounds.get_size()
@@ -152,7 +151,7 @@ def parse_bbox(bbox_string: str):
         try:
             n.append(float(str.strip(edge)))
         except ValueError:
-            return APIResponse(None, HTTPResponse.BAD_REQUEST)
+            return APIResponse(None, HTTPResponse["BAD_REQUEST"])
 
     if len(n) == 4:
         bbox = bbox.from_point_pair(s2sphere.LatLng.from_degrees(n[1], n[0]),
@@ -168,7 +167,7 @@ def parse_bbox(bbox_string: str):
         if bbox.is_valid():
             return APIResponse(bbox, None)
 
-    return APIResponse(s2sphere.LatLngRect(), HTTPResponse.BAD_REQUEST)
+    return APIResponse(s2sphere.LatLngRect(), HTTPResponse["BAD_REQUEST"])
 
 
 def json_dumps_for_response(data):
