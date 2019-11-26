@@ -4,7 +4,7 @@ import json
 import s2sphere
 
 from wfs_server import index
-from wfs_server.data_structures import WFSLink, APIResponse, HTTPResponse
+from wfs_server.data_structures import WFSLink, APIResponse, HTTP_RESPONSES
 from wfs_server.tiles import TileKey
 
 DEFAULT_LIMIT = 10
@@ -71,14 +71,14 @@ class WebServer:
         if limit is None:
             limit = DEFAULT_LIMIT
         elif not limit.isdigit():
-            return APIResponse(None, HTTPResponse["BAD_REQUEST"])
+            return APIResponse(None, HTTP_RESPONSES["BAD_REQUEST"])
 
         limit = int(limit)
 
         if limit <= 0:
             limit = 1
         elif not (0 < limit <= MAX_LIMIT):
-            return APIResponse(None, HTTPResponse["BAD_REQUEST"])
+            return APIResponse(None, HTTP_RESPONSES["BAD_REQUEST"])
 
         api_response = self.index.get_items(collection, limit, response.content, features)
         api_response.content = json_dumps_for_response(api_response.content)
@@ -101,7 +101,7 @@ class WebServer:
         tile = TileKey(x, y, zoom)
 
         if a < 0 or a > 256 or b < 0 or b >= 256:
-            return APIResponse(None, HTTPResponse["BAD_REQUEST"])
+            return APIResponse(None, HTTP_RESPONSES["BAD_REQUEST"])
 
         tile_bounds = tile.bounds()
         tile_size = tile_bounds.get_size()
@@ -145,29 +145,29 @@ def parse_bbox(bbox_string: str):
         return APIResponse(bbox, None)
 
     edges = str.split(bbox_string, ",")
-    n = []
+    float_edges = []
 
     for edge in edges:
         try:
-            n.append(float(str.strip(edge)))
+            float_edges.append(float(str.strip(edge)))
         except ValueError:
-            return APIResponse(None, HTTPResponse["BAD_REQUEST"])
+            return APIResponse(None, HTTP_RESPONSES["BAD_REQUEST"])
 
-    if len(n) == 4:
-        bbox = bbox.from_point_pair(s2sphere.LatLng.from_degrees(n[1], n[0]),
-                                    s2sphere.LatLng.from_degrees(n[3], n[2]))
+    if len(float_edges) == 4:
+        bbox = bbox.from_point_pair(s2sphere.LatLng.from_degrees(float_edges[1], float_edges[0]),
+                                    s2sphere.LatLng.from_degrees(float_edges[3], float_edges[2]))
 
         if bbox.is_valid:
             return APIResponse(bbox, None)
 
-    if len(n) == 6:
-        bbox = bbox.from_point_pair(s2sphere.LatLng.from_degrees(n[1], n[0]),
-                                    s2sphere.LatLng.from_degrees(n[4], n[3]))
+    if len(float_edges) == 6:
+        bbox = bbox.from_point_pair(s2sphere.LatLng.from_degrees(float_edges[1], float_edges[0]),
+                                    s2sphere.LatLng.from_degrees(float_edges[4], float_edges[3]))
 
         if bbox.is_valid():
             return APIResponse(bbox, None)
 
-    return APIResponse(s2sphere.LatLngRect(), HTTPResponse["BAD_REQUEST"])
+    return APIResponse(s2sphere.LatLngRect(), HTTP_RESPONSES["BAD_REQUEST"])
 
 
 def json_dumps_for_response(data):

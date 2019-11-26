@@ -9,7 +9,7 @@ from Geometry import Point
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from wfs_server import tiles, geometry
-from wfs_server.data_structures import Collection, CollectionMetadata, WFSLink, APIResponse, HTTPResponse
+from wfs_server.data_structures import Collection, CollectionMetadata, WFSLink, APIResponse, HTTP_RESPONSES
 
 
 class Footer:
@@ -46,7 +46,7 @@ class Index:
                   collection: str, limit: int,
                   bbox: s2sphere.LatLngRect, writer: io.BytesIO):
         if collection not in self.collections:
-            return APIResponse(None, HTTPResponse["NOT_FOUND"])
+            return APIResponse(None, HTTP_RESPONSES["NOT_FOUND"])
 
         coll = self.collections[collection]
 
@@ -55,7 +55,7 @@ class Index:
 
         writer.write(bytearray('{"type":"FeatureCollection","features":[', 'utf8'))
         for i, feature_bounds in enumerate(coll.bbox):
-            if not bbox.is_empty and not bbox.intersects(feature_bounds):
+            if not bbox.is_empty() and not bbox.intersects(feature_bounds):
                 continue
 
             if num_features >= limit:
@@ -90,12 +90,12 @@ class Index:
 
     def get_item(self, collection: str, feature_id: str):
         if collection not in self.collections:
-            return APIResponse(None, HTTPResponse["NOT_FOUND"])
+            return APIResponse(None, HTTP_RESPONSES["NOT_FOUND"])
 
         coll = self.collections[collection]
 
         if feature_id not in coll.by_id:
-            return APIResponse(None, HTTPResponse["NOT_FOUND"])
+            return APIResponse(None, HTTP_RESPONSES["NOT_FOUND"])
 
         writer = io.BytesIO()
         coll_index = coll.by_id[feature_id]
@@ -107,11 +107,10 @@ class Index:
 
     def get_tile(self, collection: str, zoom: int, x: int, y: int):
         if x < 0 or y < 0 or not 0 < zoom < 30:
-            return APIResponse(None, HTTPResponse["NOT_FOUND"])
+            return APIResponse(None, HTTP_RESPONSES["NOT_FOUND"])
 
-        tile_key = tiles.TileKey(x=x, y=y, zoom=zoom)
         if collection not in self.collections:
-            return APIResponse(None, HTTPResponse["NOT_FOUND"])
+            return APIResponse(None, HTTP_RESPONSES["NOT_FOUND"])
 
         coll = self.collections.get(collection)
 
@@ -121,23 +120,24 @@ class Index:
         tile_origin = Point(x=(float(x) * 256.0 / float(scale)), y=(float(y) * 256.0 / float(scale)))
         tile = tiles.Tile()
 
-        for i, feature_bounds in enumerate(coll.bbox):
+        for index, feature_bounds in enumerate(coll.bbox):
             if not tile_bounds.intersects(feature_bounds):
                 continue
 
-            p = coll.web_mercator[i].__sub__(tile_origin).__mul__(float(scale))
-            tile.draw_point(p)
+            point = coll.web_mercator[index].__sub__(tile_origin).__mul__(float(scale))
+            tile.draw_point(point)
 
         png = tile.to_png()
 
         return APIResponse(png, None)
 
-    def reload_if_changed(self, cm: CollectionMetadata):
-        response = read_collection(cm.name, cm.path, cm.last_modified)
-        if response.http_response is not None and response.http_response is HTTPResponse["NOT_MODIFIED"]:
+    def reload_if_changed(self, collection_metadata: CollectionMetadata):
+        response = read_collection(collection_metadata.name, collection_metadata.path,
+                                   collection_metadata.last_modified)
+        if response.http_response is not None and response.http_response is HTTP_RESPONSES["NOT_MODIFIED"]:
             return None
-        else:
-            self.replace_collection(response.content)
+
+        self.replace_collection(response.content)
 
     def watch_files(self):
         for collection in self.get_collections():
@@ -169,7 +169,7 @@ def read_collection(name, path, if_modified_since):
     mod_time = datetime.fromtimestamp(os.path.getmtime(abs_path))
 
     if not mod_time > if_modified_since:
-        return APIResponse(None, HTTPResponse["NOT_MODIFIED"])
+        return APIResponse(None, HTTP_RESPONSES["NOT_MODIFIED"])
 
     with open(abs_path, "rb") as file:
         feature_collection = geojson.load(file)

@@ -32,7 +32,7 @@ class WFSLink:
         return dict(href=self.href, rel=self.rel, type=self.type, title=self.title)
 
 
-HTTPResponse = {
+HTTP_RESPONSES = {
     "NOT_FOUND": HTTPException(status_code=404, detail="Collection not found"),
     "BAD_REQUEST": HTTPException(status_code=400, detail="Malformed parameters"),
     "NOT_MODIFIED": HTTPException(status_code=304, detail="Not Modified"),

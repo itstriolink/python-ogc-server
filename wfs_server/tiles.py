@@ -1,4 +1,3 @@
-from base64 import b64encode
 from io import BytesIO
 
 import Geometry
@@ -70,7 +69,3 @@ class TileKey:
         return s2sphere.LatLngRect.from_point_pair(unproject_web_mercator(self.zoom, float(self.x), float(self.y)),
                                                    unproject_web_mercator(self.zoom, float(self.x + 1),
                                                                           float(self.y + 1)))
-
-
-def encode_png(png):
-    return b64encode(png)
