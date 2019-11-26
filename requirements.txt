@@ -5,4 +5,3 @@ APScheduler==3.6.3
 Geometry==0.0.23
 Pillow==6.2.1
 fastapi==0.43.0
-locustio==0.13.2
