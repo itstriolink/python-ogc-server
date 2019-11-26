@@ -41,8 +41,8 @@ def main():
     if COLLECTIONS_ENV is None:
         collections['castles'] = CASTLES_PATH
     else:
-        for collection in str.split(COLLECTIONS_ENV, ","):
-            value = str.split(collection, "=")
+        for collection_object in str.split(COLLECTIONS_ENV, ","):
+            value = str.split(collection_object, "=")
 
             if value is None or len(value) > 2:
                 return None
@@ -119,7 +119,7 @@ def main():
                         })
 
     @app.get('/{path:path}', include_in_schema=False)
-    def raise_400():
+    def raise_404():
         return Response(content=None, status_code=404)
 
 
