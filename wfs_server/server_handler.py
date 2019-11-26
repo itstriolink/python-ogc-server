@@ -2,23 +2,14 @@ import io
 import json
 
 import s2sphere
-from fastapi import HTTPException
 
 from wfs_server import index
-from wfs_server.data_structures import WFSLink
-from wfs_server.index import APIResponse
+from wfs_server.data_structures import WFSLink, APIResponse, HTTPResponse
 from wfs_server.tiles import TileKey
 
 DEFAULT_LIMIT = 10
 MAX_LIMIT = 1000
 MAX_SIGNATURE_WIDTH = 8.0
-
-
-class HTTPResponses:
-    NOT_FOUND = HTTPException(status_code=404, detail="Collection not found")
-    BAD_REQUEST = HTTPException(status_code=400, detail="Malformed parameters")
-    NOT_MODIFIED = HTTPException(status_code=304, detail="Not Modified")
-    INTERNAL_ERROR = HTTPException(status_code=500, detail="Internal server error occurred")
 
 
 class WebServer:
@@ -80,14 +71,14 @@ class WebServer:
         if limit is None:
             limit = DEFAULT_LIMIT
         elif not limit.isdigit():
-            return APIResponse(None, HTTPResponses.BAD_REQUEST)
+            return APIResponse(None, HTTPResponse.BAD_REQUEST)
 
         limit = int(limit)
 
         if limit <= 0:
             limit = 1
         elif not (0 < limit <= MAX_LIMIT):
-            return APIResponse(None, HTTPResponses.BAD_REQUEST)
+            return APIResponse(None, HTTPResponse.BAD_REQUEST)
 
         api_response = self.index.get_items(collection, limit, response.content, features)
         api_response.content = json_dumps_for_response(api_response.content)
@@ -110,8 +101,8 @@ class WebServer:
         tile = TileKey(x, y, zoom)
 
         if a < 0 or a > 256 or b < 0 or b >= 256:
-            from wfs_server.server_handler import HTTPResponses
-            return APIResponse(None, HTTPResponses.BAD_REQUEST)
+            from wfs_server.server_handler import HTTPResponse
+            return APIResponse(None, HTTPResponse.BAD_REQUEST)
 
         tile_bounds = tile.bounds()
         tile_size = tile_bounds.get_size()
@@ -161,7 +152,7 @@ def parse_bbox(bbox_string: str):
         try:
             n.append(float(str.strip(edge)))
         except ValueError:
-            return APIResponse(None, HTTPResponses.BAD_REQUEST)
+            return APIResponse(None, HTTPResponse.BAD_REQUEST)
 
     if len(n) == 4:
         bbox = bbox.from_point_pair(s2sphere.LatLng.from_degrees(n[1], n[0]),
@@ -177,7 +168,7 @@ def parse_bbox(bbox_string: str):
         if bbox.is_valid():
             return APIResponse(bbox, None)
 
-    return APIResponse(s2sphere.LatLngRect(), HTTPResponses.BAD_REQUEST)
+    return APIResponse(s2sphere.LatLngRect(), HTTPResponse.BAD_REQUEST)
 
 
 def json_dumps_for_response(data):
