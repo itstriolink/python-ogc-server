@@ -9,9 +9,9 @@ import wfs_server.server_handler
 
 class TestGeometry(unittest.TestCase):
     def test_encode_bounding_box(self):
-        bounding_box, response = wfs_server.server_handler.parse_bbox("1.4,45.3,8.9,49.2")
+        response = wfs_server.server_handler.parse_bbox("1.4,45.3,8.9,49.2")
 
-        received = wfs_server.geometry.encode_bbox(bounding_box)
+        received = wfs_server.geometry.encode_bbox(response.content)
         expected = [1.4, 45.3, 8.9, 49.2]
 
         self.assertListEqual(received, expected)

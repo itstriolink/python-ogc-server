@@ -5,6 +5,7 @@ import unittest
 import s2sphere
 
 import wfs_server.index
+from wfs_server.data_structures import APIResponse
 
 
 def create_test_index(test: unittest.TestCase):
@@ -31,9 +32,9 @@ def get_items(index: wfs_server.index.Index, collection: str, start_id: str, sta
               bounding_box: s2sphere.LatLngRect):
     writer = io.BytesIO()
 
-    metadata, features, info = index.get_items(collection, start_id, start_index, limit, bounding_box, writer)
+    response = index.get_items(collection, start_id, start_index, limit, bounding_box, writer)
 
-    if info is not None:
-        return None, None, info
+    if response.http_response is not None:
+        return APIResponse(None, response.http_response)
 
-    return metadata, features, None
+    return APIResponse(response.content, response.http_response)
