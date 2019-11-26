@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response, HTMLResponse
 
-from wfs_server.api_handler import make_web_server
 from wfs_server.index import make_index
+from wfs_server.server_handler import make_web_server
 
 app = FastAPI()
 app.add_middleware(
@@ -54,54 +54,54 @@ def main():
 
         @app.get("/collections/{collection}/items")
         def get_collection_items(collection: str, bbox: str = '', limit=None):
-            content, http_response = server.handle_items_request(collection, bbox, limit)
+            api_response = server.handle_items_request(collection, bbox, limit)
 
-            if http_response is not None:
-                return Response(content=None, status_code=http_response.status_code)
+            if api_response.http_response is not None:
+                return Response(content=None, status_code=api_response.http_response.status_code)
 
-            return Response(content=content,
+            return Response(content=api_response.content,
                             headers={
                                 "content-type": "application/geo+json",
-                                "content-length": str(len(content))
+                                "content-length": str(len(api_response.content))
                             })
 
         @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
         def get_raster_tile(collection: str, zoom: int, x: int, y: int):
-            content, http_response = server.handle_tile_request(collection, zoom, x, y)
+            api_response = server.handle_tile_request(collection, zoom, x, y)
 
-            if http_response is not None:
-                return Response(content=None, status_code=http_response.status_code)
+            if api_response.http_response is not None:
+                return Response(content=None, status_code=api_response.http_response.status_code)
 
-            return Response(content=content,
+            return Response(content=api_response.content,
                             headers={
                                 "content-type": "image/png",
-                                "content-length": str(len(content))
+                                "content-length": str(len(api_response.content))
                             })
 
         @app.get("/collections/{collection}/items/{feature_id}")
         def get_feature_info(collection: str, feature_id: str):
-            content, http_response = server.handle_item_request(collection, feature_id)
+            api_response = server.handle_item_request(collection, feature_id)
 
-            if http_response is not None:
-                return Response(content=None, status_code=http_response.status_code)
+            if api_response.http_response is not None:
+                return Response(content=None, status_code=api_response.http_response.status_code)
 
-            return Response(content=content,
+            return Response(content=api_response.content,
                             headers={
                                 "content-type": "application/geo+json",
-                                "content-length": str(len(content))
+                                "content-length": str(len(api_response.content))
                             })
 
         @app.get("/tiles/{collection}/{zoom}/{x}/{y}/{a}/{b}.geojson")
         def get_tile_feature_info(collection: str, zoom: int, x: int, y: int, a: int, b: int):
-            content, http_response = server.handle_tile_feature_info_request(collection, zoom, x, y, a, b)
+            api_response = server.handle_tile_feature_info_request(collection, zoom, x, y, a, b)
 
-            if http_response is not None:
-                return Response(content=None, status_code=http_response.status_code)
+            if api_response.http_response is not None:
+                return Response(content=None, status_code=api_response.http_response.status_code)
 
-            return Response(content=content,
+            return Response(content=api_response.content,
                             headers={
                                 "content-type": "application/geo+json",
-                                "content-length": str(len(content))
+                                "content-length": str(len(api_response.content))
                             })
 
         @app.get('/{path:path}', include_in_schema=False)

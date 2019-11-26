@@ -6,6 +6,7 @@ from fastapi import HTTPException
 
 from wfs_server import index
 from wfs_server.data_structures import WFSLink
+from wfs_server.index import APIResponse
 from wfs_server.tiles import TileKey
 
 DEFAULT_LIMIT = 10
@@ -69,36 +70,39 @@ class WebServer:
         return content
 
     def handle_items_request(self, collection: str, bbox: str, limit: str):
-        bbox, http_response = parse_bbox(bbox)
+        response = parse_bbox(bbox)
 
-        if http_response is not None:
-            return None, http_response
-        start = 0
+        if response.http_response is not None:
+            return APIResponse(None, response.http_response)
+
         features = io.BytesIO()
 
         if limit is None:
             limit = DEFAULT_LIMIT
         elif not limit.isdigit():
-            return None, HTTPResponses.BAD_REQUEST
+            return APIResponse(None, HTTPResponses.BAD_REQUEST)
 
         limit = int(limit)
 
         if limit <= 0:
             limit = 1
         elif not (0 < limit <= MAX_LIMIT):
-            return None, HTTPResponses.BAD_REQUEST
+            return APIResponse(None, HTTPResponses.BAD_REQUEST)
 
-        metadata, features, response = self.index.get_items(collection, limit, bbox, features)
+        api_response = self.index.get_items(collection, limit, response.content, features)
+        api_response.content = json_dumps_for_response(api_response.content)
 
-        return json_dumps_for_response(features), response
+        return api_response
 
     def handle_tile_request(self, collection: str, zoom: int, x: int, y: int):
-        tile, metadata, response = self.index.get_tile(collection, zoom, x, y)
-        return tile, response
+        api_response = self.index.get_tile(collection, zoom, x, y)
+        return api_response
 
     def handle_item_request(self, collection: str, feature_id: str):
-        feature, response = self.index.get_item(collection, feature_id)
-        return json_dumps_for_response(feature), response
+        api_response = self.index.get_item(collection, feature_id)
+        api_response.content = json_dumps_for_response(api_response.content)
+
+        return api_response
 
     def handle_tile_feature_info_request(self, collection: str,
                                          zoom: int, x: int, y: int,
@@ -106,8 +110,8 @@ class WebServer:
         tile = TileKey(x, y, zoom)
 
         if a < 0 or a > 256 or b < 0 or b >= 256:
-            from wfs_server.api_handler import HTTPResponses
-            return None, HTTPResponses.BAD_REQUEST
+            from wfs_server.server_handler import HTTPResponses
+            return APIResponse(None, HTTPResponses.BAD_REQUEST)
 
         tile_bounds = tile.bounds()
         tile_size = tile_bounds.get_size()
@@ -130,14 +134,16 @@ class WebServer:
 
         features = io.BytesIO()
 
-        metadata, features, response = self.index.get_items(collection, 10, bbox, features)
+        api_response = self.index.get_items(collection, 10, bbox, features)
+        api_response.content = json_dumps_for_response(api_response.content)
 
-        return json_dumps_for_response(features), response
+        return api_response
 
 
 def make_web_server(idx: index.Index):
     server = WebServer()
     server.index = idx
+
     return server
 
 
@@ -146,7 +152,7 @@ def parse_bbox(bbox_string: str):
     bbox_string = str.strip(bbox_string)
 
     if len(bbox_string) == 0:
-        return bbox, None
+        return APIResponse(bbox, None)
 
     edges = str.split(bbox_string, ",")
     n = []
@@ -155,23 +161,23 @@ def parse_bbox(bbox_string: str):
         try:
             n.append(float(str.strip(edge)))
         except ValueError:
-            return None, HTTPResponses.BAD_REQUEST
+            return APIResponse(None, HTTPResponses.BAD_REQUEST)
 
     if len(n) == 4:
         bbox = bbox.from_point_pair(s2sphere.LatLng.from_degrees(n[1], n[0]),
                                     s2sphere.LatLng.from_degrees(n[3], n[2]))
 
         if bbox.is_valid:
-            return bbox, None
+            return APIResponse(bbox, None)
 
     if len(n) == 6:
         bbox = bbox.from_point_pair(s2sphere.LatLng.from_degrees(n[1], n[0]),
                                     s2sphere.LatLng.from_degrees(n[4], n[3]))
 
         if bbox.is_valid():
-            return bbox, None
+            return APIResponse(bbox, None)
 
-    return s2sphere.LatLngRect(), HTTPResponses.BAD_REQUEST
+    return APIResponse(s2sphere.LatLngRect(), HTTPResponses.BAD_REQUEST)
 
 
 def json_dumps_for_response(data):

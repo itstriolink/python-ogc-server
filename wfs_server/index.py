@@ -10,7 +10,16 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 from wfs_server import tiles, geometry
 from wfs_server.data_structures import Collection, CollectionMetadata, WFSLink
+from wfs_server.server_handler import HTTPException
 
+
+class APIResponse:
+    content: object
+    http_response: HTTPException
+
+    def __init__(self, content, http_response):
+        self.content = content
+        self.http_response = http_response
 
 class Footer:
     links: [] = []
@@ -46,8 +55,8 @@ class Index:
                   collection: str, limit: int,
                   bbox: s2sphere.LatLngRect, writer: io.BytesIO):
         if collection not in self.collections:
-            from wfs_server.api_handler import HTTPResponses
-            return None, None, HTTPResponses.NOT_FOUND
+            from wfs_server.server_handler import HTTPResponses
+            return APIResponse(None, HTTPResponses.NOT_FOUND)
 
         coll = self.collections[collection]
 
@@ -87,18 +96,18 @@ class Index:
 
         features = geojson.loads(writer.getvalue().decode('utf8'))
 
-        return coll.metadata, features, None
+        return APIResponse(features, None)
 
     def get_item(self, collection: str, feature_id: str):
         if collection not in self.collections:
-            from wfs_server.api_handler import HTTPResponses
-            return None, HTTPResponses.NOT_FOUND
+            from wfs_server.server_handler import HTTPResponses
+            return APIResponse(None, HTTPResponses.NOT_FOUND)
 
         coll = self.collections[collection]
 
         if feature_id not in coll.by_id:
-            from wfs_server.api_handler import HTTPResponses
-            return None, HTTPResponses.NOT_FOUND
+            from wfs_server.server_handler import HTTPResponses
+            return APIResponse(None, HTTPResponses.NOT_FOUND)
 
         writer = io.BytesIO()
         coll_index = coll.by_id[feature_id]
@@ -106,17 +115,17 @@ class Index:
 
         feature = geojson.loads(writer.getvalue().decode('utf8'))
 
-        return feature, None
+        return APIResponse(feature, None)
 
     def get_tile(self, collection: str, zoom: int, x: int, y: int):
         if x < 0 or y < 0 or not 0 < zoom < 30:
-            from wfs_server.api_handler import HTTPResponses
-            return None, CollectionMetadata, HTTPResponses.NOT_FOUND
+            from wfs_server.server_handler import HTTPResponses
+            return APIResponse(None, HTTPResponses.NOT_FOUND)
 
         tile_key = tiles.TileKey(x=x, y=y, zoom=zoom)
         if collection not in self.collections:
-            from wfs_server.api_handler import HTTPResponses
-            return None, CollectionMetadata, HTTPResponses.NOT_FOUND
+            from wfs_server.server_handler import HTTPResponses
+            return APIResponse(None, HTTPResponses.NOT_FOUND)
 
         coll = self.collections.get(collection)
 
@@ -135,16 +144,16 @@ class Index:
 
         png = tile.to_png()
 
-        return png, coll.metadata, None
+        return APIResponse(png, None)
 
     def reload_if_changed(self, cm: CollectionMetadata):
-        coll, response = read_collection(cm.name, cm.path, cm.last_modified)
+        response = read_collection(cm.name, cm.path, cm.last_modified)
 
-        from wfs_server.api_handler import HTTPResponses
-        if response is not None and response is HTTPResponses.NOT_MODIFIED:
+        from wfs_server.server_handler import HTTPResponses
+        if response.http_response is not None and response.http_response is HTTPResponses.NOT_MODIFIED:
             return None
         else:
-            self.replace_collection(coll)
+            self.replace_collection(response.content)
 
     def watch_files(self):
         for collection in self.get_collections():
@@ -161,8 +170,8 @@ def make_index(collections: dict, public_path: str):
     scheduler.start()
 
     for name, path in collections.items():
-        coll, response = read_collection(name, path, datetime.min)
-        index.collections[name] = coll
+        response = read_collection(name, path, datetime.min)
+        index.collections[name] = response.content
 
     return index
 
@@ -176,8 +185,8 @@ def read_collection(name, path, if_modified_since):
     mod_time = datetime.fromtimestamp(os.path.getmtime(abs_path))
 
     if not mod_time > if_modified_since:
-        from wfs_server.api_handler import HTTPResponses
-        return None, HTTPResponses.NOT_MODIFIED
+        from wfs_server.server_handler import HTTPResponses
+        return APIResponse(None, HTTPResponses.NOT_MODIFIED)
 
     with open(abs_path, "rb") as file:
         feature_collection = geojson.load(file)
@@ -195,4 +204,4 @@ def read_collection(name, path, if_modified_since):
         center = coll.bbox[i].get_center()
         coll.web_mercator.append(geometry.project_web_mercator(center))
 
-    return coll, None
+    return APIResponse(coll, None)

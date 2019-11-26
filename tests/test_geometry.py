@@ -3,13 +3,13 @@ import unittest
 import s2sphere
 from Geometry import Point
 
-import wfs_server.api_handler
 import wfs_server.geometry
+import wfs_server.server_handler
 
 
 class TestGeometry(unittest.TestCase):
     def test_encode_bounding_box(self):
-        bounding_box, response = wfs_server.api_handler.parse_bbox("1.4,45.3,8.9,49.2")
+        bounding_box, response = wfs_server.server_handler.parse_bbox("1.4,45.3,8.9,49.2")
 
         received = wfs_server.geometry.encode_bbox(bounding_box)
         expected = [1.4, 45.3, 8.9, 49.2]
