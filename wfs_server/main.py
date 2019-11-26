@@ -12,6 +12,9 @@ app.add_middleware(
     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
 )
 
+COLLECTIONS_ENV = os.environ.get('COLLECTIONS')
+PORT_ENV = os.environ.get('PORT')
+
 CASTLES_PATH = os.path.join(".", "osm-castles-CH.geojson")
 WEB_HOST_URL = r'http://127.0.0.1:8000/'
 
@@ -33,80 +36,91 @@ INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
 
 
 def main():
-        coll = {'castles': CASTLES_PATH}
+    collections = {}
 
-        idx = make_index(coll, WEB_HOST_URL)
-        server = make_web_server(idx)
+    if COLLECTIONS_ENV is None:
+        collections['castles'] = CASTLES_PATH
+    else:
+        for collection in str.split(COLLECTIONS_ENV, ","):
+            value = str.split(collection, "=")
 
-        @app.get("/")
-        def index():
-            return HTMLResponse(content=INDEX_MESSAGE)
+            if value is None or len(value) > 2:
+                return None
 
-        @app.get("/collections")
-        def get_collections():
-            content = server.handle_collections_request()
+            collections[value[0]] = value[1]
 
-            return Response(content=content,
-                            headers={
-                                "content-type": "application/json",
-                                "content-length": str(len(content))
-                            })
+    idx = make_index(collections, WEB_HOST_URL)
+    server = make_web_server(idx)
 
-        @app.get("/collections/{collection}/items")
-        def get_collection_items(collection: str, bbox: str = '', limit=None):
-            api_response = server.handle_items_request(collection, bbox, limit)
+    @app.get("/")
+    def index():
+        return HTMLResponse(content=INDEX_MESSAGE)
 
-            if api_response.http_response is not None:
-                return Response(content=None, status_code=api_response.http_response.status_code)
+    @app.get("/collections")
+    def get_collections():
+        content = server.handle_collections_request()
 
-            return Response(content=api_response.content,
-                            headers={
-                                "content-type": "application/geo+json",
-                                "content-length": str(len(api_response.content))
-                            })
+        return Response(content=content,
+                        headers={
+                            "content-type": "application/json",
+                            "content-length": str(len(content))
+                        })
 
-        @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
-        def get_raster_tile(collection: str, zoom: int, x: int, y: int):
-            api_response = server.handle_tile_request(collection, zoom, x, y)
+    @app.get("/collections/{collection}/items")
+    def get_collection_items(collection: str, bbox: str = '', limit=None):
+        api_response = server.handle_items_request(collection, bbox, limit)
 
-            if api_response.http_response is not None:
-                return Response(content=None, status_code=api_response.http_response.status_code)
+        if api_response.http_response is not None:
+            return Response(content=None, status_code=api_response.http_response.status_code)
 
-            return Response(content=api_response.content,
-                            headers={
-                                "content-type": "image/png",
-                                "content-length": str(len(api_response.content))
-                            })
+        return Response(content=api_response.content,
+                        headers={
+                            "content-type": "application/geo+json",
+                            "content-length": str(len(api_response.content))
+                        })
 
-        @app.get("/collections/{collection}/items/{feature_id}")
-        def get_feature_info(collection: str, feature_id: str):
-            api_response = server.handle_item_request(collection, feature_id)
+    @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
+    def get_raster_tile(collection: str, zoom: int, x: int, y: int):
+        api_response = server.handle_tile_request(collection, zoom, x, y)
 
-            if api_response.http_response is not None:
-                return Response(content=None, status_code=api_response.http_response.status_code)
+        if api_response.http_response is not None:
+            return Response(content=None, status_code=api_response.http_response.status_code)
 
-            return Response(content=api_response.content,
-                            headers={
-                                "content-type": "application/geo+json",
-                                "content-length": str(len(api_response.content))
-                            })
+        return Response(content=api_response.content,
+                        headers={
+                            "content-type": "image/png",
+                            "content-length": str(len(api_response.content))
+                        })
 
-        @app.get("/tiles/{collection}/{zoom}/{x}/{y}/{a}/{b}.geojson")
-        def get_tile_feature_info(collection: str, zoom: int, x: int, y: int, a: int, b: int):
-            api_response = server.handle_tile_feature_info_request(collection, zoom, x, y, a, b)
+    @app.get("/collections/{collection}/items/{feature_id}")
+    def get_feature_info(collection: str, feature_id: str):
+        api_response = server.handle_item_request(collection, feature_id)
 
-            if api_response.http_response is not None:
-                return Response(content=None, status_code=api_response.http_response.status_code)
+        if api_response.http_response is not None:
+            return Response(content=None, status_code=api_response.http_response.status_code)
 
-            return Response(content=api_response.content,
-                            headers={
-                                "content-type": "application/geo+json",
-                                "content-length": str(len(api_response.content))
-                            })
+        return Response(content=api_response.content,
+                        headers={
+                            "content-type": "application/geo+json",
+                            "content-length": str(len(api_response.content))
+                        })
 
-        @app.get('/{path:path}', include_in_schema=False)
-        def raise_400():
-            return Response(content=None, status_code=404)
+    @app.get("/tiles/{collection}/{zoom}/{x}/{y}/{a}/{b}.geojson")
+    def get_tile_feature_info(collection: str, zoom: int, x: int, y: int, a: int, b: int):
+        api_response = server.handle_tile_feature_info_request(collection, zoom, x, y, a, b)
+
+        if api_response.http_response is not None:
+            return Response(content=None, status_code=api_response.http_response.status_code)
+
+        return Response(content=api_response.content,
+                        headers={
+                            "content-type": "application/geo+json",
+                            "content-length": str(len(api_response.content))
+                        })
+
+    @app.get('/{path:path}', include_in_schema=False)
+    def raise_400():
+        return Response(content=None, status_code=404)
 
 
 main()
