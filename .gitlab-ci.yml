@@ -20,7 +20,7 @@ compile_pdf:
 pages:
   stage: deploy
   script:
-    - cp documentation/Main.pdf .
+    - cp documentation/Main.pdf public
   artifacts:
     paths:
-      - .
+      - public
