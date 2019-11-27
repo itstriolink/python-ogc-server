@@ -33,9 +33,9 @@ class WFSLink:
 
 
 HTTP_RESPONSES = {
-    "NOT_FOUND": HTTPException(status_code=404, detail="Collection not found"),
-    "BAD_REQUEST": HTTPException(status_code=400, detail="Malformed parameters"),
     "NOT_MODIFIED": HTTPException(status_code=304, detail="Not Modified"),
+    "BAD_REQUEST": HTTPException(status_code=400, detail="Malformed parameters"),
+    "NOT_FOUND": HTTPException(status_code=404, detail="Collection not found"),
     "INTERNAL_ERROR": HTTPException(status_code=500, detail="Internal server error occurred"),
 }
 

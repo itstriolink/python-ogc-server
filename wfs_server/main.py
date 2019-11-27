@@ -17,7 +17,7 @@ COLLECTIONS_ENV = os.environ.get('COLLECTIONS')
 PORT_ENV = os.environ.get('PORT')
 
 CASTLES_PATH = os.path.join(".", "osm-castles-CH.geojson")
-WEB_HOST_URL = r'http://127.0.0.1:8000/'
+WEB_HOST_URL = str.format('http://127.0.0.1:{0}/', PORT_ENV if PORT_ENV else '8000')
 
 SHORT_INDEX_MESSAGE = 'This is a MiniWFS server compliant with WFS3, written in Python ' \
                       '<a href=\"https://gitlab.com/labiangashi/python-wfs-server\" ' \
@@ -39,17 +39,17 @@ INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
 def main():
     collections = {}
 
-    if COLLECTIONS_ENV is None:
-        collections['castles'] = CASTLES_PATH
-    else:
+    if COLLECTIONS_ENV:
         for collection_object in str.split(COLLECTIONS_ENV, ","):
             value = str.split(collection_object, "=")
             if value is None or len(value) != 2:
-                return logging.ERROR('Malformed parameters for the --collections argument, '
-                                     'pass something like: pass something like --collections=castles=path/to/c.geojson,'
+                return logging.fatal('Malformed parameters for the --collections argument, '
+                                     'pass something like: "COLLECTIONS=castles=path/to/c.geojson,'
                                      'lakes=path/to/l.geojson"')
 
             collections[value[0]] = value[1]
+    else:
+        collections['castles'] = CASTLES_PATH
 
     idx = make_index(collections, WEB_HOST_URL)
     server = make_web_server(idx)
@@ -125,4 +125,5 @@ def main():
         return Response(content=None, status_code=404)
 
 
-main()
+if __name__ == 'wfs_server.main':
+    main()
