@@ -42,6 +42,13 @@ class Index:
 
         return collections
 
+    def get_collection(self, collection_name: str):
+        collection = self.collections.get(collection_name)
+        if collection is None:
+            return APIResponse(None, HTTP_RESPONSES["NOT_FOUND"])
+
+        return APIResponse(collection.metadata, None)
+
     def get_items(self,
                   collection: str, limit: int,
                   bbox: s2sphere.LatLngRect, writer: io.BytesIO):

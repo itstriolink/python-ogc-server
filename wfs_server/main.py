@@ -60,12 +60,25 @@ def main():
 
     @app.get("/collections")
     def get_collections():
-        content = server.handle_collections_request()
+        api_response = server.handle_collections_request()
 
-        return Response(content=content,
+        return Response(content=api_response.content,
                         headers={
                             "content-type": "application/json",
-                            "content-length": str(len(content))
+                            "content-length": str(len(api_response.content))
+                        })
+
+    @app.get("/collections/{collection}")
+    def get_collection(collection: str):
+        api_response = server.handle_collections_request(collection)
+
+        if api_response.http_response is not None:
+            return Response(content=None, status_code=api_response.http_response.status_code)
+
+        return Response(content=api_response.content,
+                        headers={
+                            "content-type": "application/json",
+                            "content-length": str(len(api_response.content))
                         })
 
     @app.get("/collections/{collection}/items")
@@ -79,6 +92,7 @@ def main():
                         headers={
                             "content-type": "application/geo+json",
                             "content-length": str(len(api_response.content))
+
                         })
 
     @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
