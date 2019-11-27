@@ -17,7 +17,7 @@ compile_pdf:
     - cd documentation
     - pdflatex Main.tex
 
-pages:
+documentation:
   stage: deploy
   script:
     - mkdir public
