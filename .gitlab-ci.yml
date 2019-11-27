@@ -16,15 +16,11 @@ compile_pdf:
   script:
     - cd documentation
     - pdflatex Main.tex
-  artifacts:
-    paths:
-      - documentation/Main.pdf
 
 pages:
   stage: deploy
   script:
-    - mkdir public
-    - cp documentation/Main.pdf public
+    - cp documentation/Main.pdf .
   artifacts:
     paths:
-      - public
+      - .
