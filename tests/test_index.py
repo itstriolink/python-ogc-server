@@ -1,6 +1,5 @@
 import io
 import os.path
-import unittest
 
 import s2sphere
 
@@ -8,19 +7,17 @@ import wfs_server.index
 from wfs_server.data_structures import APIResponse
 
 
-def create_test_index(test: unittest.TestCase):
+def create_test_index():
     collection_castles = os.path.join("test_data", "castles.geojson")
     collection_lakes = os.path.join("test_data", "lakes.geojson")
     public_path = r"https://test.example.org/wfs/"
 
     index = wfs_server.index.make_index({"castles": collection_castles, "lakes": collection_lakes}, public_path)
 
-    test.assertTrue(index)
-
     return index
 
 
-class TestIndex(unittest.TestCase):
+class TestIndex():
     # def test_get_items_empty_bbox(self):
     #    index = create_test_index(self)
     #    items, _, _ = get_items(index, "castles", '', 0, 100, s2sphere.LatLngRect)

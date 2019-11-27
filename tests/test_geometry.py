@@ -1,5 +1,3 @@
-import unittest
-
 import s2sphere
 from Geometry import Point
 
@@ -7,19 +5,19 @@ import wfs_server.geometry
 import wfs_server.server_handler
 
 
-class TestGeometry(unittest.TestCase):
+class TestGeometry:
     def test_encode_bounding_box(self):
         response = wfs_server.server_handler.parse_bbox("1.4,45.3,8.9,49.2")
 
         received = wfs_server.geometry.encode_bbox(response.content)
         expected = [1.4, 45.3, 8.9, 49.2]
 
-        self.assertListEqual(received, expected)
+        assert received == expected
 
     def test_encode_bounding_box_empty(self):
         received = wfs_server.geometry.encode_bbox(s2sphere.LatLngRect())
 
-        self.assertIsNone(received)
+        assert received is None
 
     def test_get_tile_bounds(self):
         bounding_box = wfs_server.geometry.encode_bbox(wfs_server.geometry.get_tile_bounds(12, 2148, 1436))
