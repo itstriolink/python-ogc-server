@@ -29,6 +29,7 @@ INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
                 '<strong>Available API methods: </strong>' \
                 '<ol>' \
                 '<li><i>/collections</i></li>' \
+                '<li><i>/collections/{collection_name}</i></li>' \
                 '<li><i>/collections/{collection_name}/items?{bbox}{limit} </i></li>' \
                 '<li><i>/collections{collection_name}/items/{feature_id}</i></li>' \
                 '<li><i>/tiles/{collection_name}/{zoom}/{x}/{y}.png</i></li>' \
