@@ -14,12 +14,20 @@ class CollectionMetadata:
 
 class Collection:
     metadata: CollectionMetadata
-    offset: [] = []
-    bbox: [] = []
-    web_mercator: [] = []
-    id: [] = []
-    by_id: {} = {}
-    feature: [] = []
+    offset: []
+    bbox: []
+    web_mercator: []
+    id: []
+    by_id: {}
+    feature: []
+
+    def __init__(self):
+        self.offset = []
+        self.bbox = []
+        self.web_mercator = []
+        self.id = []
+        self.by_id = {}
+        self.feature = []
 
 
 class WFSLink:

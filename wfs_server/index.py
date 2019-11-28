@@ -13,13 +13,20 @@ from wfs_server.data_structures import Collection, CollectionMetadata, WFSLink, 
 
 
 class Footer:
-    links: [] = []
-    bbox: [] = []
+    links: []
+    bbox: []
+
+    def __init__(self):
+        self.links = []
+        self.bbox = []
 
 
 class Index:
-    collections: {} = {}
+    collections: {}
     public_path: str
+
+    def __init__(self):
+        self.collections = {}
 
     def get_collection_metadata(self, path: str):
         for coll in self.collections:
@@ -82,9 +89,12 @@ class Index:
         footer = Footer()
 
         self_link = WFSLink()
+        self_link.href = ""
         self_link.rel = "self"
         self_link.title = "self"
         self_link.type = "application/geo+json"
+
+        # footer.links.append(self_link.to_json())
 
         footer.bbox = geometry.encode_bbox(bounds)
         encoded_footer = json.dumps(footer.__dict__)
@@ -181,17 +191,17 @@ def read_collection(name, path, if_modified_since):
     with open(abs_path, "rb") as file:
         feature_collection = geojson.load(file)
 
-    coll = Collection()
-    coll.metadata = CollectionMetadata(name, path, mod_time)
+    collection = Collection()
+
+    collection.metadata = CollectionMetadata(name, path, mod_time)
 
     for i, f in enumerate(feature_collection.features):
-        coll.id.append(f.id)
-        coll.by_id[f.id] = i
-        coll.feature.append(geojson.dumps(f, ensure_ascii=False, separators=(',', ':')))
+        collection.id.append(f.id)
+        collection.by_id[f.id] = i
+        collection.feature.append(geojson.dumps(f, ensure_ascii=False, separators=(',', ':')))
 
-        coll.bbox.append(geometry.compute_bounds(f.geometry))
+        collection.bbox.append(geometry.compute_bounds(f.geometry))
 
-        center = coll.bbox[i].get_center()
-        coll.web_mercator.append(geometry.project_web_mercator(center))
-
-    return APIResponse(coll, None)
+        center = collection.bbox[i].get_center()
+        collection.web_mercator.append(geometry.project_web_mercator(center))
+    return APIResponse(collection, None)

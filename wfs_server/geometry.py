@@ -7,6 +7,7 @@ import s2sphere
 
 DBL_EPSILON = sys.float_info.epsilon
 
+
 def compute_bounds(geometry: geojson.geometry.Geometry):
     feature = s2sphere.LatLngRect()
 

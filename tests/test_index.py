@@ -18,12 +18,6 @@ def create_test_index():
 
 
 class TestIndex:
-    def test_get_items_empty_bbox(self):
-        index = create_test_index()
-        response = get_items(index, "castles", 100, s2sphere.LatLngRect())
-
-        # assert response.content == ""
-
     def test_get_item_existing_item(self):
         index = create_test_index()
         received = index.get_item("castles", "W418392510")
