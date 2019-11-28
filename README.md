@@ -1,6 +1,6 @@
 # Python Tile Server
 
-This is a MiniWFS server compliant with WFS3, written in Python here that serves GeoJSON objects and PNG raster tiles.
+This is a MiniWFS server compliant with WFS3, written in Python that serves GeoJSON objects and PNG raster tiles.
 
 **Available API methods:**
 1. */collections*
