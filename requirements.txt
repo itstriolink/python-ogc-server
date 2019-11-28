@@ -1,3 +1,4 @@
+requests
 s2sphere==0.2.5
 starlette==0.12.9
 geojson==2.5.0

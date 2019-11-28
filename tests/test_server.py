@@ -15,6 +15,7 @@ class TestServer:
 
     def test_list_collections(self):
         response = client.get("/collections")
+
         assert response.status_code == 200
         assert response.headers["content-type"] == "application/json"
         assert response.json() == {"links": [
@@ -92,7 +93,7 @@ class TestServer:
 
     def test_collection_items_bad_request(self):
         response = client.get("/collections/castles/items?limit=1001")
-        response_2 = client.get("/collections/castles/items?bbox=weirdstring")
+        response_2 = client.get("/collections/castles/items?bbox=weird-string")
 
         assert response.status_code == 400 and response_2.status_code == 400
         assert (response.content.decode('utf8') is None or response.content.decode('utf8') == "") \

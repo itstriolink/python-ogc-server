@@ -16,8 +16,11 @@ app.add_middleware(
 COLLECTIONS_ENV = os.environ.get('COLLECTIONS')
 PORT_ENV = os.environ.get('PORT')
 
+LOCAL_WEB_URL = "http://127.0.0.1"
+DOCKER_WEB_URL = "http://0.0.0.0"
+
 CASTLES_PATH = os.path.join(".", "osm-castles-CH.geojson")
-WEB_HOST_URL = str.format('http://127.0.0.1:{0}/', PORT_ENV if PORT_ENV else '8000')
+WEB_HOST_URL = str.format('{0}:{1}/', DOCKER_WEB_URL if PORT_ENV else LOCAL_WEB_URL, PORT_ENV if PORT_ENV else '8000')
 
 SHORT_INDEX_MESSAGE = 'This is a MiniWFS server compliant with WFS3, written in Python ' \
                       '<a href=\"https://gitlab.com/labiangashi/python-wfs-server\" ' \
