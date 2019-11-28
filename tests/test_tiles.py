@@ -14,6 +14,6 @@ class TestTiles:
     def test_tile_draw_point(self):
         tile = wfs_server.tiles.Tile()
         tile.draw_point(Point(7.02, 22.95))
+        result = tile.to_png()
 
-        img = tile.to_png()
-        # TODO
+        assert result != wfs_server.tiles.EMPTY_PNG
