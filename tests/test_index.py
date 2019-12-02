@@ -41,6 +41,7 @@ def get_items(index: wfs_server.index.Index, collection: str, limit: int,
               bounding_box: s2sphere.LatLngRect):
     writer = io.BytesIO()
 
-    response = index.get_items(collection, limit, bounding_box, writer)
+    include_links = True
+    response = index.get_items(collection, limit, bounding_box, include_links, writer)
 
     return response

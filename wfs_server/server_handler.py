@@ -3,7 +3,7 @@ import json
 
 import s2sphere
 
-from wfs_server import index
+from wfs_server import index, geometry
 from wfs_server.data_structures import WFSLink, APIResponse, HTTP_RESPONSES
 from wfs_server.tiles import TileKey
 
@@ -90,7 +90,8 @@ class WebServer:
         elif not (0 < limit <= MAX_LIMIT):
             return APIResponse(None, HTTP_RESPONSES["BAD_REQUEST"])
 
-        api_response = self.index.get_items(collection, limit, response.content, features)
+        include_links = True
+        api_response = self.index.get_items(collection, limit, response.content, include_links, features)
         api_response.content = json_dumps_for_response(api_response.content)
 
         return api_response
@@ -133,8 +134,9 @@ class WebServer:
         bbox = s2sphere.LatLngRect.from_center_size(center, bbox_size)
 
         features = io.BytesIO()
+        include_links = False
 
-        api_response = self.index.get_items(collection, 10, bbox, features)
+        api_response = self.index.get_items(collection, 10, bbox, include_links, features)
         api_response.content = json_dumps_for_response(api_response.content)
 
         return api_response
@@ -178,6 +180,25 @@ def parse_bbox(bbox_string: str):
             return APIResponse(bbox, None)
 
     return APIResponse(s2sphere.LatLngRect(), HTTP_RESPONSES["BAD_REQUEST"])
+
+
+def format_items_url(path: str, collection: str, bbox: s2sphere.LatLngRect, limit: int):
+    params = []
+
+    if not bbox.is_empty():
+        bbox_str = geometry.encode_bbox(bbox)
+        bbox_params = str.format("bbox={0},{1},{2},{3}", bbox_str[0], bbox_str[1], bbox_str[2], bbox_str[3])
+        params.append(bbox_params)
+
+    if limit != DEFAULT_LIMIT:
+        params.append(str.format("limit={0}", str(limit)))
+
+    url = path + str.format("collections/{0}", collection) + "/items"
+
+    if len(params) > 0:
+        url += "?" + "&".join(params)
+
+    return url
 
 
 def json_dumps_for_response(data):

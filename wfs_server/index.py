@@ -17,7 +17,6 @@ class Footer:
     bbox: []
 
     def __init__(self):
-        self.links = []
         self.bbox = []
 
 
@@ -58,7 +57,7 @@ class Index:
 
     def get_items(self,
                   collection: str, limit: int,
-                  bbox: s2sphere.LatLngRect, writer: io.BytesIO):
+                  bbox: s2sphere.LatLngRect, include_links: bool, writer: io.BytesIO):
         if collection not in self.collections:
             return APIResponse(None, HTTP_RESPONSES["NOT_FOUND"])
 
@@ -88,13 +87,18 @@ class Index:
 
         footer = Footer()
 
-        self_link = WFSLink()
-        self_link.href = ""
-        self_link.rel = "self"
-        self_link.title = "self"
-        self_link.type = "application/geo+json"
+        if include_links:
+            from wfs_server import server_handler
+            self_link = WFSLink()
+            self_link.href = ""
+            self_link.rel = "self"
+            self_link.title = "self"
+            self_link.type = "application/geo+json"
 
-        # footer.links.append(self_link.to_json())
+            public_path = self.public_path
+            footer.links = []
+            self_link.href = server_handler.format_items_url(public_path, collection, bbox, limit)
+            footer.links.append(self_link.to_json())
 
         footer.bbox = geometry.encode_bbox(bounds)
         encoded_footer = json.dumps(footer.__dict__)
