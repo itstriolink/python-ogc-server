@@ -193,7 +193,7 @@ def format_items_url(path: str, collection: str, bbox: s2sphere.LatLngRect, limi
     if limit != DEFAULT_LIMIT:
         params.append(str.format("limit={0}", str(limit)))
 
-    url = path + str.format("collections/{0}", collection) + "/items"
+    url = str.format("{0}collections/{1}/items", path, collection)
 
     if len(params) > 0:
         url += "?" + "&".join(params)
