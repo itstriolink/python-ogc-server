@@ -6,4 +6,4 @@ services:
       - "80:8000"
     environment:
       - COLLECTIONS=castles=/app/wfs/osm-castles-CH.geojson
-      - PORT=80
+      - PORT=8000
