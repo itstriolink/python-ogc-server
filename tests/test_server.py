@@ -70,7 +70,7 @@ class TestServer:
         response = client.get("/tiles/castles/9/266/180/137/209.geojson")
 
         assert response.status_code == 200
-        assert response.content.decode('utf8') == '{"type":"FeatureCollection","links":[],"bbox":[7.406668,46.649168,' \
+        assert response.content.decode('utf8') == '{"type":"FeatureCollection","bbox":[7.406668,46.649168,' \
                                                   '7.406668,46.649168],"features":[{"type":"Feature",' \
                                                   '"id":"W387544802","geometry":{"type":"Polygon","coordinates":[[[' \
                                                   '7.406668,46.649168],[7.406333,46.649],[7.406405,46.648945],' \
