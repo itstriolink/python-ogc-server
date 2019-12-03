@@ -1,7 +1,7 @@
 from starlette.testclient import TestClient
 
-from wfs_server.main import WEB_HOST_URL
-from wfs_server.main import app
+from wfs_server import tiles
+from wfs_server.main import app, WEB_HOST_URL
 
 client = TestClient(app)
 
@@ -99,8 +99,16 @@ class TestServer:
         assert (response.content.decode('utf8') is None or response.content.decode('utf8') == "") \
                and (response_2.content.decode('utf8') is None or response_2.content.decode('utf8') == "")
 
-    def test_raster_tile(self):
+    def test_empty_raster_tile(self):
+        response = client.get("tiles/castles/1/1/1.png")
+
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "image/png"
+        assert response.content == tiles.EMPTY_PNG
+
+    def test_not_empty_raster_tile(self):
         response = client.get("tiles/castles/9/268/179.png")
 
         assert response.status_code == 200
         assert response.headers["content-type"] == "image/png"
+        assert response.content != tiles.EMPTY_PNG

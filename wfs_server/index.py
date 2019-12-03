@@ -1,6 +1,7 @@
 import io
 import json
 import os
+from collections import OrderedDict
 from datetime import datetime
 
 import geojson
@@ -89,15 +90,15 @@ class Index:
 
         if include_links:
             from wfs_server import server_handler
+            public_path = self.public_path
+
             self_link = WFSLink()
-            self_link.href = ""
+            self_link.href = server_handler.format_items_url(public_path, collection, bbox, limit)
             self_link.rel = "self"
             self_link.title = "self"
             self_link.type = "application/geo+json"
 
-            public_path = self.public_path
             footer.links = []
-            self_link.href = server_handler.format_items_url(public_path, collection, bbox, limit)
             footer.links.append(self_link.to_json())
 
         footer.bbox = geometry.encode_bbox(bounds)
@@ -105,7 +106,7 @@ class Index:
 
         writer.write(bytearray(encoded_footer[1:], 'utf8'))
 
-        features = geojson.loads(writer.getvalue().decode('utf8'))
+        features = geojson.loads(writer.getvalue().decode('utf8'), object_hook=OrderedDict)
 
         return APIResponse(features, None)
 
