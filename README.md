@@ -1,10 +1,10 @@
-# Python Tile Server
+# Python Feature and Tile Server
 
-This is a MiniWFS server compliant with WFS3, written in Python that serves GeoJSON objects and PNG raster tiles.
+This is a mini OGC API server compliant with the "OGC API - Features", written in Python that serves GeoJSON objects and PNG raster tiles.
 
 **Available API methods:**
 
-*  ***WFS3 methods***:
+*  ***OGC API methods***:
 1. */collections*
 2. */collections/{collection}*
 3. */collections/{collection}/items?{bbox}{limit}*

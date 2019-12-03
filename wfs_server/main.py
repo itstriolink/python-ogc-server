@@ -22,7 +22,7 @@ DOCKER_WEB_URL = "http://0.0.0.0"
 CASTLES_PATH = os.path.join(".", "osm-castles-CH.geojson")
 WEB_HOST_URL = str.format('{0}:{1}/', DOCKER_WEB_URL if PORT_ENV else LOCAL_WEB_URL, PORT_ENV if PORT_ENV else '8000')
 
-SHORT_INDEX_MESSAGE = 'This is a MiniWFS server compliant with WFS3, written in Python ' \
+SHORT_INDEX_MESSAGE = 'This is a mini OGC API server compliant with the "OGC API - Features", written in Python ' \
                       '<a href=\"https://gitlab.com/labiangashi/python-wfs-server\" ' \
                       'target="_blank" title="Repository">here</a> ' \
                       'that serves GeoJSON objects and PNG raster tiles. <br />'
@@ -31,7 +31,7 @@ INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
                 '<br/>' \
                 '<strong>Available API methods: </strong><br/>' \
                 '<ol>' \
-                '<strong><i>WFS Endpoints: </i></strong><br/>' \
+                '<strong><i>OGC API Endpoints: </i></strong><br/>' \
                 '<li><i>/collections</i></li>' \
                 '<li><i>/collections/{collection_name}</i></li>' \
                 '<li><i>/collections/{collection_name}/items?{bbox}{limit} </i></li>' \
