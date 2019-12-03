@@ -1,6 +1,8 @@
 # Python Feature and Tile Server
 
 This is a mini OGC API server compliant with the "OGC API - Features".
+ 
+It serves GeoJSON objects and PNG raster tiles.
 
 **Available API methods:**
 
