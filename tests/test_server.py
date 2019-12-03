@@ -70,12 +70,12 @@ class TestServer:
         response = client.get("/tiles/castles/9/266/180/137/209.geojson")
 
         assert response.status_code == 200
-        assert response.content.decode('utf8') == '{"type":"FeatureCollection","bbox":[7.406668,46.649168,' \
-                                                  '7.406668,46.649168],"features":[{"type":"Feature",' \
+        assert response.content.decode('utf8') == '{"type":"FeatureCollection","features":[{"type":"Feature",' \
                                                   '"id":"W387544802","geometry":{"type":"Polygon","coordinates":[[[' \
                                                   '7.406668,46.649168],[7.406333,46.649],[7.406405,46.648945],' \
                                                   '[7.406735,46.649107],[7.406668,46.649168]]]},"properties":{' \
-                                                  '"historic":"castle","name":"Festi","wikidata":"Q67772651"}}]}'
+                                                  '"historic":"castle","name":"Festi","wikidata":"Q67772651"}}],' \
+                                                  '"bbox":[7.406668,46.649168,7.406668,46.649168]}'
 
     def test_tile_feature_info_no_such_feature(self):
         response = client.get("/collections/castles/17/69585/46595/10/5.geojson")
