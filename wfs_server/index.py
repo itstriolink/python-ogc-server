@@ -200,13 +200,14 @@ def read_collection(name, path, if_modified_since):
 
     collection.metadata = CollectionMetadata(name, path, mod_time)
 
-    for i, f in enumerate(feature_collection.features):
-        collection.id.append(f.id)
-        collection.by_id[f.id] = i
-        collection.feature.append(geojson.dumps(f, ensure_ascii=False, separators=(',', ':')))
+    for index, feature in enumerate(feature_collection.features):
+        collection.id.append(feature.id)
+        collection.by_id[feature.id] = index
+        collection.feature.append(geojson.dumps(feature, ensure_ascii=False, separators=(',', ':')))
 
-        collection.bbox.append(geometry.compute_bounds(f.geometry))
+        collection.bbox.append(geometry.compute_bounds(feature.geometry))
 
-        center = collection.bbox[i].get_center()
+        center = collection.bbox[index].get_center()
         collection.web_mercator.append(geometry.project_web_mercator(center))
+
     return APIResponse(collection, None)
