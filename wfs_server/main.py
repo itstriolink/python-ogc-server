@@ -29,12 +29,16 @@ SHORT_INDEX_MESSAGE = 'This is a MiniWFS server compliant with WFS3, written in 
 
 INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
                 '<br/>' \
-                '<strong>Available API methods: </strong>' \
+                '<strong>Available API methods: </strong><br/>' \
                 '<ol>' \
+                '<strong><i>WFS Endpoints: </i></strong><br/>' \
                 '<li><i>/collections</i></li>' \
                 '<li><i>/collections/{collection_name}</i></li>' \
                 '<li><i>/collections/{collection_name}/items?{bbox}{limit} </i></li>' \
                 '<li><i>/collections{collection_name}/items/{feature_id}</i></li>' \
+                '</ol>' \
+                '<ol>' \
+                '<strong><i>Other Endpoints: </i></strong><br/>' \
                 '<li><i>/tiles/{collection_name}/{zoom}/{x}/{y}.png</i></li>' \
                 '<li><i>/tiles/{collection_name}/{zoom}/{x}/{y}/{a}/{b}.geojson</i></li>' \
                 '</ol>'
@@ -62,6 +66,7 @@ def main():
     def index():
         return HTMLResponse(content=INDEX_MESSAGE)
 
+    # region WFS endpoints
     @app.get("/collections")
     def get_collections():
         api_response = server.handle_collections_request()
@@ -99,19 +104,6 @@ def main():
 
                         })
 
-    @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
-    def get_raster_tile(collection: str, zoom: int, x: int, y: int):
-        api_response = server.handle_tile_request(collection, zoom, x, y)
-
-        if api_response.http_response is not None:
-            return Response(content=None, status_code=api_response.http_response.status_code)
-
-        return Response(content=api_response.content,
-                        headers={
-                            "content-type": "image/png",
-                            "content-length": str(len(api_response.content))
-                        })
-
     @app.get("/collections/{collection}/items/{feature_id}")
     def get_feature_info(collection: str, feature_id: str):
         api_response = server.handle_item_request(collection, feature_id)
@@ -122,6 +114,22 @@ def main():
         return Response(content=api_response.content,
                         headers={
                             "content-type": "application/geo+json",
+                            "content-length": str(len(api_response.content))
+                        })
+
+    # endregion
+
+    # region Tile endpoints
+    @app.get("/tiles/{collection}/{zoom}/{x}/{y}.png")
+    def get_raster_tile(collection: str, zoom: int, x: int, y: int):
+        api_response = server.handle_tile_request(collection, zoom, x, y)
+
+        if api_response.http_response is not None:
+            return Response(content=None, status_code=api_response.http_response.status_code)
+
+        return Response(content=api_response.content,
+                        headers={
+                            "content-type": "image/png",
                             "content-length": str(len(api_response.content))
                         })
 
@@ -137,6 +145,8 @@ def main():
                             "content-type": "application/geo+json",
                             "content-length": str(len(api_response.content))
                         })
+
+    # endregion
 
     @app.get('/{path:path}', include_in_schema=False)
     def raise_404():
