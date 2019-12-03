@@ -9,8 +9,8 @@ import s2sphere
 from Geometry import Point
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from wfs_server import tiles, geometry
-from wfs_server.data_structures import Collection, CollectionMetadata, WFSLink, APIResponse, HTTP_RESPONSES
+from ogc_api import tiles, geometry
+from ogc_api.data_structures import Collection, CollectionMetadata, WFSLink, APIResponse, HTTP_RESPONSES
 
 
 class Footer:
@@ -89,7 +89,7 @@ class Index:
         footer = Footer()
 
         if include_links:
-            from wfs_server import server_handler
+            from ogc_api import server_handler
             public_path = self.public_path
 
             self_link = WFSLink()

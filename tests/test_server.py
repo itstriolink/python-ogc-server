@@ -1,7 +1,7 @@
 from starlette.testclient import TestClient
 
-from wfs_server import tiles
-from wfs_server.main import app, WEB_HOST_URL
+from ogc_api import tiles
+from ogc_api.main import app, WEB_HOST_URL
 
 client = TestClient(app)
 

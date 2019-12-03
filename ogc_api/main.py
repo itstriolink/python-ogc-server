@@ -5,8 +5,8 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response, HTMLResponse
 
-from wfs_server.index import make_index
-from wfs_server.server_handler import make_web_server
+from ogc_api.index import make_index
+from ogc_api.server_handler import make_web_server
 
 app = FastAPI()
 app.add_middleware(
@@ -67,7 +67,7 @@ def main():
     def index():
         return HTMLResponse(content=INDEX_MESSAGE)
 
-    # region WFS endpoints
+    # region OGC API endpoints
     @app.get("/collections")
     def get_collections():
         api_response = server.handle_collections_request()
@@ -154,5 +154,5 @@ def main():
         return Response(content=None, status_code=404)
 
 
-if __name__ == 'wfs_server.main':
+if __name__ == 'ogc_api.main':
     main()

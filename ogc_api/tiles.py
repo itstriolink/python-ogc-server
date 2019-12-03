@@ -4,7 +4,7 @@ import Geometry
 import s2sphere
 from PIL import Image, ImageDraw
 
-from wfs_server.geometry import unproject_web_mercator
+from ogc_api.geometry import unproject_web_mercator
 
 PEN_COLOR = (195, 66, 244)
 SIZE = (256, 256)

@@ -1,6 +1,6 @@
 version: '3'
 services:
-  wfs_server:
+  ogcapi_server:
     build: .
     ports:
       - "80:8000"

@@ -3,9 +3,9 @@ import json
 
 import s2sphere
 
-from wfs_server import index, geometry
-from wfs_server.data_structures import WFSLink, APIResponse, HTTP_RESPONSES
-from wfs_server.tiles import TileKey
+from ogc_api import index, geometry
+from ogc_api.data_structures import WFSLink, APIResponse, HTTP_RESPONSES
+from ogc_api.tiles import TileKey
 
 DEFAULT_LIMIT = 10
 MAX_LIMIT = 1000

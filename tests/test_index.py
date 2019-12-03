@@ -3,8 +3,8 @@ import os.path
 
 import s2sphere
 
-import wfs_server.index
-from wfs_server.data_structures import HTTP_RESPONSES
+import ogc_api.index
+from ogc_api.data_structures import HTTP_RESPONSES
 
 
 def create_test_index():
@@ -12,7 +12,7 @@ def create_test_index():
     collection_lakes = os.path.join("tests", "test_data", "lakes.geojson")
 
     public_path = r"https://test.example.org/wfs/"
-    index = wfs_server.index.make_index({"castles": collection_castles, "lakes": collection_lakes}, public_path)
+    index = ogc_api.index.make_index({"castles": collection_castles, "lakes": collection_lakes}, public_path)
 
     return index
 
@@ -37,7 +37,7 @@ class TestIndex:
         assert received.http_response is not None and received.http_response == HTTP_RESPONSES["NOT_FOUND"]
 
 
-def get_items(index: wfs_server.index.Index, collection: str, limit: int,
+def get_items(index: ogc_api.index.Index, collection: str, limit: int,
               bounding_box: s2sphere.LatLngRect):
     writer = io.BytesIO()
 
