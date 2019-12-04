@@ -9,7 +9,7 @@ It serves GeoJSON objects and PNG raster tiles.
 *  ***OGC API methods***:
 1. */collections*
 2. */collections/{collection}*
-3. */collections/{collection}/items?{bbox}*
+3. */collections/{collection}/items*
 4. */collections{collection}/items/{feature_id}*
 
 * ***Other methods:***
