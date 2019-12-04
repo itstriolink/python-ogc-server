@@ -22,7 +22,9 @@ DOCKER_WEB_URL = "http://0.0.0.0"
 CASTLES_PATH = os.path.join(".", "osm-castles-CH.geojson")
 WEB_HOST_URL = str.format('{0}:{1}/', DOCKER_WEB_URL if PORT_ENV else LOCAL_WEB_URL, PORT_ENV if PORT_ENV else '8000')
 
-SHORT_INDEX_MESSAGE = 'This is a mini OGC API server compliant with the "OGC API - Features".<br/>' \
+SHORT_INDEX_MESSAGE = 'This is a mini OGC API server compliant with the ' \
+                      '<a href="https://docs.opengeospatial.org/is/17-069r3/17-069r3.html" target="_blank">' \
+                      'OGC API - Features</a><br/>' \
                       'The server is written in Python ' \
                       '<a href=\"https://gitlab.com/labiangashi/python-wfs-server\" ' \
                       'target="_blank" title="Repository">here</a> ' \
