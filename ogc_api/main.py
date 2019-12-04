@@ -24,10 +24,10 @@ WEB_HOST_URL = str.format('{0}:{1}/', DOCKER_WEB_URL if PORT_ENV else LOCAL_WEB_
 
 SHORT_INDEX_MESSAGE = 'This is a mini OGC API server compliant with the ' \
                       '<a href="https://docs.opengeospatial.org/is/17-069r3/17-069r3.html" target="_blank">' \
-                      'OGC API - Features</a><br/>' \
+                      'OGC API - Features</a>.<br/>' \
                       'The server is written in Python ' \
                       '<a href=\"https://gitlab.com/labiangashi/python-wfs-server\" ' \
-                      'target="_blank" title="Repository">here</a> ' \
+                      'target="_blank" title="Repository">here</a>' \
                       ', it serves GeoJSON objects and PNG raster tiles. <br />'
 
 INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
@@ -36,14 +36,14 @@ INDEX_MESSAGE = f'{SHORT_INDEX_MESSAGE}' \
                 '<ol>' \
                 '<strong><i>OGC API Endpoints: </i></strong><br/>' \
                 '<li><i>/collections</i></li>' \
-                '<li><i>/collections/{collection_name}</i></li>' \
-                '<li><i>/collections/{collection_name}/items?{bbox}{limit} </i></li>' \
-                '<li><i>/collections{collection_name}/items/{feature_id}</i></li>' \
+                '<li><i>/collections/{collection}</i></li>' \
+                '<li><i>/collections/{collection}/items</i></li>' \
+                '<li><i>/collections{collection}/items/{feature_id}</i></li>' \
                 '</ol>' \
                 '<ol>' \
                 '<strong><i>Other Endpoints: </i></strong><br/>' \
-                '<li><i>/tiles/{collection_name}/{zoom}/{x}/{y}.png</i></li>' \
-                '<li><i>/tiles/{collection_name}/{zoom}/{x}/{y}/{a}/{b}.geojson</i></li>' \
+                '<li><i>/tiles/{collection}/{zoom}/{x}/{y}.png</i></li>' \
+                '<li><i>/tiles/{collection}/{zoom}/{x}/{y}/{a}/{b}.geojson</i></li>' \
                 '</ol>'
 
 
