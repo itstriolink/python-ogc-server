@@ -1,7 +1,7 @@
 from starlette.testclient import TestClient
 
 from ogc_api import tiles
-from ogc_api.main import app, WEB_HOST_URL
+from ogc_api.main import app
 
 client = TestClient(app)
 
@@ -18,11 +18,6 @@ class TestServer:
 
         assert response.status_code == 200
         assert response.headers["content-type"] == "application/json"
-        assert response.json() == {"links": [
-            {"href": str.format("{0}collections", WEB_HOST_URL), "rel": "self", "type": "application/json",
-             "title": "Collections"}], "collections": [{"name": "castles", "links": [
-            {"href": str.format("{0}collections/castles", WEB_HOST_URL), "rel": "item", "type": "application/geo+json",
-             "title": "castles"}]}]}
 
     def test_collection_items(self):
         response = client.get("/collections/castles/items?bbox=11.183467,47.910413,11.183469,47.910415")
