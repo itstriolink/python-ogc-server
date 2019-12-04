@@ -31,10 +31,11 @@ class WebServer:
 
         class WFSCollection:
             name: str
+            title: str
             links: [] = []
 
             def to_json(self):
-                return dict(name=self.name, links=self.links)
+                return dict(name=self.name, title=self.title, links=self.links)
 
         class WFSCollectionResponse:
             links: [] = []
@@ -52,6 +53,7 @@ class WebServer:
 
             wfs_collection = WFSCollection()
             wfs_collection.name = collection.name
+            wfs_collection.title = collection.name
             wfs_collection.links.append(link.to_json())
 
             wfs_collections.append(wfs_collection.to_json())

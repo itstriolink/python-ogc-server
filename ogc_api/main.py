@@ -70,6 +70,14 @@ def main():
         return HTMLResponse(content=INDEX_MESSAGE)
 
     # region OGC API endpoints
+    @app.get("/api")
+    def api_endpoint():
+        return Response(content='{"api": "placeholder"}',
+                        headers={
+                            "content-type": "application/json",
+                            "content-length": str(len('{"api": "placeholder"}'))
+                        })
+
     @app.get("/collections")
     def get_collections():
         api_response = server.handle_collections_request()
