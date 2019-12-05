@@ -9,14 +9,6 @@ test_job:
     - echo "Running tests"
     - pytest tests/
 
-
-compile_pdf:
-  stage: build
-  image: gabrielepmattia/latex-minted
-  script:
-    - cd documentation
-    - pdflatex --shell-escape Main.tex
-
 documentation:
   stage: deploy
   script:
