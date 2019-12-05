@@ -16,7 +16,7 @@ compile_pdf:
   script:
     - pip install Pygments
     - cd documentation
-    - pdflatex Main.tex
+    - pdflatex --shell-escape Main.tex
 
 documentation:
   stage: deploy
