@@ -3,16 +3,16 @@
 %% ---------------------------------------------------------------- 
 
 % Set up the document
-\documentclass[a4paper, 11pt, oneside]{Main}  % Use the "Seminar" style, based on the ECS Thesis style by Steve Gunn
+\documentclass[a4paper, 12pt, oneside]{Main}  % Use the "Seminar" style, based on the ECS Thesis style by Steve Gunn
 \renewcommand{\familydefault}{\sfdefault} % Use sans-serif
 \usepackage{helvet} % Helvetica font
-
-\graphicspath{Figures/}  % Location of the graphics files (set up for graphics to be in PDF format)
+\usepackage{minted}
+\graphicspath{Images/}  % Location of the graphics files (set up for graphics to be in PDF format)
 
 % Include any extra LaTeX packages required
 \usepackage[square, numbers, comma, sort&compress]{natbib}  % Use the "Natbib" style for the references in the Bibliography
 \usepackage{verbatim}  % Needed for the "comment" environment to make LaTeX comments
-\usepackage{vector}  % Allows "\bvec{}" and "\buvec{}" for "blackboard" style bold vectors in maths
+\usepackage{hyperref}
 \hypersetup{urlcolor=blue, colorlinks=true}  % Colours hyperlinks in blue, but this can be distracting if there are many links.
 \usepackage{tikz} % Needed for drawin pictures
 \usepackage[export]{adjustbox} % to include a graphic on the left or right
@@ -50,6 +50,7 @@
 \clearpage  % End of the Acknowledgements
 %% ----------------------------------------------------------------
 
+\input{Declaration/DeclarationOfOriginiality}
 
 %% ----------------------------------------------------------------
 \lhead{\emph{Contents}}  % Set the left side page header to "Contents"
@@ -60,29 +61,22 @@
 \mainmatter	  % Begin normal, numeric (1,2,3...) page numbering
 
 \input{Chapters/Introduction}
+\lhead{\emph{Introduction}}
 
-\lhead{\emph{Requirements Engineering}}
 \input{Chapters/RequirementsEngineering}
+\lhead{\emph{Requirements Engineering}}
 
-\lhead{\emph{Architecture \& Design}}
 \input{Chapters/ArchitectureDesign}
+\lhead{\emph{Architecture \& Design}}
 
-\lhead{\emph{Implementation}}
 \input{Chapters/Implementation}
+\lhead{\emph{Implementation}}
 
-\lhead{\emph{Results}}
 \input{Chapters/Results}
+\lhead{\emph{Results}}
 
-
-\lhead{\emph{List of Figures}}  % Set the left side page header to "List if Figures"
-\listoffigures  % Write out the List of Figures
-
-%% ----------------------------------------------------------------
-\lhead{\emph{List of Tables}}  % Set the left side page header to "List of Tables"
-\listoftables  % Write out the List of Tables
-
-%% ----------------------------------------------------------------
-% Now begin the Appendices, including them as separate files
+\listoffigures
+\lhead{\emph{List of Figures}}
 
 \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
 

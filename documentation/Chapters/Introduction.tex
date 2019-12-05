@@ -1,11 +1,40 @@
 \chapter{Introduction}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum mi vitae ipsum placerat, eu placerat ex feugiat. Pellentesque faucibus velit ante, quis bibendum massa lobortis ut. Aliquam id sem interdum, volutpat turpis vel, ultricies augue. Fusce congue turpis eget arcu maximus, eget commodo quam convallis. Aenean vel interdum dui. Nulla in erat vel ante euismod interdum. Donec eu sem non elit mollis vulputate vel vel ipsum. Praesent et convallis ligula. Pellentesque non libero lacinia, vestibulum velit sit amet, consectetur tellus. Cras eget mollis tellus. Sed pellentesque, tortor eu mollis vestibulum, ante lacus tincidunt nisl, vulputate efficitur sapien enim vitae urna.\cite{CiteExample}
+This project work is split into five main parts. 
+The first chapter gives an introduction to the work done, what the problem is (the problem statement) and the goals that this project work tries to meet.\\
+\newline
+The second chapter has to do with the software engineering part (Requirements Engineering). This chapter shows some of the functional and non-functional requirements that this project has to require in order for this project to do the work as intended.\\
+\newline
+The third chapter is a little bit more on the technical side, it has to do with the architecture and the design of the application. It shows some of the technologies that were used, some useful information regarding those technologies and some application design patterns as well.\\
+\newline
+After the things above have been clarified, we now delve into the fourth chapter which explains the actual implementation of the application. It contains documentation about the source code, some programming logic that was used to do different tasks and some important operations that the application does.\\
+\newline
+The fifth and final chapter presents the results that were achieved from this project work. It wraps up with a conclusion about the project and my personal opinions about this project.
+\newpage
 
 \section{Problem Statement}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum mi vitae ipsum placerat, eu placerat ex feugiat. Pellentesque faucibus velit ante, quis bibendum massa lobortis ut. Aliquam id sem interdum, volutpat turpis vel, ultricies augue. Fusce congue turpis eget arcu maximus, eget commodo quam convallis. 
 
 \section{Project Aim}
-Donec eu sem non elit mollis vulputate vel vel ipsum. Praesent et convallis ligula. Pellentesque non libero lacinia, vestibulum velit sit amet, consectetur tellus. Cras eget mollis tellus. Sed pellentesque, tortor eu mollis vestibulum, ante lacus tincidunt nisl, vulputate efficitur sapien enim vitae urna.
+The main objective is to create a server-side application that is minimally compliant with the "OGC API - Features" \cite{OGCApiFeatures}. The application also has to support correct API responses for the GDAL OAPIF \cite{OAPIF} driver (which is an acronym for OGC API Features). It also has to support a couple more API endpoints that return raster tiles. More technical explanation about those endpoints and how they work will be written in the implementation chapter.\\
+\newline
+The main tasks include: returning GeoJSON objects given a specific collection, with the option of limiting the features to a specific bounding box within a region or even limiting the result set to as many features as the request prefers. These are the tasks that also should be compliant with the "OGC API - Features".
 
-\section{State of the Art}
-Pellentesque non libero lacinia, vestibulum velit sit amet, consectetur tellus. Cras eget mollis tellus. Sed pellentesque, tortor eu mollis vestibulum, ante lacus tincidunt nisl, vulputate efficitur sapien enim vitae urna.
+Other tasks include: returning raster tiles as an image format, given specific coordinates and zoom and returning a feature from the feature collection given coordinates and zoom.
+
+\section{GDAL}
+GDAL is a very important notation for this project since a lot of the drivers and features in their library can be used in conjunction with this project to deliver Geodata and different responses.\\
+\newline
+GDAL is a translator library for raster and vector geospatial data formats that is released under an X/MIT style Open Source License by the Open Source Geospatial Foundation. As a library, it presents a single raster abstract data model and single vector abstract data model to the calling application for all supported formats. It also comes with a variety of useful command line utilities for data translation and processing. \cite{WhatIsGDAL}
+
+\section{OGC API}
+OGC is a standard (still in draft mode) that is very important for this project since this project implements it's features and tasks using the OGC standard which is defined \href{https://docs.opengeospatial.org/DRAFTS/17-069r1.html#webapi}{HERE}.
+
+Portion of text directly taken from the OGC API - Features ABSTRACT:  \cite{OGCApiFeatures}\\
+\newline
+"OGC API standards define modular API building blocks to spatially enable Web APIs in a consistent way. The OpenAPI specification is used to define the API building blocks.
+
+The OGC API family of standards is organized by resource type. This standard specifies the fundamental API building blocks for interacting with features. The spatial data community uses the term 'feature' for things in the real world that are of interest.
+
+OGC API Features provides API building blocks to create, modify and query features on the Web. OGC API Features is comprised of multiple parts, each of them is a separate standard. This part, the "Core", specifies the core capabilities and is restricted to fetching features where geometries are represented in the coordinate reference system WGS 84 with axis order longitude/latitude. Additional capabilities that address more advanced needs will be specified in additional parts. Examples include support for creating and modifying features, more complex data models, richer queries, additional coordinate reference systems, multiple datasets and collection hierarchies.
+
+By default, every API implementing this standard will provide access to a single dataset. Rather than sharing the data as a complete dataset, the OGC API Features standards offer direct, fine-grained access to the data at the feature (object) level." \cite{OGCApiFeatures}
