@@ -14,7 +14,10 @@ compile_pdf:
   stage: build
   image: timnn/texlive
   script:
-    - pip install Pygments
+    - apt-get update \
+      && apt-get install -qy python python-pip \
+      && pip install pygments \
+      && rm -rf /var/lib/apt/lists/*
     - cd documentation
     - pdflatex --shell-escape Main.tex
 
