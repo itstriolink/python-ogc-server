@@ -15,19 +15,20 @@ MAX_SIGNATURE_WIDTH = 8.0
 class WebServer:
     index: index.Index
 
-    def handle_collections_request(self, collection: str = None):
+    def handle_collections_request(self, collection_parameter: str = None):
         collections = []
 
-        if collection is None:
+        if collection_parameter is None:
             collections = self.index.get_collections()
         else:
-            response = self.index.get_collection(collection)
+            response = self.index.get_collection(collection_parameter)
             if response.http_response is not None:
                 return APIResponse(None, response.http_response)
 
             collections.append(response.content)
 
         wfs_collections = []
+        content = None
 
         class WFSCollection:
             name: str
@@ -58,6 +59,9 @@ class WebServer:
 
             wfs_collections.append(wfs_collection.to_json())
 
+            if collection_parameter is not None:
+                content = wfs_collection
+
         self_link = WFSLink()
         self_link.href = self.index.public_path + "collections"
         self_link.rel = "self"
@@ -68,7 +72,10 @@ class WebServer:
         result.collections = wfs_collections
         result.links.append(self_link.to_json())
 
-        content = json.dumps(result.to_json(), separators=(',', ':'))
+        if content is None:
+            content = json.dumps(result.to_json(), separators=(',', ':'))
+        else:
+            content = json.dumps(content.to_json(), separators=(',', ':'))
 
         return APIResponse(content, None)
 
