@@ -14,7 +14,6 @@ compile_pdf:
   stage: build
   image: timnn/texlive
   script:
-    - apt-get install python
     - pip install Pygments
     - cd documentation
     - pdflatex Main.tex
