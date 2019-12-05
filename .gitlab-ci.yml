@@ -15,7 +15,7 @@ compile_pdf:
   image: timnn/texlive
   script:
     - cd documentation
-    - pdflatex Main.tex
+    - pdflatex --shell-escape Main.tex
 
 documentation:
   stage: deploy
