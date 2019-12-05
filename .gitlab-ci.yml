@@ -12,7 +12,7 @@ test_job:
 
 compile_pdf:
   stage: build
-  image: latex-minted
+  image: gabrielepmattia/latex-minted
   script:
     - cd documentation
     - pdflatex --shell-escape Main.tex
