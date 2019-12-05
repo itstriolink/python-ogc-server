@@ -10,13 +10,13 @@ The docker image of this application also contains the application Python librar
 As soon as the docker image is built and ran, there is a command that starts the application automatically.
 \newline
 \begin{figure}[H]
-	\includegraphics[width=\linewidth]{Images/ArchitectureDesign/dockerfile_image.png}
+	\includegraphics[width=\linewidth]{./Images/ArchitectureDesign/dockerfile_image.png}
 	\caption{How the docker file looks}
 \end{figure}
 That docker image is then also sent to the Docker Compose tool which is a tool for defining and running docker applications (it is more suitable for multi-container applications, but works in this case too), this was added for easier accessibility, configuration and running of the container.
 \newline
 \begin{figure}[H]
-	\includegraphics[width=\linewidth]{Images/ArchitectureDesign/dockercompose_image.png}
+	\includegraphics[width=\linewidth]{./Images/ArchitectureDesign/dockercompose_image.png}
 	\caption{How the docker compose file looks}
 \end{figure}
 This container architecture makes it very easy to build and start the container since it only requires changing the environment variables in the docker compose (if necessary) and then running the command:
@@ -78,7 +78,7 @@ Docker is a set of platform as a service (PaaS) products that use OS-level virtu
 Here's an illustration of the Docker architecture:
 
 \begin{figure}[H]
-	\includegraphics[width=\linewidth]{Images/ArchitectureDesign/docker_architecture.png}
+	\includegraphics[width=\linewidth]{./Images/ArchitectureDesign/docker_architecture.png}
 	\caption{How the docker architecture looks like}
 \end{figure}
 \textit{Docker images} are read-only templates and can for instance contain already installed software such as Ubuntu, Python, various databases or in this case, combined image of Alpine Linux and Python. They simplify the process of creating Docker containers.
