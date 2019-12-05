@@ -12,12 +12,8 @@ test_job:
 
 compile_pdf:
   stage: build
-  image: timnn/texlive
+  image: latex-minted
   script:
-    - apt-get update \
-      && apt-get install -qy python python-pip \
-      && pip install pygments \
-      && rm -rf /var/lib/apt/lists/*
     - cd documentation
     - pdflatex --shell-escape Main.tex
 
