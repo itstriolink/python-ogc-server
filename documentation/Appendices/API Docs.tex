@@ -1,7 +1,8 @@
 \chapter{API Docs}
 Here are some of the API endpoints, provided by \href{https://swagger.io/}{Swagger UI}.\\
 Disclaimer: This is all data within my environment, the response body can change if the environment or collections are different, but not the response structure or the response headers.
-\section{api/collections}
+\section{OGC API Endpoints}
+\subsection{api/collections}
 Response body:
 \begin{minted}{json}
 {
@@ -36,7 +37,7 @@ Response headers:
  date: Fri, 06 Dec 2019 13:42:33 GMT 
  server: uvicorn 
 \end{minted}
-\section{api/collections/\{collection\}}
+\subsection{api/collections/\{collection\}}
 Response body:
 \begin{minted}{json}
 {
@@ -60,7 +61,7 @@ Response headers:
  server: uvicorn 
 \end{minted}
 \newpage
-\section{api/collections/\{collection\}/items}
+\subsection{api/collections/\{collection\}/items}
 Response body (with only 1 feature, which means a limit of 1):
 \begin{minted}{json}
 {
@@ -81,14 +82,14 @@ Response body (with only 1 feature, which means a limit of 1):
         "description": "Die Schlosshöfe können kostenlos besichtigt werden. In die Schlossgebäude kommt man nur mit einem Ticket aus dem Ticketshop unten im Ort. Kein Ticketverkauf am Schloss.",
         "historic": "castle",
         "name": "Schloss Neuschwanstein   ",
-        "name:ar": "(characters that LaTeX can't compile)",
-        "name:be": "(characters that LaTeX can't compile)",
+        "name:ar": "(characters that can't be interpreted here)",
+        "name:be": "(characters that can't be interpreted here)",
         "name:en": "Neuschwanstein Castle",
         "name:fr": "Château de Neuschwanstein",
-        "name:ja": "(characters that LaTeX can't compile)",
-        "name:ja_kana": "(characters that LaTeX can't compile)",
-        "name:ru": "(characters that LaTeX can't compile)",
-        "name:zh": "(characters that LaTeX can't compile)",
+        "name:ja": "(characters that can't be interpreted here)",
+        "name:ja_kana": "(characters that can't be interpreted here)",
+        "name:ru": "(characters that can't be interpreted here)",
+        "name:zh": "(characters that can't be interpreted here)",
         "opening_hours": "Mo-Su 09:00-18:00",
         "phone": "+49 8362 93 98 80",
         "toilets:wheelchair": "yes",
@@ -123,7 +124,7 @@ Response headers:
  date: Fri, 06 Dec 2019 13:46:28 GMT 
  server: uvicorn 
 \end{minted}
-\section{api/collections/\{collection\}/\{feature\_id\}}
+\subsection{api/collections/\{collection\}/\{feature\_id\}}
 Response body:
 \begin{minted}{json}
 {
@@ -152,11 +153,14 @@ Response headers:
  server: uvicorn 
 \end{minted}
 \newpage
-\section{api/tiles/\{collection\}/\{zoom\}/\{x\}/\{y\}.png}
+\section{Other Endpoints for Tiles}
+\subsection{api/tiles/\{collection\}/\{zoom\}/\{x\}/\{y\}.png}
 Response body:\\
 \begin{figure}[H]
-	\includegraphics[width=\linewidth]{./Images/Appendices/raster_tile_response_body.png}
-	\caption{A raster tile PNG response}
+	\begin{center}
+	\includegraphics[width=256px, height=256px]{./Images/Appendices/raster_tile_response_body.png}
+	\end{center}
+	\caption{A raster tile PNG response, 256x256}
 \end{figure}
 Response headers:
 \begin{minted}{bash}
@@ -165,7 +169,8 @@ Response headers:
  date: Fri, 06 Dec 2019 13:49:50 GMT 
  server: uvicorn 
 \end{minted}
-\section{api/tiles/\{collection\}/\{zoom\}/\{x\}/\{y\}/\{a\}/\{b\}.geojson}
+\newpage
+\subsection{api/tiles/\{collection\}/\{zoom\}/\{x\}/\{y\}/\{a\}/\{b\}.geojson}
 \begin{minted}{json}
 {
   "type": "FeatureCollection",
