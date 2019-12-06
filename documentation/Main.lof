@@ -10,4 +10,5 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {B.1}{\ignorespaces Information about GitLab commits\relax }}{25}{figure.caption.50}%
+\contentsline {figure}{\numberline {B.2}{\ignorespaces Information about CI/CD pipelines\relax }}{25}{figure.caption.51}%
