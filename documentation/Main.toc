@@ -38,8 +38,15 @@
 \contentsline {chapter}{\numberline {A}Installation}{22}{appendix.43}%
 \contentsline {section}{\numberline {A.1}Cloning \& Dockerizing}{22}{section.44}%
 \contentsline {section}{\numberline {A.2}Running the server}{23}{section.45}%
-\contentsline {chapter}{\numberline {B}Project Management}{24}{appendix.46}%
-\contentsline {section}{\numberline {B.1}Organization}{24}{section.47}%
-\contentsline {section}{\numberline {B.2}Planning \& Coordination}{24}{section.48}%
-\contentsline {section}{\numberline {B.3}Workflow}{25}{section.49}%
-\contentsline {chapter}{Bibliography}{26}{dummy.52}%
+\contentsline {chapter}{\numberline {B}API Docs}{24}{appendix.46}%
+\contentsline {section}{\numberline {B.1}api/collections}{24}{section.47}%
+\contentsline {section}{\numberline {B.2}api/collections/\{collection\}}{25}{section.48}%
+\contentsline {section}{\numberline {B.3}api/collections/\{collection\}/items}{26}{section.49}%
+\contentsline {section}{\numberline {B.4}api/collections/\{collection\}/\{feature\_id\}}{27}{section.50}%
+\contentsline {section}{\numberline {B.5}api/tiles/\{collection\}/\{zoom\}/\{x\}/\{y\}.png}{29}{section.51}%
+\contentsline {section}{\numberline {B.6}api/tiles/\{collection\}/\{zoom\}/\{x\}/\{y\}/\{a\}/\{b\}.geojson}{30}{section.53}%
+\contentsline {chapter}{\numberline {C}Project Management}{32}{appendix.54}%
+\contentsline {section}{\numberline {C.1}Organization}{32}{section.55}%
+\contentsline {section}{\numberline {C.2}Planning \& Coordination}{32}{section.56}%
+\contentsline {section}{\numberline {C.3}Workflow}{33}{section.57}%
+\contentsline {chapter}{Bibliography}{34}{dummy.60}%

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=pdflatex 2019.11.19)  6 DEC 2019 14:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=pdflatex 2019.11.19)  6 DEC 2019 14:55
 entering extended mode
 **./Main.tex
 (Main.tex
@@ -1321,13 +1321,13 @@ Package epstopdf Info: Source file: <Logos/HSR_Logo_CMYK.eps>
 verted-to.pdf Logos/HSR_Logo_CMYK.eps>
 (epstopdf)             \includegraphics on input line 11.
 Package epstopdf Info: Output file is already uptodate.
-<Logos/HSR_Logo_CMYK-eps-converted-to.pdf, id=150, 184.69pt x 72.27pt>
+<Logos/HSR_Logo_CMYK-eps-converted-to.pdf, id=178, 184.69pt x 72.27pt>
 File: Logos/HSR_Logo_CMYK-eps-converted-to.pdf Graphic file (type pdf)
 <use Logos/HSR_Logo_CMYK-eps-converted-to.pdf>
 Package pdftex.def Info: Logos/HSR_Logo_CMYK-eps-converted-to.pdf  used on inpu
 t line 11.
 (pdftex.def)             Requested size: 127.7772pt x 50.0pt.
-<Logos/MSE.jpg, id=151, 258.9675pt x 30.1125pt>
+<Logos/MSE.jpg, id=179, 258.9675pt x 30.1125pt>
 File: Logos/MSE.jpg Graphic file (type jpg)
 <use Logos/MSE.jpg>
 Package pdftex.def Info: Logos/MSE.jpg  used on input line 11.
@@ -1392,7 +1392,16 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 6.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [4
 
-])
+]
+LaTeX Font Info:    Trying to load font information for OMS+phv on input line 4
+3.
+
+("C:\Users\labia\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\omsphv.fd"
+File: omsphv.fd 
+)
+LaTeX Font Info:    Font shape `OMS/phv/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 43.
+)
 \tf@toc=\write7
 \openout7 = `Main.toc'.
 
@@ -1465,7 +1474,7 @@ Chapter 3.
 ------------------------------------------------------------------------------
  3 Architecture \& Design
 ------------------------------------------------------------------------------
-<./Images/ArchitectureDesign/dockerfile_image.png, id=261, 455.301pt x 189.7087
+<./Images/ArchitectureDesign/dockerfile_image.png, id=297, 455.301pt x 189.7087
 6pt>
 File: ./Images/ArchitectureDesign/dockerfile_image.png Graphic file (type png)
 <use ./Images/ArchitectureDesign/dockerfile_image.png>
@@ -1485,7 +1494,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 4--15
 [5
 
 ]
-<./Images/ArchitectureDesign/dockercompose_image.png, id=267, 419.166pt x 184.2
+<./Images/ArchitectureDesign/dockercompose_image.png, id=303, 419.166pt x 184.2
 885pt>
 File: ./Images/ArchitectureDesign/dockercompose_image.png Graphic file (type pn
 g)
@@ -1535,7 +1544,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 75--79
 
  []
 
-<./Images/ArchitectureDesign/docker_architecture.png, id=292, 759.58781pt x 396
+<./Images/ArchitectureDesign/docker_architecture.png, id=328, 759.58781pt x 396
 .7322pt>
 File: ./Images/ArchitectureDesign/docker_architecture.png Graphic file (type pn
 g)
@@ -1621,7 +1630,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 147--1
 
 (_minted-Main/B520919F2D6FDA43824EBC26BA9F28911FB7A63F278795F3148E60ED45A6B278.
 pygtex [15])
-<./Images/Implementation/locust_interface.png, id=344, 953.06062pt x 551.05875p
+<./Images/Implementation/locust_interface.png, id=380, 953.06062pt x 551.05875p
 t>
 File: ./Images/Implementation/locust_interface.png Graphic file (type png)
 <use ./Images/Implementation/locust_interface.png>
@@ -1635,7 +1644,7 @@ e-fault in [][]http://127.0.0.1:8089[][]
  []
 
 [16 <./Images/Implementation/locust_interface.png>]
-<./Images/Implementation/gitlab_view.png, id=353, 1047.915pt x 831.105pt>
+<./Images/Implementation/gitlab_view.png, id=389, 1047.915pt x 831.105pt>
 File: ./Images/Implementation/gitlab_view.png Graphic file (type png)
 <use ./Images/Implementation/gitlab_view.png>
 Package pdftex.def Info: ./Images/Implementation/gitlab_view.png  used on input
@@ -1738,57 +1747,154 @@ pygtex)
 
 
 (_minted-Main/38C6B9564F0A5C704F3C6AD6006D32421FB7A63F278795F3148E60ED45A6B278.
-pygtex)) ("Appendices/Project Management.tex" [23]
+pygtex)) ("Appendices/API Docs.tex" [23]
 Appendix B.
 ------------------------------------------------------------------------------
- B Project Management
+ B API Docs
+------------------------------------------------------------------------------
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/93353F49ACB88A8DF59D3CEDF68ACA259A91112E4D44278CE87C49E803424D23.
+pygtex [24
+
+])
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/1382A863225A3827638133017673ED111FB7A63F278795F3148E60ED45A6B278.
+pygtex)
+
+LaTeX Font Warning: Font shape `OMS/phv/bx/n' undefined
+(Font)              using `OMS/phv/m/n' instead
+(Font)              for symbol `textbraceleft' on input line 39.
+
+LaTeX Font Info:    Font shape `OMS/phv/m/n' in size <17.28> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 39.
+LaTeX Font Info:    Font shape `OMS/phv/bx/n' in size <17.28> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 39.
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/5D7A08415FB002E54C7991257C3278CA9A91112E4D44278CE87C49E803424D23.
+pygtex)
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/BE350803D3943E78D9C339642995819F1FB7A63F278795F3148E60ED45A6B278.
+pygtex) [25]
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/B89AE25437DB02C24707CA059190D7509A91112E4D44278CE87C49E803424D23.
+pygtex [26])
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/7024420E9F7731789A8715C54869D3941FB7A63F278795F3148E60ED45A6B278.
+pygtex)
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/3179610BA741E0A5DB82A08991D6D2BB9A91112E4D44278CE87C49E803424D23.
+pygtex [27])
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/00DE955E3D98DCCBD6882127FFA4B7F71FB7A63F278795F3148E60ED45A6B278.
+pygtex) [28]
+<./Images/Appendices/raster_tile_response_body.png, id=466, 256.96pt x 256.96pt
+>
+File: ./Images/Appendices/raster_tile_response_body.png Graphic file (type png)
+
+<use ./Images/Appendices/raster_tile_response_body.png>
+Package pdftex.def Info: ./Images/Appendices/raster_tile_response_body.png  use
+d on input line 158.
+(pdftex.def)             Requested size: 453.60808pt x 453.6429pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 156--160
+
+ []
+
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/FB2B84CBFFDA4B9EDACD4F644C30D5AD1FB7A63F278795F3148E60ED45A6B278.
+pygtex)
+Overfull \hbox (23.79941pt too wide) in paragraph at lines 168--168
+[]\OT1/phv/b/n/17.28 api/tiles/\OMS/cmsy/m/n/17.28 f\OT1/phv/b/n/17.28 collecti
+on\OMS/cmsy/m/n/17.28 g\OT1/phv/b/n/17.28 /\OMS/cmsy/m/n/17.28 f\OT1/phv/b/n/17
+.28 zoom\OMS/cmsy/m/n/17.28 g\OT1/phv/b/n/17.28 /\OMS/cmsy/m/n/17.28 f\OT1/phv/
+b/n/17.28 x\OMS/cmsy/m/n/17.28 g\OT1/phv/b/n/17.28 /\OMS/cmsy/m/n/17.28 f\OT1/p
+hv/b/n/17.28 y\OMS/cmsy/m/n/17.28 g\OT1/phv/b/n/17.28 /\OMS/cmsy/m/n/17.28 f\OT
+1/phv/b/n/17.28 a\OMS/cmsy/m/n/17.28 g\OT1/phv/b/n/17.28 /\OMS/cmsy/m/n/17.28 f
+\OT1/phv/b/n/17.28 b\OMS/cmsy/m/n/17.28 g\OT1/phv/b/n/17.28 .geojson 
+ []
+
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/90E51BD92C7518D6864BAC97DC707DA69A91112E4D44278CE87C49E803424D23.
+pygtex [29 <./Images/Appendices/raster_tile_response_body.png>] [30])
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/B6CBC752CDF9CA8F48F55F34168555811FB7A63F278795F3148E60ED45A6B278.
+pygtex)) ("Appendices/Project Management.tex" [31]
+Appendix C.
+------------------------------------------------------------------------------
+ C Project Management
 ------------------------------------------------------------------------------
 
 Underfull \hbox (badness 10000) in paragraph at lines 7--14
 
  []
 
-<./Images/Appendixes/commits_graph.png, id=410, 978.65625pt x 341.47575pt>
-File: ./Images/Appendixes/commits_graph.png Graphic file (type png)
-<use ./Images/Appendixes/commits_graph.png>
-Package pdftex.def Info: ./Images/Appendixes/commits_graph.png  used on input l
+<./Images/Appendices/commits_graph.png, id=485, 978.65625pt x 341.47575pt>
+File: ./Images/Appendices/commits_graph.png Graphic file (type png)
+<use ./Images/Appendices/commits_graph.png>
+Package pdftex.def Info: ./Images/Appendices/commits_graph.png  used on input l
 ine 19.
 (pdftex.def)             Requested size: 453.60808pt x 158.27396pt.
-[24
+[32
 
 ]
-<./Images/Appendixes/pipelines_graph.png, id=415, 972.63374pt x 255.354pt>
-File: ./Images/Appendixes/pipelines_graph.png Graphic file (type png)
-<use ./Images/Appendixes/pipelines_graph.png>
-Package pdftex.def Info: ./Images/Appendixes/pipelines_graph.png  used on input
+<./Images/Appendices/pipelines_graph.png, id=490, 972.63374pt x 255.354pt>
+File: ./Images/Appendices/pipelines_graph.png Graphic file (type png)
+<use ./Images/Appendices/pipelines_graph.png>
+Package pdftex.def Info: ./Images/Appendices/pipelines_graph.png  used on input
  line 23.
 (pdftex.def)             Requested size: 453.60808pt x 119.08905pt.
-) [25 <./Images/Appendixes/commits_graph.png> <./Images/Appendixes/pipelines_gr
+) [33 <./Images/Appendices/commits_graph.png> <./Images/Appendices/pipelines_gr
 aph.png>]
 ------------------------------------------------------------------------------
  Bibliography
 ------------------------------------------------------------------------------
-(Main.bbl) [26
+(Main.bbl) [34
 
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 95.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 95.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 96.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 96.
  (Main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 95.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 95.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 96.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 96.
 Package rerunfilecheck Info: File `Main.out' has not changed.
-(rerunfilecheck)             Checksum: 20966DC84941D40A1159396D6EE0033F;4669.
+(rerunfilecheck)             Checksum: 2C8A46FCE0A53439D80D466D4EA52025;6392.
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
 runsystem(del Main.pyg)...executed.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 95.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 96.
  ) 
 Here is how much of TeX's memory you used:
- 28464 strings out of 492450
- 514802 string characters out of 3120004
- 584935 words of memory out of 3000000
- 32085 multiletter control sequences out of 15000+200000
- 31878 words of font info for 65 fonts, out of 3000000 for 9000
+ 28580 strings out of 492450
+ 521413 string characters out of 3120004
+ 585738 words of memory out of 3000000
+ 32145 multiletter control sequences out of 15000+200000
+ 32135 words of font info for 66 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  65i,11n,79p,1035b,659s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc
@@ -1797,15 +1903,16 @@ cm/cmitt10.pfb><C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmmi6.pfb><C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fo
 nts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/labia/AppData/Local/Programs/M
 iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/labia/AppData/Local
-/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/labia/A
-ppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt12.pfb><C:/
-Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.p
-fb><C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/u
-hvr8a.pfb><C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/hel
-vetic/uhvro8a.pfb>
-Output written on Main.pdf (32 pages, 492990 bytes).
+/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/labia/
+AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/
+Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cm
+tt12.pfb><C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helv
+etic/uhvb8a.pfb><C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/u
+rw/helvetic/uhvr8a.pfb><C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/
+type1/urw/helvetic/uhvro8a.pfb>
+Output written on Main.pdf (40 pages, 520218 bytes).
 PDF statistics:
- 501 PDF objects out of 1000 (max. 8388607)
- 98 named destinations out of 1000 (max. 500000)
- 346 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 583 PDF objects out of 1000 (max. 8388607)
+ 114 named destinations out of 1000 (max. 500000)
+ 407 words of extra memory for PDF output out of 10000 (max. 10000000)
 
