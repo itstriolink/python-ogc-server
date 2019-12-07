@@ -10,10 +10,6 @@ After the things above have been clarified, we now delve into the fourth chapter
 \newline
 The fifth and final chapter presents the results that were achieved from this project work. It wraps up with a conclusion about the project and my personal opinions about this project.
 \newpage
-
-\section{Problem Statement}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum mi vitae ipsum placerat, eu placerat ex feugiat. Pellentesque faucibus velit ante, quis bibendum massa lobortis ut. Aliquam id sem interdum, volutpat turpis vel, ultricies augue. Fusce congue turpis eget arcu maximus, eget commodo quam convallis. 
-
 \section{Project Aim}
 The main objective is to create a server-side application that is minimally compliant with the "OGC API - Features" \cite{OGCApiFeatures}. The application also has to support correct API responses for the GDAL OAPIF \cite{OAPIF} driver (which is an acronym for OGC API Features). It also has to support a couple more API endpoints that return raster tiles. More technical explanation about those endpoints and how they work will be written in the implementation chapter.\\
 \newline
@@ -24,8 +20,11 @@ Other tasks include: returning raster tiles as an image format, given specific c
 \section{GDAL}
 GDAL is a very important notation for this project since a lot of the drivers and features in their library can be used in conjunction with this project to deliver Geodata and different responses.\\
 \newline
-GDAL is a translator library for raster and vector geospatial data formats that is released under an X/MIT style Open Source License by the Open Source Geospatial Foundation. As a library, it presents a single raster abstract data model and single vector abstract data model to the calling application for all supported formats. It also comes with a variety of useful command line utilities for data translation and processing. \cite{WhatIsGDAL}
+GDAL is a translator library for raster and vector geospatial data formats that is released under an X/MIT style Open Source License by the Open Source Geospatial Foundation. As a library, it presents a single raster abstract data model and single vector abstract data model to the calling application for all supported formats. It also comes with a variety of useful command line utilities for data translation and processing. \cite{WhatIsGDAL}\\
+GDAL also provides a lot of drivers, and the driver that is important for this project is the \href{https://gdal.org/drivers/vector/oapif.html}{OAPIF} driver (Short for OGC API - Features).\\
+This driver provides us the opportunity to query OGC API servers and to retrieve Geo information from those API's.
 
+\newpage
 \section{OGC API}
 OGC is a standard (still in draft mode) that is very important for this project since this project implements it's features and tasks using the OGC standard which is defined \href{https://docs.opengeospatial.org/DRAFTS/17-069r1.html#webapi}{HERE}.
 
