@@ -11,7 +11,9 @@ class TestServer:
         response = client.get("/")
 
         assert response.status_code == 200
-        assert response.headers["content-type"] == "text/html; charset=utf-8"
+        assert response.headers["content-type"] == "application/json"
+        assert response.content.decode('utf8').find("title") > 0 \
+               and response.content.decode('utf8').find("links") > 0
 
     def test_list_collections(self):
         response = client.get("/collections")
@@ -38,14 +40,7 @@ class TestServer:
         response = client.get("/collections/castles/items/N3256406527")
 
         assert response.status_code == 200
-        assert response.content.decode('utf8') == '{"type":"Feature","id":"N3256406527","geometry":{"type":"Point",' \
-                                                  '"coordinates":[9.021746,46.192902]},"properties":{' \
-                                                  '"castle_type":"defensive","heritage":"1",' \
-                                                  '"heritage:operator":"whc","historic":"castle",' \
-                                                  '"historic:civilization":"medieval","name":"Castelgrande",' \
-                                                  '"name:ru":"Кастельгранде","ref:whc":"884-001",' \
-                                                  '"tourism":"attraction","whc:inscription_date":"2000",' \
-                                                  '"wikidata":"Q664376","wikipedia":"it:Castelgrande (castello)"}}'
+        assert response.content.decode('utf8').find("N3256406527") > 0
 
     def test_collection_feature_not_found(self):
         response = client.get("/collections/castles/items/no-such-feature")
@@ -65,12 +60,7 @@ class TestServer:
         response = client.get("/tiles/castles/9/266/180/137/209.geojson")
 
         assert response.status_code == 200
-        assert response.content.decode('utf8') == '{"type":"FeatureCollection","features":[{"type":"Feature",' \
-                                                  '"id":"W387544802","geometry":{"type":"Polygon","coordinates":[[[' \
-                                                  '7.406668,46.649168],[7.406333,46.649],[7.406405,46.648945],' \
-                                                  '[7.406735,46.649107],[7.406668,46.649168]]]},"properties":{' \
-                                                  '"historic":"castle","name":"Festi","wikidata":"Q67772651"}}],' \
-                                                  '"bbox":[7.406668,46.649168,7.406668,46.649168]}'
+        assert response.content.decode('utf8').find("W387544802") > 0
 
     def test_tile_feature_info_no_such_feature(self):
         response = client.get("/collections/castles/17/69585/46595/10/5.geojson")
