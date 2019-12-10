@@ -125,7 +125,7 @@ class WebServer:
                 link.rel = "self"
             else:
                 link.rel = "item"
-            link.type = "application/geo+json"
+            link.type = "application/json"
             link.title = "Information about the " + collection.name + " data"
 
             items_link = WFSLink()
