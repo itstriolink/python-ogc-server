@@ -3,7 +3,7 @@ import os
 
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import Response, HTMLResponse
+from starlette.responses import Response
 
 from ogc_api.index import make_index
 from ogc_api.server_handler import make_web_server
@@ -67,15 +67,23 @@ def main():
 
     @app.get("/")
     def index():
-        return HTMLResponse(content=INDEX_MESSAGE)
+        api_response = server.handle_landing_request()
+
+        return Response(content=api_response.content,
+                        headers={
+                            "content-type": "application/json",
+                            "content-length": str(len(api_response.content))
+                        })
 
     # region OGC API endpoints
     @app.get("/api")
     def api_endpoint():
-        return Response(content='{"api": "placeholder"}',
+        api_response = server.handle_landing_request(landing_page=False)
+
+        return Response(content=api_response.content,
                         headers={
-                            "content-type": "application/json",
-                            "content-length": str(len('{"api": "placeholder"}'))
+                            "content-type": "application/geo+json",
+                            "content-length": str(len(api_response.content))
                         })
 
     @app.get("/collections")

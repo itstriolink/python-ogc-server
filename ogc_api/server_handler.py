@@ -15,6 +15,79 @@ MAX_SIGNATURE_WIDTH = 8.0
 class WebServer:
     index: index.Index
 
+    def handle_landing_request(self, landing_page=True):
+        class LandingPageResponse:
+            title: str
+            description: str
+            links: []
+
+            def to_json(self):
+                return dict(title=self.title, description=self.description, links=self.links)
+
+        response = LandingPageResponse()
+        response.links = []
+        response.title = "OGC API - Features server"
+        response.description = "Web API that conforms to the OGC API Features specification."
+
+        landing_link = WFSLink()
+
+        landing_link.href = self.index.public_path
+
+        if landing_page:
+            landing_link.rel = "self"
+        else:
+            landing_link.rel = "item"
+
+        landing_link.type = "application/json"
+        landing_link.title = "This document"
+
+        response.links.append(landing_link.to_json())
+
+        api_link = WFSLink()
+
+        api_link.href = self.index.public_path + "api"
+
+        if landing_page:
+            api_link.rel = "service-desc"
+        else:
+            api_link.rel = "self"
+
+        api_link.type = "application/json"
+        api_link.title = "The API definition"
+
+        response.links.append(api_link.to_json())
+
+        collections_link = WFSLink()
+
+        collections_link.href = self.index.public_path + "collections"
+        collections_link.rel = "data"
+        collections_link.type = "application/json"
+        collections_link.title = "Metadata about the feature collections"
+
+        response.links.append(collections_link.to_json())
+
+        # collections = self.index.get_collections()
+
+        # for collection in collections:
+        #     link = WFSLink()
+        #     link.href = self.index.public_path + "collections/" + collection.name
+        #     link.rel = "item"
+        #     link.type = "application/json"
+        #     link.title = "Information about the " + collection.name + " data"
+        #
+        #     items_link = WFSLink()
+        #     items_link.href = self.index.public_path + "collections/" + collection.name + "/items"
+        #     items_link.rel = "item"
+        #     items_link.type = "application/geo+json"
+        #     items_link.title = collection.name + " as GeoJSON"
+        #
+        #     response.links.append(link.to_json())
+        #     response.links.append(items_link.to_json())
+
+        content = json.dumps(response.to_json(), indent=2)
+
+        return APIResponse(content=content, http_response=None)
+
     def handle_collections_request(self, collection_parameter: str = None):
         collections = []
 
@@ -48,14 +121,25 @@ class WebServer:
         for collection in collections:
             link = WFSLink()
             link.href = self.index.public_path + "collections/" + collection.name
-            link.rel = "item"
+            if collection_parameter is not None:
+                link.rel = "self"
+            else:
+                link.rel = "item"
             link.type = "application/geo+json"
-            link.title = collection.name
+            link.title = "Information about the " + collection.name + " data"
+
+            items_link = WFSLink()
+            items_link.href = self.index.public_path + "collections/" + collection.name + "/items"
+            items_link.rel = "item"
+            items_link.type = "application/geo+json"
+            items_link.title = collection.name + " as GeoJSON"
 
             wfs_collection = WFSCollection()
             wfs_collection.name = collection.name
             wfs_collection.title = collection.name
+
             wfs_collection.links.append(link.to_json())
+            wfs_collection.links.append(items_link.to_json())
 
             wfs_collections.append(wfs_collection.to_json())
 
@@ -73,9 +157,9 @@ class WebServer:
         result.links.append(self_link.to_json())
 
         if content is None:
-            content = json.dumps(result.to_json(), separators=(',', ':'))
+            content = json.dumps(result.to_json(), indent=2)
         else:
-            content = json.dumps(content.to_json(), separators=(',', ':'))
+            content = json.dumps(content.to_json(), indent=2)
 
         return APIResponse(content, None)
 
@@ -101,7 +185,7 @@ class WebServer:
 
         include_links = True
         api_response = self.index.get_items(collection, limit, response.content, include_links, features)
-        api_response.content = json_dumps_for_response(api_response.content)
+        api_response.content = json_dumps_for_response(api_response.content, without_indent=True)
 
         return api_response
 
@@ -210,10 +294,17 @@ def format_items_url(path: str, collection: str, bbox: s2sphere.LatLngRect, limi
     return url
 
 
-def json_dumps_for_response(data):
-    return json.dumps(data,
-                      ensure_ascii=False,
-                      allow_nan=False,
-                      indent=None,
-                      separators=(",", ":"),
-                      ).encode("utf-8")
+def json_dumps_for_response(data, without_indent=False):
+    if without_indent:
+        return json.dumps(data,
+                          ensure_ascii=False,
+                          allow_nan=False,
+                          indent=None,
+                          separators=(",", ":")
+                          ).encode("utf-8")
+    else:
+        return json.dumps(data,
+                          ensure_ascii=False,
+                          allow_nan=False,
+                          indent=2
+                          ).encode("utf-8")
