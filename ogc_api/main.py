@@ -66,7 +66,7 @@ def main():
     server = make_web_server(idx)
 
     @app.get("/")
-    def index():
+    def landing_page():
         api_response = server.handle_landing_request()
 
         return Response(content=api_response.content,
@@ -77,7 +77,7 @@ def main():
 
     # region OGC API endpoints
     @app.get("/api")
-    def api_endpoint():
+    def api_definition():
         api_response = server.handle_landing_request(landing_page=False)
 
         return Response(content=api_response.content,

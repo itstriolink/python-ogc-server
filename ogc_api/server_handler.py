@@ -104,12 +104,12 @@ class WebServer:
         content = None
 
         class WFSCollection:
-            name: str
+            id: str
             title: str
             links: [] = []
 
             def to_json(self):
-                return dict(name=self.name, title=self.title, links=self.links)
+                return dict(id=self.id, title=self.title, links=self.links)
 
         class WFSCollectionResponse:
             links: [] = []
@@ -135,8 +135,8 @@ class WebServer:
             items_link.title = collection.name + " as GeoJSON"
 
             wfs_collection = WFSCollection()
-            wfs_collection.name = collection.name
-            wfs_collection.title = collection.name
+            wfs_collection.id = collection.name
+            wfs_collection.title = "A collection of " + collection.name + " features"
 
             wfs_collection.links.append(link.to_json())
             wfs_collection.links.append(items_link.to_json())
