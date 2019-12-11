@@ -26,7 +26,7 @@
 \newcommand\bhrule{\typeout{------------------------------------------------------------------------------}}
 
 \newcommand\Declaration[1]{
-\btypeout{Declaration of Authorship}
+\btypeout{Declaration of hip}
 \addtotoc{Declaration of Authorship}
 \thispagestyle{plain}
 \null\vfil
@@ -186,9 +186,9 @@
 			\vfill
 			{\huge \bf \@title \par}
 			\vfill 
-			{\LARGE Projekt Arbeit 1\par}
+			{\Large Projekt Arbeit 1\par}
 			\bigskip
-			{\LARGE \authornames \par}
+			{\Large \authornames \par}
 			\vfill
 			{\large \facname \par}
 			{\large \deptname \par}

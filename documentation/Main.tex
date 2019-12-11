@@ -36,26 +36,21 @@
 	\addtocontents{toc}{\vspace{1em}}
 	\input{Acknowledgements/Acknowledgements}
 }
-
-\addtocontents{toc}{\vspace{1em}}
-\input{Declaration/DeclarationOfOriginiality}
+\newpage
+\Declaration{
+	\addtocontents{toc}{\vspace{1em}}
+	\input{Declaration/DeclarationOfOriginality}
+}
 
 \setcounter{tocdepth}{1}
 \tableofcontents
 
 \mainmatter
 
-
 \input{Chapters/Introduction}
-
-\input{Chapters/RequirementsEngineering}
-
 \input{Chapters/ArchitectureDesign}
-
 \input{Chapters/Implementation}
-
 \input{Chapters/Results}
-
 
 \listoffigures
 \addtocontents{toc}{\vspace{2em}}

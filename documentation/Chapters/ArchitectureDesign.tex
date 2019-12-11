@@ -1,4 +1,4 @@
-\chapter{Architecture \& Design}
+\chapter{Architecture and Design}
 \section{Overview}
 The application is developed and built using the Python language (v3.7.4) and it is also dockerized into a docker image which contains the Alpine Linux distribution, the server which runs the application and the Python language. 
 The application uses a lot of Geo libraries in Python, it also uses some libraries that were initially created in other languages (C++, Go etc), but were minimally converted to Python since they were very powerful and useful for the community.
@@ -24,8 +24,8 @@ $ docker compose up --build
 \end{minted}
 \newpage
 
-\section{Python}
-This application was built using the Python programming language, version 3.7.4.\\
+\section{Design Decision - Programming Language}
+This application was built using the \href{https://python.org/}{Python} programming language, version 3.7.4.\\
 \newline
 Python is an interpreted, high-level, general-purpose programming language. Created by Guido van Rossum and first released in 1991, Python's design philosophy emphasizes code readability with its notable use of significant whitespace. Its language constructs and object-oriented approach aim to help programmers write clear, logical code for small and large-scale projects. \cite{WhatIsPython}\\
 \newline
@@ -70,8 +70,9 @@ print file_text
 \end{minted}
 As you can see, this is not the typical code syntax that people write in other programming languages. However, it is very convenient and efficient once you get used to it.\\
 \newpage
-\section{Docker}
-This application is also shipped into containers, which are the new thing in the software engineering world. This project uses only container, the application only, since that's the only required one, there is no database or front-end application which has to be separated into other containers.\\
+\section{Design Decision - Containerization}
+This application is also shipped into containers, which are the new thing in the software engineering world. This project uses only one container, the application only, since that's the only required one, there is no database or front-end application which has to be separated into other containers.\\
+The container architecture that this project uses is \href{https://www.docker.com/}{Docker}.\\
 Docker is a set of platform as a service (PaaS) products that use OS-level virtualization to deliver software in packages called containers. Containers are isolated from one another and bundle their own software, libraries and configuration files; they can communicate with each other through well-defined channels. All containers are run by a single operating-system kernel and are thus more lightweight than virtual machines. \cite{WhatIsDocker}\\
 \newline
 Here's an illustration of the Docker architecture:
@@ -84,5 +85,5 @@ Here's an illustration of the Docker architecture:
 
 \textit{Docker registries} are used for distributing existing Docker images. They can be either private or public in the \href{https://hub.docker.com/}{Docker Hub}. Docker images are downloaded from Docker registries.
 
-\textit{Docker containers} are built from the Docker images themselves. They contain everything needed for an application to run and have their own file system and networking. Each container is an isolated application platform which can be run, started, stopped, moved and deleted.
+\textit{Docker containers} are built from the Docker images themselves. They contain everything needed for an application to run and have their own file system and networking.
 
