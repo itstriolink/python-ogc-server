@@ -163,7 +163,7 @@ class WebServer:
 
         return APIResponse(content, None)
 
-    def handle_items_request(self, collection: str, bbox: str, limit: str):
+    def handle_items_request(self, collection: str, start_id: str, start: int, bbox: str, limit: str):
         response = parse_bbox(bbox)
 
         if response.http_response is not None:
@@ -184,7 +184,8 @@ class WebServer:
             return APIResponse(None, HTTP_RESPONSES["BAD_REQUEST"])
 
         include_links = True
-        api_response = self.index.get_items(collection, limit, response.content, include_links, features)
+        api_response = self.index.get_items(collection, start_id, start, limit, response.content, include_links,
+                                            features)
         api_response.content = json_dumps_for_response(api_response.content, without_indent=True)
 
         return api_response
@@ -229,7 +230,7 @@ class WebServer:
         features = io.BytesIO()
         include_links = False
 
-        api_response = self.index.get_items(collection, 10, bbox, include_links, features)
+        api_response = self.index.get_items(collection, "", 0, 10, bbox, include_links, features)
         api_response.content = json_dumps_for_response(api_response.content)
 
         return api_response
@@ -275,8 +276,14 @@ def parse_bbox(bbox_string: str):
     return APIResponse(s2sphere.LatLngRect(), HTTP_RESPONSES["BAD_REQUEST"])
 
 
-def format_items_url(path: str, collection: str, bbox: s2sphere.LatLngRect, limit: int):
+def format_items_url(path: str, collection: str, start_id: str, start: int, bbox: s2sphere.LatLngRect, limit: int):
     params = []
+
+    if len(start_id) > 0:
+        params.append(str.format("start_id={0}", start_id))
+
+    if start > 0:
+        params.append(str.format("start={0}", start))
 
     if not bbox.is_empty():
         bbox_str = geometry.encode_bbox(bbox)

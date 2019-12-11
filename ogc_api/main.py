@@ -2,10 +2,12 @@ import logging
 import os
 
 from fastapi import FastAPI
+from fastapi.openapi.utils import get_openapi
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response
 
 from ogc_api.index import make_index
+from ogc_api.server_handler import json_dumps_for_response
 from ogc_api.server_handler import make_web_server
 
 app = FastAPI()
@@ -76,15 +78,6 @@ def main():
                         })
 
     # region OGC API endpoints
-    @app.get("/api")
-    def api_definition():
-        api_response = server.handle_landing_request(landing_page=False)
-
-        return Response(content=api_response.content,
-                        headers={
-                            "content-type": "application/geo+json",
-                            "content-length": str(len(api_response.content))
-                        })
 
     @app.get("/collections")
     def get_collections():
@@ -110,8 +103,8 @@ def main():
                         })
 
     @app.get("/collections/{collection}/items")
-    def get_collection_items(collection: str, bbox: str = '', limit=None):
-        api_response = server.handle_items_request(collection, bbox, limit)
+    def get_collection_items(collection: str, bbox: str = '', limit=None, start_id='', start=0):
+        api_response = server.handle_items_request(collection, start_id, start, bbox, limit)
 
         if api_response.http_response is not None:
             return Response(content=None, status_code=api_response.http_response.status_code)
@@ -164,6 +157,31 @@ def main():
                             "content-type": "application/geo+json",
                             "content-length": str(len(api_response.content))
                         })
+
+    @app.get("/api")
+    def api_definition():
+        spec = get_custom_api()
+        response = json_dumps_for_response(spec)
+
+        return Response(content=response,
+                        headers={
+                            "content-type": "application/openapi+json;version=3.0",
+                            "content-length": str(len(response))
+                        })
+
+    def get_custom_api():
+        if app.openapi_schema:
+            return app.openapi_schema
+
+        openapi_schema = get_openapi(
+            title="OGC API - Features server",
+            description="Web API that conforms to the OGC API Features specification.",
+            version="1.0",
+            routes=app.routes,
+        )
+
+        app.openapi_schema = openapi_schema
+        return app.openapi_schema
 
     # endregion
 

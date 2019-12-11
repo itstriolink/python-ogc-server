@@ -42,6 +42,6 @@ def get_items(index: ogc_api.index.Index, collection: str, limit: int,
     writer = io.BytesIO()
 
     include_links = True
-    response = index.get_items(collection, limit, bounding_box, include_links, writer)
+    response = index.get_items(collection, "", 0, limit, bounding_box, include_links, writer)
 
     return response

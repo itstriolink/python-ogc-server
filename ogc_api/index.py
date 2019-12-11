@@ -57,7 +57,7 @@ class Index:
         return APIResponse(collection.metadata, None)
 
     def get_items(self,
-                  collection: str, limit: int,
+                  collection: str, start_id: str, start_index: int, limit: int,
                   bbox: s2sphere.LatLngRect, include_links: bool, writer: io.BytesIO):
         if collection not in self.collections:
             return APIResponse(None, HTTP_RESPONSES["NOT_FOUND"])
@@ -67,13 +67,25 @@ class Index:
         bounds = s2sphere.LatLngRect()
         num_features = 0
 
+        if len(start_id) > 0:
+            start_index = coll.by_id[start_id]
+
         writer.write(bytearray('{"type":"FeatureCollection","features":[', 'utf8'))
+        skip = start_index
+        next_id = ''
+        next_index = 0
         for i, feature_bounds in enumerate(coll.bbox):
             if not bbox.is_empty() and not bbox.intersects(feature_bounds):
                 continue
 
             if num_features >= limit:
+                next_id = coll.id[i]
+                next_index = i
                 break
+
+            if skip > 0:
+                skip -= 1
+                continue
 
             if num_features > 0:
                 writer.write(bytearray(',', 'utf8'))
@@ -91,15 +103,26 @@ class Index:
         if include_links:
             from ogc_api import server_handler
             public_path = self.public_path
+            footer.links = []
 
             self_link = WFSLink()
-            self_link.href = server_handler.format_items_url(public_path, collection, bbox, limit)
+            self_link.href = server_handler.format_items_url(public_path, collection, start_id, start_index, bbox,
+                                                             limit)
             self_link.rel = "self"
             self_link.title = "self"
             self_link.type = "application/geo+json"
 
-            footer.links = []
             footer.links.append(self_link.to_json())
+
+            if next_index > 0:
+                next_link = WFSLink()
+                next_link.href = server_handler.format_items_url(public_path, collection, next_id, next_index, bbox,
+                                                                 limit)
+                next_link.rel = "next"
+                next_link.title = "next"
+                next_link.type = "application/geo+json"
+
+                footer.links.append(next_link.to_json())
 
         footer.bbox = geometry.encode_bbox(bounds)
         encoded_footer = json.dumps(footer.__dict__)
