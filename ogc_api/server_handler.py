@@ -15,7 +15,7 @@ MAX_SIGNATURE_WIDTH = 8.0
 class WebServer:
     index: index.Index
 
-    def handle_landing_request(self, landing_page=True):
+    def handle_landing_request(self):
         class LandingPageResponse:
             title: str
             description: str
@@ -30,14 +30,8 @@ class WebServer:
         response.description = "Web API that conforms to the OGC API Features specification."
 
         landing_link = WFSLink()
-
         landing_link.href = self.index.public_path
-
-        if landing_page:
-            landing_link.rel = "self"
-        else:
-            landing_link.rel = "item"
-
+        landing_link.rel = "self"
         landing_link.type = "application/json"
         landing_link.title = "This document"
 
@@ -46,13 +40,8 @@ class WebServer:
         api_link = WFSLink()
 
         api_link.href = self.index.public_path + "api"
-
-        if landing_page:
-            api_link.rel = "service-desc"
-        else:
-            api_link.rel = "self"
-
-        api_link.type = "application/json"
+        api_link.rel = "service-desc"
+        api_link.type = "application/openapi+json;version=3.0"
         api_link.title = "The API definition"
 
         response.links.append(api_link.to_json())

@@ -78,7 +78,6 @@ def main():
                         })
 
     # region OGC API endpoints
-
     @app.get("/collections")
     def get_collections():
         api_response = server.handle_collections_request()
