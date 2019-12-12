@@ -159,13 +159,11 @@ class WebServer:
             return APIResponse(None, response.http_response)
 
         features = io.BytesIO()
-
-        if limit is None:
-            limit = DEFAULT_LIMIT
-        elif not limit.isdigit():
-            return APIResponse(None, HTTP_RESPONSES["BAD_REQUEST"])
-
-        limit = int(limit)
+        if type(limit) is not int:
+            if limit.isdigit():
+                limit = int(limit)
+            else:
+                return APIResponse(None, HTTP_RESPONSES["BAD_REQUEST"])
 
         if limit <= 0:
             limit = 1

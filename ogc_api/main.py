@@ -7,7 +7,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response
 
 from ogc_api.index import make_index
-from ogc_api.server_handler import json_dumps_for_response
+from ogc_api.server_handler import json_dumps_for_response, DEFAULT_LIMIT
 from ogc_api.server_handler import make_web_server
 
 app = FastAPI()
@@ -102,7 +102,8 @@ def main():
                         })
 
     @app.get("/collections/{collection}/items")
-    def get_collection_items(collection: str, bbox: str = '', limit=None, start_id='', start=0):
+    def get_collection_items(collection: str, bbox: str = '', limit=DEFAULT_LIMIT,
+                             start_id: str = '', start: int = 0):
         api_response = server.handle_items_request(collection, start_id, start, bbox, limit)
 
         if api_response.http_response is not None:
