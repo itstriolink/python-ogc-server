@@ -3,10 +3,10 @@
 \section{Overview}
 This chapter shows how the project was implemented in a more-detailed way. It also shows some of the key points for this application, how they were implemented and what they are useful for. This chapter of the documentation is the technical part of it.\\
 It will show how the data is inserted into the server, how it is processed and based on the request, how that data is used to return a response to that specific request.\\
-This section will also cover some of the important techniques that were used for example to test, to document, to generate artifacts etc. It will also cover the code repository and CI/CD part, which for this application, is  \href{https://gitlab.com/}{GitLab}.
+This section will also cover some of the important techniques and tools that were used to test, document, generate artifacts etc. It will also cover the code repository and CI/CD part, which for this application, is \href{https://gitlab.com/}{GitLab}.
 
 \section{API}
-This application serves as an API for OAPIF clients or the driver itself. In order to use it, one must point it to the URL where it is hosted under. All the paths and request handling are taken care by the application itself. The application has around 6 API endpoints which some of them are a requirement from the "OGC API - Features" standard, and the others are a requirement for one of the front-end applications (a map of castles in Switzerland), which is going to use this API to serve features, geometry objects but also PNG raster tiles which will appear as dots in the application where a user can click on them in order to view what castle is hidden under a dot and get more information about it.\\
+This application serves as an API for OAPIF clients or the driver itself. In order to use it, one must point it to the URL where it is hosted under. All the paths and request handling are taken care by the application itself. The application has around 6 API endpoints which some of them are a requirement from the "OGC API - Features" standard, and the others are a requirement for the web map tiles and also for one of the front-end applications (the castle map mentioned in the introduction goals), which is going to use this API to serve features, geometry objects but also PNG raster tiles which will appear as dots in the application where a user can click on them in order to view what castle is hidden under a dot and get more information about it.\\
 The application uses a library called \href{https://fastapi.tiangolo.com/}{FastAPI}, which was very convenient for this project and offers a lot of different ways of implementing an API, depending on the requirements and the nature of the application.\\
 \newline
 FastAPI is a modern, fast (high-performance), web framework for building APIs with Python 3.6+ based on standard Python type hints.
@@ -80,7 +80,7 @@ Here's an example of some minimal GeoJSON data:
 
 
 \section{Testing}
-This application has two testing methods integrated. That is the Unit Testing which was done using \href{https://docs.pytest.org/en/latest/}{pytest} and the Load Testing part which was done using \href{https://locust.io/}{Locust}.\\
+This application is tested using two methods. That is the Unit Testing which was done using \href{https://docs.pytest.org/en/latest/}{pytest} and the Load Testing which was done using \href{https://locust.io/}{Locust} to measure the application's performance.\\
 The Unit Testing was done to test some of the main features of the application, some HTTP requests \& responses etc.\\
 The Load Testing was done to test what happens if a lot of users access the server and make the same requests at the same time, what the performance of the server into giving responses would be.
 \subsection{Unit Testing}
@@ -195,8 +195,8 @@ GitLab is a DevOps lifecycle tool that provides a lot of things like: Git-reposi
 It has a very nice web interface and lots of different features that make application lifecycle much easier. The features GitLab offers that were used for this project were the project repository and the CI/CD feature.\\
 \newline
 CI/CD, or continuous integration and continuous delivery (aka continuous deployment), combines the values of these two practices in order to provide precise integration and delivery.
-GitLab has a feature of writing a CI/CD file which does various operations for you each and every push, to make sure that the CI/CD logic still works with the applied changes.\\
-In this case, CI/CD was used to test the project (run the unit tests) and then generate and upload the documentation PDF into an artifact which can be downloaded from the CI/CD pipeline.
+GitLab has a feature of writing a CI/CD file (yaml), which does various operations for you each and every push, to make sure that the CI/CD configuration still works with the applied changes.\\
+In this case, CI/CD was used to test the project (run the unit tests) and then generate and upload the documentation PDF into an artifact which can be downloaded from the CI/CD pipeline itself.
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{./Images/Implementation/gitlab_view.png}
 	\caption{A peek at the GitLab interface}
@@ -208,7 +208,7 @@ The application that was used in conjunction with LaTeX was \href{http://texstud
 TeXstudio is an integrated writing environment for creating LaTeX documents. Our goal is to make writing LaTeX as easy and comfortable as possible. Therefore TeXstudio has numerous features like syntax-highlighting, integrated viewer, reference checking and various assistants. \cite{WhatIsTeXStudio}\\
 The reason why LaTeX was used is that it is very convenient to developers, since they can get used to the syntax very quickly and are familiar with "coding" approaches. Another big reason is that it provides a lot of packages for displaying code in a nice formatted way, it has the ability of displaying web links in a nice manner and also the figures and figure alignments are very appropriate and easy to create \& maintain.\\
 \newline
-This is how a portion of this page for example looks like in LaTeX before being compiled:
+This is for example how a portion of this page looks like in LaTeX before being compiled:
 \begin{minted}[linenos,tabsize=2,breaklines]{latex}
 \section{LaTeX}
 The system that was used in order to document this project was \href{https://www.LaTeX-project.org/}{LaTeX}.\\

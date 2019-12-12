@@ -1,12 +1,12 @@
 \chapter{Architecture and Design}
 \section{Overview}
-The application is developed and built using the Python language (v3.7.4) and it is also dockerized into a docker image which contains the Alpine Linux distribution, the server which runs the application and the Python language. 
-The application uses a lot of Geo libraries in Python, it also uses some libraries that were initially created in other languages (C++, Go etc), but were minimally converted to Python since they were very powerful and useful for the community.
-Some of these libraries are powerful (for example the drawing library) and require a lot of dependencies which do not exist in the Alpine Linux distribution for the docker image. As a result, the docker file is not very small as it requires those dependencies first before the libraries can be used (which are necessary for the project).\\
-The application mostly deals with geometry objects, API requests, correct and precise HTTP responses and some mathematical calculations here and there.\\
+The application is developed and built using the Python language (v3.7.4) and it is also containerized into a Docker image which contains the Alpine Linux distribution, the operating system which runs the application using the Python language. 
+The application uses a lot of geospatial libraries in Python, it also uses some libraries that were initially created in other languages (C++, Go etc), but were minimally converted to Python since they were very powerful and useful for the community.
+Some of these libraries are powerful (for example the drawing library) and require a lot of dependencies which do not exist in the Alpine Linux distribution out of the box for the docker image. As a result, the docker image is not very light as it requires those dependencies first before the libraries can be used (which are necessary for the project).\\
+The application mostly deals with geometry objects, API requests, correct and precise HTTP responses and some mathematical calculations for the geospatial data.\\
 \newline
-The docker image of this application also contains the application Python libraries and some dependencies that some of those libraries use.
-As soon as the docker image is built and ran, there is a command that starts the application automatically.
+The docker image of this application also contains the application's libraries and some dependencies that some of those libraries use.
+As soon as the docker image is built and ran, there is a command in that docker file that starts the application automatically.
 \newline
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{./Images/ArchitectureDesign/dockerfile_image.png}
@@ -18,7 +18,7 @@ That docker image is then also sent to the Docker Compose tool which is a tool f
 	\includegraphics[width=\linewidth]{./Images/ArchitectureDesign/dockercompose_image.png}
 	\caption{How the docker compose file looks}
 \end{figure}
-This container architecture makes it very easy to build and start the container since it only requires changing the environment variables in the docker compose (if necessary) and then running the command:
+The container architecture makes it very easy to build and start the container since it only requires changing the environment variables in the docker compose (if necessary) and then running the command:
 \begin{minted}{bash}
 $ docker compose up --build
 \end{minted}
