@@ -1,7 +1,6 @@
 # Python OGC API Feature and Tile Server
 
 This is a dockerized OGC API server that is minimally compliant with the [OGC API - Features (OAPIF)](https://docs.opengeospatial.org/is/17-069r3/17-069r3.html) standard.
-
 It serves GeoJSON objects and PNG raster tiles.
 
 To use it, just point any OGC API client to it.
