@@ -195,7 +195,7 @@ def make_index(collections: dict, public_path: str):
 
     scheduler = BackgroundScheduler()
 
-    scheduler.add_job(index.watch_files, 'interval', minutes=5)
+    scheduler.add_job(index.watch_files, 'interval', minutes=30)
     scheduler.start()
 
     for name, path in collections.items():
